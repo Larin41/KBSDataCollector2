@@ -3,7 +3,7 @@ package com.android.example.kbsdatacollector.db
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "products")
 data class Product(
     @PrimaryKey(autoGenerate = true) val id: Long,
     val name: String,

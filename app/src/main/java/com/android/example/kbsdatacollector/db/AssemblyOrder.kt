@@ -3,7 +3,7 @@ package com.android.example.kbsdatacollector.db
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "assembly_orders")
 data class AssemblyOrder(
     @PrimaryKey(autoGenerate = true) val id: Long,
     val guid: String,

@@ -3,10 +3,10 @@ package com.android.example.kbsdatacollector.db
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
-data class Stamps(
+@Entity(tableName = "barcodes")
+data class Barcode(
     @PrimaryKey(autoGenerate = true) val id: Long,
-    val stamp: String?,
+    val barcode: String?,
     val productId: Long
 ) {
 
