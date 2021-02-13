@@ -4,7 +4,7 @@ import androidx.room.*
 import com.android.example.kbsdatacollector.db.Product
 
 @Dao
-interface ProductsDao {
+interface ProductDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(product: Product)
