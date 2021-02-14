@@ -13,7 +13,10 @@ interface ProductDao {
     @Delete
     suspend fun delete(product: Product)
 
-    @Query("Select * FROM products ORDER BY name ASC")
+    @Query("DELETE FROM products")
+    fun deleteAll()
+
+    @Query("SELECT * FROM products ORDER BY name ASC")
     fun getAlphabetizedProducts(): Flow<List<Product>>
 
 }
