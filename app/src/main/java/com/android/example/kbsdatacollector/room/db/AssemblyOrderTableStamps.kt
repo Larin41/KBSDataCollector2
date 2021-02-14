@@ -1,9 +1,9 @@
-package com.android.example.kbsdatacollector.db
+package com.android.example.kbsdatacollector.room.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "assembly_orders_table_goods")
+@Entity(tableName = "assembly_orders_table_stamps")
 data class AssemblyOrderTableStamps(
     @PrimaryKey(autoGenerate = true) val id: Long,
     val barcode: String,
