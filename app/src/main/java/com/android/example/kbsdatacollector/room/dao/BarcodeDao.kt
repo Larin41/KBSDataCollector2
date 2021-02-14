@@ -1,10 +1,8 @@
 package com.android.example.kbsdatacollector.room.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
+import androidx.room.*
 import com.android.example.kbsdatacollector.room.db.Barcode
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
@@ -14,4 +12,7 @@ interface BarcodeDao {
 
     @Delete
     suspend fun delete(barcode: Barcode)
+
+    @Query("SELECT * FROM barcodes ORDER BY barcode ASC")
+    fun getSortedBarcodes(): Flow<List<Barcode>>
 }

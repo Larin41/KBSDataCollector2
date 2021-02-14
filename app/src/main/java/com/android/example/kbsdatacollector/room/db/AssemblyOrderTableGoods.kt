@@ -1,5 +1,6 @@
 package com.android.example.kbsdatacollector.room.db
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -10,7 +11,8 @@ data class AssemblyOrderTableGoods(
     val row: Int,
     val qty: Double,
     val qtyCollected: Double,
-    val AssemblyOrderId: Long,
+    val assemblyOrderId: Long,
     val ProductId: Long
+    //@Embedded val Product: Product?
 ) {
 }

@@ -11,8 +11,7 @@ class ProductRepository(private val productDao: ProductDao) {
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insert(product: Product){
+    suspend fun insert(product: Product) {
         productDao.insert(product)
     }
-
 }

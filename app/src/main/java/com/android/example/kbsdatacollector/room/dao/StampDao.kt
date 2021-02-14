@@ -1,10 +1,9 @@
 package com.android.example.kbsdatacollector.room.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
+import androidx.room.*
+import com.android.example.kbsdatacollector.room.db.Barcode
 import com.android.example.kbsdatacollector.room.db.Stamp
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StampDao {
@@ -14,4 +13,8 @@ interface StampDao {
 
     @Delete
     suspend fun delete(stamp: Stamp)
+
+    @Query("SELECT * FROM stamps ORDER BY stamp ASC")
+    fun getSortedStamps(): Flow<List<Stamp>>
+
 }
