@@ -14,9 +14,12 @@ interface ProductDao {
     suspend fun delete(product: Product)
 
     @Query("DELETE FROM products")
-    fun deleteAll()
+    suspend fun deleteAll()
 
     @Query("SELECT * FROM products ORDER BY name ASC")
     fun getAlphabetizedProducts(): Flow<List<Product>>
+
+    @Query("SELECT * FROM products WHERE guid = :productGuid")
+    fun getProductByGuid(productGuid: String): List<Product>
 
 }

@@ -3,8 +3,9 @@ package com.android.example.kbsdatacollector.retrofit
 
 
 import android.util.Log
-import android.widget.Toast
+import com.android.example.kbsdatacollector.room.AppDatabase
 import com.android.example.kbsdatacollector.room.db.Product
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -39,9 +40,20 @@ class ExchangeMaster {
 
                     Log.d("GOODS", i.name.toString())
 
-                    var product: Product = Product(
-                        ,
+                    val productDao = AppDatabase.getDatabase(this, CoroutineScope(Dispatchers.IO)).productDao()
 
+                    var foundProducts = productDao.getProductByGuid(i.guid)
+
+                    var product: Product = Product(
+                       0,
+                        i.name,
+                        i.unit,
+                        i.isAlcohol,
+                        i.hasStamp,
+                        i.guid,
+                        i.isFolder,
+                        i.parentGuid,
+                        foundProducts[0].id
                     )
 
 

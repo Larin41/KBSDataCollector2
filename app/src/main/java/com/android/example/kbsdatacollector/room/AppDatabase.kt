@@ -32,7 +32,7 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
+        fun getDatabase(context: CoroutineScope, scope: CoroutineScope): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
@@ -66,12 +66,11 @@ abstract class AppDatabase : RoomDatabase() {
                 productDao.deleteAll()
 
                 // Add sample words.
-                var product = Product(1, "Российский", null, null, null, null, null, null)
+                var product = Product(1, "Российский", null, null, null, null, null, null, null)
                 productDao.insert(product)
 
                 product = Product(2, "Пошехонский", null, null, null, null, null, null)
                 productDao.insert(product)
-
             }
         }
 

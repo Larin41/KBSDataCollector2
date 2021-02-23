@@ -14,4 +14,6 @@ class ProductRepository(private val productDao: ProductDao) {
     suspend fun insert(product: Product) {
         productDao.insert(product)
     }
+
+
 }

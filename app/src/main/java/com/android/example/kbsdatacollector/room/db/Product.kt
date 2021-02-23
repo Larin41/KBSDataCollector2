@@ -12,6 +12,7 @@ data class Product(
     val hasStamp: Boolean?,
     val guid: String?,
     val isFolder: Boolean?,
+    val parentGuid: String?,
     val parentId: Long?
 
 ) {
