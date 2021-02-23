@@ -15,4 +15,9 @@ data class Product(
     val parentId: Long?
 
 ) {
+
+
+
+
+
 }
