@@ -42,20 +42,23 @@ class OrdersFragment : Fragment() {
 
         rootView = inflater.inflate(R.layout.orders_fragment, container, false)
 
-        rwAdapter = OrdersAdapter()
+        rwAdapter = OrdersAdapter(model.allOrders)
         btn = rootView.findViewById<Button>(R.id.btnSexy)
         rwOrders = rootView.findViewById<RecyclerView>(R.id.rwOrders)
         rwOrders.layoutManager = LinearLayoutManager(context)
         rwOrders.adapter = rwAdapter
 
 
+
         model.test.observe(viewLifecycleOwner, Observer<String> { string ->
-            btn.text = model.test.value
+            btn.text = string
         })
 
 
+
         model.allOrders.observe(viewLifecycleOwner, Observer<List<AssemblyOrder>> { list ->
-            list.let { rwAdapter.submitList(list) }
+            list.let {
+                rwAdapter.notifyDataSetChanged() }
         })
 
 

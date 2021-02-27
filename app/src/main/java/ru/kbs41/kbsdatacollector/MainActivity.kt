@@ -24,23 +24,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         //TODO: удалить getData(). Нужно для отладки
-
-
         val ordersFragment = OrdersFragment()
-
 
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.container, ordersFragment)
             commit()
         }
-
     }
 
     private fun getData() {
-
         val em = ExchangeMaster()
         em.getData(application)
-
     }
 
 
