@@ -1,5 +1,7 @@
 package ru.kbs41.kbsdatacollector.retrofit
 
+import java.sql.Date
+
 data class DataJSON(
     val goods: List<Good>,
     val orders: List<Order>
@@ -33,7 +35,7 @@ data class DataJSON(
         val comment: String,
         val completed: Boolean,
         val contractor: String,
-        val date: String,
+        val date: Date,
         val guid: String,
         val number: String,
         val tableGoods: List<TableGood>

@@ -3,6 +3,7 @@ package ru.kbs41.kbsdatacollector.retrofit
 
 import android.app.Application
 import android.util.Log
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
 import retrofit2.Retrofit
 import retrofit2.awaitResponse
@@ -24,9 +25,10 @@ class ExchangeMaster {
 
         val baseUrl = getBaseURL()
 
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
         val api = Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(Api::class.java)
 
