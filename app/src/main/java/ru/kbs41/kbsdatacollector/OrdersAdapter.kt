@@ -28,12 +28,13 @@ class OrdersAdapter(
 
     override fun onBindViewHolder(holder: OrdersViewHolder, position: Int) {
         val currentItem = list.value!![position]
-
-        val number = currentItem.number.toString()
+        val number = currentItem.number
         val date = CommonFunctions.getDateRussianFormat(currentItem.date)
 
-        holder.contractor.text = currentItem.counterpart.toString()
+        holder.contractor.text = currentItem.counterpart
         holder.dateNumber.text = "№$number от $date"
+        holder.comment.text = currentItem.comment
+
     }
 
     override fun getItemCount(): Int {
@@ -43,6 +44,7 @@ class OrdersAdapter(
     inner class OrdersViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var contractor: TextView = itemView.findViewById(R.id.contractor_name)
         var dateNumber: TextView = itemView.findViewById(R.id.date_number)
+        var comment: TextView = itemView.findViewById(R.id.comment)
 
 
         init {
