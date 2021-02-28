@@ -1,9 +1,7 @@
-package ru.kbs41.kbsdatacollector
+package ru.kbs41.kbsdatacollector.ui
 
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import ru.kbs41.kbsdatacollector.room.dao.AssemblyOrderDao
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
 import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderRepository
 

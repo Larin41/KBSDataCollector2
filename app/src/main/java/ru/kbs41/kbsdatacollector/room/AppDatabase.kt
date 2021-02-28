@@ -34,14 +34,13 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
+        fun getDatabase(context: Context,  scope: CoroutineScope): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
                     "dc_database"
                 )
-                    .addCallback(ProductDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
                 // return instance
@@ -49,24 +48,5 @@ abstract class AppDatabase : RoomDatabase() {
 
             }
         }
-
-        private class ProductDatabaseCallback(
-            private val scope: CoroutineScope
-        ) : RoomDatabase.Callback() {
-
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-                INSTANCE?.let { database ->
-                    scope.launch {
-                        populateDatabase(database.productDao())
-                    }
-                }
-            }
-
-            suspend fun populateDatabase(productDao: ProductDao) {
-
-            }
-        }
-
     }
 }

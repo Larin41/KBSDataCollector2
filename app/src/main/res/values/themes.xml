@@ -15,4 +15,13 @@
         <item name="fontFamily">@font/roboto</item>
         <item name="font">@font/roboto</item>
     </style>
+
+    <style name="Theme.KBSDataCollector.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.KBSDataCollector.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.KBSDataCollector.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

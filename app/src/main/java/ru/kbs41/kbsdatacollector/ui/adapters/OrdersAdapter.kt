@@ -1,18 +1,19 @@
-package ru.kbs41.kbsdatacollector
+package ru.kbs41.kbsdatacollector.ui.adapters
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.*
+import kotlinx.coroutines.withContext
+import ru.kbs41.kbsdatacollector.CommonFunctions
+import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
-import javax.sql.DataSource
-import kotlin.coroutines.CoroutineContext
+import ru.kbs41.kbsdatacollector.ui.activities.AssemblyOrderActivity
 import kotlin.coroutines.coroutineContext
 
 
@@ -23,7 +24,7 @@ class OrdersAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.orders_item, parent, false)
-        return OrdersViewHolder(itemView)
+        return OrdersViewHolder(itemView, parent.context)
     }
 
     override fun onBindViewHolder(holder: OrdersViewHolder, position: Int) {
@@ -41,14 +42,19 @@ class OrdersAdapter(
         return list.value!!.size
     }
 
-    inner class OrdersViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class OrdersViewHolder(itemView: View, context: Context) :
+        RecyclerView.ViewHolder(itemView) {
         var contractor: TextView = itemView.findViewById(R.id.contractor_name)
         var dateNumber: TextView = itemView.findViewById(R.id.date_number)
         var comment: TextView = itemView.findViewById(R.id.comment)
 
 
         init {
-            itemView.setOnClickListener { list.value!![adapterPosition].id }
+            itemView.setOnClickListener {
+                val intent = Intent(context, AssemblyOrderActivity::class.java)
+                intent.putExtra("AssemblyOrderId", list.value!![adapterPosition].id)
+                ContextCompat.startActivity(context, intent, null)
+            }
         }
 
     }

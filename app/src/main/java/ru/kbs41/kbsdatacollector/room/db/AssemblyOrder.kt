@@ -6,14 +6,17 @@ import java.util.*
 
 @Entity(tableName = "assembly_orders")
 data class AssemblyOrder(
-    @PrimaryKey(autoGenerate = true) val id: Long,
-    val guid: String,
-    val date: Date,
-    val number: String,
-    val counterpart: String,
-    val comment: String,
-    val isCompleted: Boolean,
-    val isSent: Boolean
-
+    @PrimaryKey(autoGenerate = true) var id: Long = -1,
+    val guid: String = "",
+    val date: Date = Date(0),
+    val number: String = "",
+    val counterpart: String = "",
+    val comment: String = "",
+    val isCompleted: Boolean = false,
+    val isSent: Boolean = false
 ) {
+    init {
+
+    }
+
 }

@@ -1,23 +1,23 @@
-package ru.kbs41.kbsdatacollector
+package ru.kbs41.kbsdatacollector.ui.fragments
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.FtsOptions
+import ru.kbs41.kbsdatacollector.App
+import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
+import ru.kbs41.kbsdatacollector.ui.MainViewModel
+import ru.kbs41.kbsdatacollector.ui.MainViewModelFactory
+import ru.kbs41.kbsdatacollector.ui.adapters.OrdersAdapter
 
 class OrdersFragment : Fragment() {
 
@@ -25,7 +25,7 @@ class OrdersFragment : Fragment() {
         fun newInstance() = OrdersFragment()
     }
 
-    private val model:MainViewModel by activityViewModels{
+    private val model: MainViewModel by activityViewModels{
         MainViewModelFactory(((activity?.application) as App).assemblyOrdersRepository)
     }
 

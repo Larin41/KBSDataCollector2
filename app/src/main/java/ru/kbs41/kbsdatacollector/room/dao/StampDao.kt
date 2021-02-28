@@ -2,6 +2,7 @@ package ru.kbs41.kbsdatacollector.room.dao
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoods
 import ru.kbs41.kbsdatacollector.room.db.Stamp
 
 @Dao
@@ -18,5 +19,7 @@ interface StampDao {
 
     @Query("SELECT * FROM stamps WHERE :stamp")
     fun getNoteByStamp(stamp: String): List<Stamp>
+
+
 
 }

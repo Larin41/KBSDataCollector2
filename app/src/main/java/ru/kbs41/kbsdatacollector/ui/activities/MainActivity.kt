@@ -1,17 +1,12 @@
-package ru.kbs41.kbsdatacollector
+package ru.kbs41.kbsdatacollector.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
 import androidx.activity.viewModels
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
+import ru.kbs41.kbsdatacollector.ui.MainViewModel
+import ru.kbs41.kbsdatacollector.ui.fragments.OrdersFragment
 
 
 class MainActivity : AppCompatActivity() {
