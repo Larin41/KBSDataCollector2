@@ -34,7 +34,7 @@ class AccemblyOrderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_accembly_order, container, false)
+        return inflater.inflate(R.layout.fragment_assembly_order, container, false)
     }
 
     companion object {

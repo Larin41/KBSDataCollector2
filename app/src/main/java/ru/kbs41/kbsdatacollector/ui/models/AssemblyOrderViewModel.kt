@@ -9,10 +9,13 @@ import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderRepository
 
 class AssemblyOrderViewModel(id: Long) : ViewModel() {
 
+
     val repository = AssemblyOrderFullRepository()
     val assemblyOrders: LiveData<List<AssemblyOrder>> = repository.getAssemblyOrder(id).asLiveData()
-    val tableGoods: LiveData<List<AssemblyOrderTableGoods>> = repository.getAssemblyOrderTableGoods(id).asLiveData()
-    val tableStamps: LiveData<List<AssemblyOrderTableStamps>> = repository.getAssemblyOrderTableStamps(id).asLiveData()
+    val tableGoods: LiveData<List<AssemblyOrderTableGoods>> =
+        repository.getAssemblyOrderTableGoods(id).asLiveData()
+    val tableStamps: LiveData<List<AssemblyOrderTableStamps>> =
+        repository.getAssemblyOrderTableStamps(id).asLiveData()
 
 }
 

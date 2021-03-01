@@ -11,7 +11,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.android.example.kbsdatacollector"
+        applicationId "ru.kbs41.kbsdatacollector"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
@@ -38,6 +38,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+
+    dataBinding {
+        enabled true
+    }
+
 }
 
 dependencies {

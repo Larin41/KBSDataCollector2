@@ -13,4 +13,9 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="assembly_order_main">ГЛАВНОЕ</string>
     <string name="assembly_order_goods">ТОВАРЫ</string>
+    <string name="number_symbol">№</string>
+    <string name="date_number">Номер и дата</string>
+    <string name="contractor">Контрагент</string>
+    <string name="from">от</string>
+    <string name="comment">Комментарий</string>
 </resources>

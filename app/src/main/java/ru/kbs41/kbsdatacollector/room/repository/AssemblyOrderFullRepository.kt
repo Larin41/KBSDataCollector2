@@ -16,7 +16,7 @@ class AssemblyOrderFullRepository() {
     val assemblyOrderTableStampsDao = database.assemblyOrderTableStampsDao()
 
     fun getAssemblyOrder(id: Long): Flow<List<AssemblyOrder>> {
-        return assemblyOrderDao.getAssemblyOrderById(id).take(0)
+        return assemblyOrderDao.getAssemblyOrderById(id).take(1)
     }
 
     fun getAssemblyOrderTableGoods(id: Long): Flow<List<AssemblyOrderTableGoods>> {

@@ -152,40 +152,42 @@ class ExchangeMaster {
         }
 
         //BARCODES
-        for (b in i.barcodes) {
+        if (i.barcodes != null) {
+            for (b in i.barcodes) {
 
-            var barcodes = barcodeDao.getNoteByBarcode(b.barcode)
-            var barcodeId: Long = 0
-            if (barcodes.size > 0) {
-                barcodeId = barcodes[0].id
+                var barcodes = barcodeDao.getNoteByBarcode(b.barcode)
+                var barcodeId: Long = 0
+                if (barcodes.size > 0) {
+                    barcodeId = barcodes[0].id
+                }
+
+                val barcode: Barcode = Barcode(
+                    barcodeId,
+                    b.barcode,
+                    productId
+                )
+
+                barcodeDao.insert(barcode)
             }
 
-            val barcode: Barcode = Barcode(
-                barcodeId,
-                b.barcode,
-                productId
-            )
+            //STAMPS
+            for (s in i.stamps) {
 
-            barcodeDao.insert(barcode)
-        }
+                var stamps = stampsDao.getNoteByStamp(s.stamp)
+                var stampId: Long = 0
+                if (stamps.size > 0) {
+                    stampId = stamps[0].id
+                }
 
-        //STAMPS
-        for (s in i.stamps) {
+                val stamp: Stamp = Stamp(
+                    stampId,
+                    s.stamp,
+                    productId
+                )
 
-            var stamps = stampsDao.getNoteByStamp(s.stamp)
-            var stampId: Long = 0
-            if (stamps.size > 0) {
-                stampId = stamps[0].id
+                stampsDao.insert(stamp)
             }
 
-            val stamp: Stamp = Stamp(
-                stampId,
-                s.stamp,
-                productId
-            )
-
-            stampsDao.insert(stamp)
         }
-
     }
 }

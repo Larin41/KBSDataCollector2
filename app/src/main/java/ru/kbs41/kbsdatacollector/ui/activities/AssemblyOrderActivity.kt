@@ -15,16 +15,18 @@ import androidx.lifecycle.ViewModelProvider
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModel
+import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModelFactory
 import ru.kbs41.kbsdatacollector.ui.MainViewModel
 import ru.kbs41.kbsdatacollector.ui.MainViewModelFactory
 import ru.kbs41.kbsdatacollector.ui.activities.ui.main.SectionsPagerAdapter
 
-class AssemblyOrderActivity : AppCompatActivity() {
+class AssemblyOrderActivity() : AppCompatActivity() {
 
-    private val model: MainViewModel by viewModels {
+    private val model: AssemblyOrderViewModel by viewModels {
         val assemblyOrderId = intent.extras?.getLong("AssemblyOrderId")
-        MainViewModelFactory(((application) as App).assemblyOrdersRepository)
+        AssemblyOrderViewModelFactory(assemblyOrderId!!)
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //ИНИЦИАЛИЗАЦИЯ
@@ -35,11 +37,6 @@ class AssemblyOrderActivity : AppCompatActivity() {
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
-
-
-
-
-
 
     }
 }

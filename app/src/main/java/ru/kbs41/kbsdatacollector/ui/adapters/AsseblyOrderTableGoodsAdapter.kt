@@ -13,34 +13,35 @@ import kotlinx.coroutines.withContext
 import ru.kbs41.kbsdatacollector.CommonFunctions
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
+import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoods
 import ru.kbs41.kbsdatacollector.ui.activities.AssemblyOrderActivity
 import kotlin.coroutines.coroutineContext
 
 
-class OrdersAdapter(
-    private val list: LiveData<List<AssemblyOrder>>
-) : RecyclerView.Adapter<OrdersAdapter.OrdersViewHolder>() {
+class AsseblyOrderTableGoodsAdapter(
+    private val list: LiveData<List<AssemblyOrderTableGoods>>
+) : RecyclerView.Adapter<AsseblyOrderTableGoodsAdapter.OrdersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersViewHolder {
         val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.orders_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.list_goods_item, parent, false)
         return OrdersViewHolder(itemView, parent.context)
     }
 
     override fun onBindViewHolder(holder: OrdersViewHolder, position: Int) {
         val currentItem = list.value!![position]
-        val number = currentItem.number
-        val date = CommonFunctions.getDateRussianFormat(currentItem.date)
 
-        holder.contractor.text = currentItem.counterpart
-        holder.dateNumber.text = "№$number от $date"
-        holder.comment.text = currentItem.comment
+
+        holder.number.text = currentItem.row.toString()
+        holder.product.text = currentItem.ProductId.toString()
+        holder.qty.text = currentItem.qty.toString()
+        holder.qtyCollected.text = currentItem.qtyCollected.toString()
 
     }
 
     override fun getItemCount(): Int {
         var size: Int = 0
-        if (list.value != null){
+        if (list.value != null) {
             size = list.value!!.size
         }
 
@@ -49,9 +50,10 @@ class OrdersAdapter(
 
     inner class OrdersViewHolder(itemView: View, context: Context) :
         RecyclerView.ViewHolder(itemView) {
-        var contractor: TextView = itemView.findViewById(R.id.contractor_name)
-        var dateNumber: TextView = itemView.findViewById(R.id.date_number)
-        var comment: TextView = itemView.findViewById(R.id.comment)
+        var number: TextView = itemView.findViewById(R.id.tvNumber)
+        var product: TextView = itemView.findViewById(R.id.tvProduct)
+        var qty: TextView = itemView.findViewById(R.id.tvQty)
+        var qtyCollected: TextView = itemView.findViewById(R.id.tvQtyCollected)
 
 
         init {
