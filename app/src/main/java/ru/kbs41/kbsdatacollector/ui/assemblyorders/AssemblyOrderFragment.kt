@@ -1,10 +1,9 @@
-package ru.kbs41.kbsdatacollector.ui.activities.ui.main
+package ru.kbs41.kbsdatacollector.ui.assemblyorders
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -14,7 +13,7 @@ import ru.kbs41.kbsdatacollector.databinding.FragmentAssemblyOrderBinding
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
 import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModel
 import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModelFactory
-import ru.kbs41.kbsdatacollector.ui.adapters.OrdersAdapter
+import ru.kbs41.kbsdatacollector.ui.main.AllAssemblyOrdersAdapter
 
 
 /**
@@ -28,7 +27,7 @@ class AssemblyOrderFragment : Fragment() {
 
     private lateinit var rootView: View
     private lateinit var rwOrders: RecyclerView
-    private lateinit var rwAdapter: OrdersAdapter
+    private lateinit var rwAdapterAllAssembly: AllAssemblyOrdersAdapter
 
     private val model: AssemblyOrderViewModel by activityViewModels() {
         AssemblyOrderViewModelFactory(requireActivity().intent.getLongExtra("AssemblyOrderId", 0))

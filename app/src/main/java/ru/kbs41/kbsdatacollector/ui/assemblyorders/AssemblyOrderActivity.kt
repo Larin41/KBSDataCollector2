@@ -1,24 +1,14 @@
-package ru.kbs41.kbsdatacollector.ui.activities
+package ru.kbs41.kbsdatacollector.ui.assemblyorders
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import androidx.viewpager.widget.ViewPager
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModel
 import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModelFactory
-import ru.kbs41.kbsdatacollector.ui.MainViewModel
-import ru.kbs41.kbsdatacollector.ui.MainViewModelFactory
-import ru.kbs41.kbsdatacollector.ui.activities.ui.main.SectionsPagerAdapter
+import ru.kbs41.kbsdatacollector.ui.assemblyorders.SectionsPagerAdapter
 
 class AssemblyOrderActivity() : AppCompatActivity() {
 

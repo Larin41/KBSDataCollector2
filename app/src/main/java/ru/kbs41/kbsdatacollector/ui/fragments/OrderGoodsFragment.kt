@@ -17,7 +17,7 @@ import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
 import ru.kbs41.kbsdatacollector.ui.MainViewModel
 import ru.kbs41.kbsdatacollector.ui.MainViewModelFactory
-import ru.kbs41.kbsdatacollector.ui.adapters.OrdersAdapter
+import ru.kbs41.kbsdatacollector.ui.main.AllAssemblyOrdersAdapter
 
 class OrderGoodsFragment : Fragment() {
 
@@ -31,7 +31,7 @@ class OrderGoodsFragment : Fragment() {
 
     private lateinit var rootView: View
     private lateinit var rwOrders: RecyclerView
-    private lateinit var rwAdapter: OrdersAdapter
+    private lateinit var rwAdapterAllAssembly: AllAssemblyOrdersAdapter
     private lateinit var btn: Button
 
 
@@ -42,10 +42,10 @@ class OrderGoodsFragment : Fragment() {
 
         rootView = inflater.inflate(R.layout.orders_fragment, container, false)
 
-        rwAdapter = OrdersAdapter(model.allOrders)
+        rwAdapterAllAssembly = AllAssemblyOrdersAdapter(model.allOrders)
         rwOrders = rootView.findViewById<RecyclerView>(R.id.rwOrders)
         rwOrders.layoutManager = LinearLayoutManager(context)
-        rwOrders.adapter = rwAdapter
+        rwOrders.adapter = rwAdapterAllAssembly
 
 
 
@@ -57,7 +57,7 @@ class OrderGoodsFragment : Fragment() {
 
         model.allOrders.observe(viewLifecycleOwner, Observer<List<AssemblyOrder>> { list ->
             list.let {
-                rwAdapter.notifyDataSetChanged() }
+                rwAdapterAllAssembly.notifyDataSetChanged() }
         })
 
 

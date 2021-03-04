@@ -1,4 +1,4 @@
-package ru.kbs41.kbsdatacollector.ui.adapters
+package ru.kbs41.kbsdatacollector.ui.main
 
 import android.content.Context
 import android.content.Intent
@@ -9,17 +9,15 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.withContext
 import ru.kbs41.kbsdatacollector.CommonFunctions
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
-import ru.kbs41.kbsdatacollector.ui.activities.AssemblyOrderActivity
-import kotlin.coroutines.coroutineContext
+import ru.kbs41.kbsdatacollector.ui.assemblyorders.AssemblyOrderActivity
 
 
-class OrdersAdapter(
+class AllAssemblyOrdersAdapter(
     private val list: LiveData<List<AssemblyOrder>>
-) : RecyclerView.Adapter<OrdersAdapter.OrdersViewHolder>() {
+) : RecyclerView.Adapter<AllAssemblyOrdersAdapter.OrdersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersViewHolder {
         val itemView =

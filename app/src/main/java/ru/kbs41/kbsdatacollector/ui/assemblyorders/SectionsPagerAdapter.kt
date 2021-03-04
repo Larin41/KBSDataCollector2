@@ -1,4 +1,4 @@
-package ru.kbs41.kbsdatacollector.ui.activities.ui.main
+package ru.kbs41.kbsdatacollector.ui.assemblyorders
 
 import android.content.Context
 import androidx.fragment.app.Fragment

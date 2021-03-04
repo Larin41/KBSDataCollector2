@@ -1,4 +1,4 @@
-package ru.kbs41.kbsdatacollector.ui.adapters
+package ru.kbs41.kbsdatacollector.ui.assemblyorders
 
 import android.content.Context
 import android.content.Intent
@@ -9,20 +9,13 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.withContext
-import ru.kbs41.kbsdatacollector.CommonFunctions
 import ru.kbs41.kbsdatacollector.R
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoods
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithProducts
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStampsWithProducts
-import ru.kbs41.kbsdatacollector.ui.activities.AssemblyOrderActivity
-import kotlin.coroutines.coroutineContext
 
 
-class AsseblyOrderTableStampsAdapter(
-    private val list: LiveData<List<AssemblyOrderTableStampsWithProducts>>
-) : RecyclerView.Adapter<AsseblyOrderTableStampsAdapter.OrdersViewHolder>() {
+class AsseblyOrderTableGoodsAdapter(
+    private val list: LiveData<List<AssemblyOrderTableGoodsWithProducts>>
+) : RecyclerView.Adapter<AsseblyOrderTableGoodsAdapter.OrdersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersViewHolder {
         val itemView =
@@ -31,11 +24,14 @@ class AsseblyOrderTableStampsAdapter(
     }
 
     override fun onBindViewHolder(holder: OrdersViewHolder, position: Int) {
-        val currentItem = list.value!![position].assemblyOrderTableStamps
+        val currentItem = list.value!![position].assemblyOrderTableGoods
         val currentProduct = list.value!![position].product
 
+
+        holder.number.text = currentItem.row.toString()
         holder.product.text = currentProduct.name
-        holder.stamp.text = currentItem.barcode.toString()
+        holder.qty.text = currentItem.qty.toString()
+        holder.qtyCollected.text = currentItem.qtyCollected.toString()
 
     }
 
@@ -50,8 +46,10 @@ class AsseblyOrderTableStampsAdapter(
 
     inner class OrdersViewHolder(itemView: View, context: Context) :
         RecyclerView.ViewHolder(itemView) {
+        var number: TextView = itemView.findViewById(R.id.tvNumber)
         var product: TextView = itemView.findViewById(R.id.tvProduct)
-        var stamp: TextView = itemView.findViewById(R.id.tvStamp)
+        var qty: TextView = itemView.findViewById(R.id.tvQty)
+        var qtyCollected: TextView = itemView.findViewById(R.id.tvQtyCollected)
 
 
         init {
@@ -59,7 +57,7 @@ class AsseblyOrderTableStampsAdapter(
                 val intent = Intent(context, AssemblyOrderActivity::class.java)
                 intent.putExtra(
                     "AssemblyOrderId",
-                    list.value!![adapterPosition].assemblyOrderTableStamps.id
+                    list.value!![adapterPosition].assemblyOrderTableGoods.id
                 )
                 ContextCompat.startActivity(context, intent, null)
             }

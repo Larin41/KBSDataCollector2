@@ -13,10 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KBSDataCollector">
         <activity
-            android:name=".ui.activities.AssemblyOrderActivity"
+            android:name=".ui.assemblyorders.AssemblyOrderActivity"
             android:label="@string/title_activity_assembly_order"
             android:theme="@style/Theme.KBSDataCollector.NoActionBar"></activity>
-        <activity android:name=".ui.activities.MainActivity">
+        <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

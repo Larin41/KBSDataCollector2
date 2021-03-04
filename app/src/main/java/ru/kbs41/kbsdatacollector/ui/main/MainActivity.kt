@@ -1,11 +1,9 @@
-package ru.kbs41.kbsdatacollector.ui.activities
+package ru.kbs41.kbsdatacollector.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
-import ru.kbs41.kbsdatacollector.ui.MainViewModel
 import ru.kbs41.kbsdatacollector.ui.fragments.OrdersFragment
 
 
