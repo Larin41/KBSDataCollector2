@@ -53,6 +53,13 @@ class AssemblyOrderFragment : Fragment() {
             binding.number = order.number
             binding.contractor = order.counterpart
             binding.comment = order.comment
+
+            var comment: String = "---"
+            if (order.comment.length != 0){
+                comment = order.comment
+            }
+            binding.comment = comment
+
         }
 
 
@@ -62,12 +69,15 @@ class AssemblyOrderFragment : Fragment() {
                 binding.date = CommonFunctions.getDateRussianFormat(order.date)
                 binding.number = order.number.toString()
                 binding.contractor = order.counterpart
-                binding.comment = order.comment
+
+                var comment: String = "---"
+                if (order.comment.length != 0){
+                    comment = order.comment
+                }
+                binding.comment = comment
             }
         })
 
-        Toast.makeText(context, "" + model.assemblyOrders.value.toString(), Toast.LENGTH_SHORT)
-            .show()
         return root
 
     }

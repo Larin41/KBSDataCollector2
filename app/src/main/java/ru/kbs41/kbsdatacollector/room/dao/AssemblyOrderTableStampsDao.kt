@@ -3,7 +3,9 @@ package ru.kbs41.kbsdatacollector.room.dao
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoods
+import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithProducts
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
+import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStampsWithProducts
 
 @Dao
 interface AssemblyOrderTableStampsDao {
@@ -22,5 +24,9 @@ interface AssemblyOrderTableStampsDao {
 
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId AND ProductId = :productId ORDER BY id")
     fun getTableStampsByDocIdAndProductId(assemblyOrderId: Long, productId: Long): Flow<List<AssemblyOrderTableStamps>>
+
+    @Transaction
+    @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :id ORDER BY id")
+    fun getAssemblyOrderTableStampsWithProducts(id: Long): Flow<List<AssemblyOrderTableStampsWithProducts>>
 
 }

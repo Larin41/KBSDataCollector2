@@ -11,6 +11,6 @@ data class AssemblyOrderTableGoods(
     val qty: Double,
     val qtyCollected: Double,
     val assemblyOrderId: Long,
-    val ProductId: Long
+    val productId: Long
 ) {
 }

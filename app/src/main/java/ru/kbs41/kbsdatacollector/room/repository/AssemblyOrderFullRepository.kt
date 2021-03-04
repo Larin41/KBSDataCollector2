@@ -4,9 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.take
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.room.AppDatabase
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoods
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
+import ru.kbs41.kbsdatacollector.room.db.*
 
 class AssemblyOrderFullRepository() {
 
@@ -19,13 +17,24 @@ class AssemblyOrderFullRepository() {
         return assemblyOrderDao.getAssemblyOrderById(id).take(1)
     }
 
+    fun getAssemblyOrderWithTables(id: Long): Flow<List<AssemblyOrderWithTables>> {
+        return assemblyOrderDao.getAssemblyOrderWithTables(id).take(1)
+    }
+
     fun getAssemblyOrderTableGoods(id: Long): Flow<List<AssemblyOrderTableGoods>> {
         return assemblyOrderTableGoodsDao.getTableGoodsByDocId(id)
+    }
+
+    fun getAssemblyOrderTableGoodsWithProducts(id: Long): Flow<List<AssemblyOrderTableGoodsWithProducts>> {
+        return assemblyOrderTableGoodsDao.getAssemblyOrderTableGoodsWithProducts(id)
     }
 
     fun getAssemblyOrderTableStamps(id: Long): Flow<List<AssemblyOrderTableStamps>> {
         return assemblyOrderTableStampsDao.getTableStampsByDocId(id)
     }
 
+    fun getAssemblyOrderTableStampsWithProducts(id: Long): Flow<List<AssemblyOrderTableStampsWithProducts>> {
+        return assemblyOrderTableStampsDao.getAssemblyOrderTableStampsWithProducts(id)
+    }
 
 }

@@ -18,4 +18,7 @@
     <string name="contractor">Контрагент</string>
     <string name="from">от</string>
     <string name="comment">Комментарий</string>
+    <string name="collected">Собрано:</string>
+    <string name="out_of">из</string>
+    <string name="assembly_order_stamps">МАРКИ</string>
 </resources>

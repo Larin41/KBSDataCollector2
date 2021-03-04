@@ -26,6 +26,7 @@ interface AssemblyOrderDao {
     @Query("SELECT * FROM assembly_orders WHERE guid = :guid")
     fun getAssemblyOrderByGuid(guid: String): List<AssemblyOrder>
 
+    @Transaction
     @Query("SELECT * FROM ASSEMBLY_ORDERS WHERE :id")
     fun getAssemblyOrderWithTables(id: Long): Flow<List<AssemblyOrderWithTables>>
 

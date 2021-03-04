@@ -1,9 +1,7 @@
 package ru.kbs41.kbsdatacollector.ui
 
 import androidx.lifecycle.*
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoods
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
+import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderFullRepository
 import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderRepository
 
@@ -11,11 +9,24 @@ class AssemblyOrderViewModel(id: Long) : ViewModel() {
 
 
     val repository = AssemblyOrderFullRepository()
+
     val assemblyOrders: LiveData<List<AssemblyOrder>> = repository.getAssemblyOrder(id).asLiveData()
+
     val tableGoods: LiveData<List<AssemblyOrderTableGoods>> =
         repository.getAssemblyOrderTableGoods(id).asLiveData()
+
     val tableStamps: LiveData<List<AssemblyOrderTableStamps>> =
         repository.getAssemblyOrderTableStamps(id).asLiveData()
+
+    val assemblyOrderTableGoodsWithProducts: LiveData<List<AssemblyOrderTableGoodsWithProducts>> =
+        repository.getAssemblyOrderTableGoodsWithProducts(id).asLiveData()
+
+    val assemblyOrderTableStampsWithProducts: LiveData<List<AssemblyOrderTableStampsWithProducts>> =
+        repository.getAssemblyOrderTableStampsWithProducts(id).asLiveData()
+
+    //TODO: Это экспереминтальная функция, удалить в продакшане, если не задейстованно
+    val assemblyOrderWithTables: LiveData<List<AssemblyOrderWithTables>> =
+        repository.getAssemblyOrderWithTables(id).asLiveData()
 
 }
 

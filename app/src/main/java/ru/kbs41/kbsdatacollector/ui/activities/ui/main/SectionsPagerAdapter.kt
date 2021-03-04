@@ -8,7 +8,9 @@ import ru.kbs41.kbsdatacollector.R
 
 private val TAB_TITLES = arrayOf(
     R.string.assembly_order_main,
-    R.string.assembly_order_goods
+    R.string.assembly_order_goods,
+    contextR.string.assembly_order_stamps
+
 )
 
 class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
@@ -18,6 +20,7 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
         return when(position){
             0 -> AssemblyOrderFragment()
             1 -> AssemblyOrderTableGoodsFragment()
+            2 -> AssemblyOrderTableStampsFragment()
             else -> {
                 AssemblyOrderFragment()
             }
@@ -29,6 +32,6 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
     }
 
     override fun getCount(): Int {
-        return 2
+        return 3
     }
 }
