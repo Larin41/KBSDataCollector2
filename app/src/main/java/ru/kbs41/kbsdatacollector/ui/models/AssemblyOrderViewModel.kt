@@ -1,6 +1,9 @@
 package ru.kbs41.kbsdatacollector.ui
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderFullRepository
 import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderRepository
@@ -27,6 +30,7 @@ class AssemblyOrderViewModel(id: Long) : ViewModel() {
     //TODO: Это экспереминтальная функция, удалить в продакшане, если не задейстованно
     val assemblyOrderWithTables: LiveData<List<AssemblyOrderWithTables>> =
         repository.getAssemblyOrderWithTables(id).asLiveData()
+
 
 }
 

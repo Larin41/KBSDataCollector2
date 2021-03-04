@@ -8,6 +8,6 @@ data class AssemblyOrderTableStamps(
     @PrimaryKey(autoGenerate = true) val id: Long,
     val barcode: String,
     val AssemblyOrderId: Long,
-    val ProductId: Long
+    val productId: Long
 ) {
 }

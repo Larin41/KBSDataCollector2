@@ -9,7 +9,7 @@ import ru.kbs41.kbsdatacollector.R
 private val TAB_TITLES = arrayOf(
     R.string.assembly_order_main,
     R.string.assembly_order_goods,
-    contextR.string.assembly_order_stamps
+    R.string.assembly_order_stamps
 
 )
 

@@ -12,6 +12,7 @@ class AssemblyOrderFullRepository() {
     val assemblyOrderDao = database.assemblyOrderDao()
     val assemblyOrderTableGoodsDao = database.assemblyOrderTableGoodsDao()
     val assemblyOrderTableStampsDao = database.assemblyOrderTableStampsDao()
+    val stampDao = database.stampDao()
 
     fun getAssemblyOrder(id: Long): Flow<List<AssemblyOrder>> {
         return assemblyOrderDao.getAssemblyOrderById(id).take(1)
@@ -35,6 +36,10 @@ class AssemblyOrderFullRepository() {
 
     fun getAssemblyOrderTableStampsWithProducts(id: Long): Flow<List<AssemblyOrderTableStampsWithProducts>> {
         return assemblyOrderTableStampsDao.getAssemblyOrderTableStampsWithProducts(id)
+    }
+
+    suspend fun insertStamp(stamp: Stamp){
+        stampDao.insert(stamp)
     }
 
 }
