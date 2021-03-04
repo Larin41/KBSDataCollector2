@@ -11,11 +11,12 @@ import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithProducts
+import ru.kbs41.kbsdatacollector.ui.stamps.StampsReading
 
 
-class AsseblyOrderTableGoodsAdapter(
+class AssemblyOrderTableGoodsAdapter(
     private val list: LiveData<List<AssemblyOrderTableGoodsWithProducts>>
-) : RecyclerView.Adapter<AsseblyOrderTableGoodsAdapter.OrdersViewHolder>() {
+) : RecyclerView.Adapter<AssemblyOrderTableGoodsAdapter.OrdersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersViewHolder {
         val itemView =
@@ -54,15 +55,13 @@ class AsseblyOrderTableGoodsAdapter(
 
         init {
             itemView.setOnClickListener {
-                val intent = Intent(context, AssemblyOrderActivity::class.java)
-                intent.putExtra(
-                    "AssemblyOrderId",
-                    list.value!![adapterPosition].assemblyOrderTableGoods.id
-                )
+                val intent = Intent(context, StampsReading::class.java)
+                intent.putExtra("productId", list.value!![adapterPosition].assemblyOrderTableGoods.productId)
+                intent.putExtra("docId", list.value!![adapterPosition].assemblyOrderTableGoods.assemblyOrderId)
+                intent.putExtra("qty", list.value!![adapterPosition].assemblyOrderTableGoods.qty)
+
                 ContextCompat.startActivity(context, intent, null)
             }
         }
-
     }
-
 }

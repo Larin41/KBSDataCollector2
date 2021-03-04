@@ -17,7 +17,7 @@ import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
 import ru.kbs41.kbsdatacollector.ui.MainViewModel
 import ru.kbs41.kbsdatacollector.ui.MainViewModelFactory
-import ru.kbs41.kbsdatacollector.ui.main.AllAssemblyOrdersAdapter
+import ru.kbs41.kbsdatacollector.ui.mainactivity.AllAssemblyOrdersAdapter
 
 class OrdersFragment : Fragment() {
 

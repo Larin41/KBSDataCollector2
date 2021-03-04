@@ -1,4 +1,4 @@
-package ru.kbs41.kbsdatacollector.ui.main
+package ru.kbs41.kbsdatacollector.ui.mainactivity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

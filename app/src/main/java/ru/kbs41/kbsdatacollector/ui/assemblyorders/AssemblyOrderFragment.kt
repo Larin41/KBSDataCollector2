@@ -13,7 +13,7 @@ import ru.kbs41.kbsdatacollector.databinding.FragmentAssemblyOrderBinding
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
 import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModel
 import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModelFactory
-import ru.kbs41.kbsdatacollector.ui.main.AllAssemblyOrdersAdapter
+import ru.kbs41.kbsdatacollector.ui.mainactivity.AllAssemblyOrdersAdapter
 
 
 /**
@@ -54,7 +54,7 @@ class AssemblyOrderFragment : Fragment() {
             binding.comment = order.comment
 
             var comment: String = "---"
-            if (order.comment.length != 0){
+            if (order.comment.length != 0) {
                 comment = order.comment
             }
             binding.comment = comment
@@ -64,16 +64,18 @@ class AssemblyOrderFragment : Fragment() {
 
         model.assemblyOrders.observe(viewLifecycleOwner, Observer<List<AssemblyOrder>> { list ->
             list.let {
-                val order = it[0]
-                binding.date = CommonFunctions.getDateRussianFormat(order.date)
-                binding.number = order.number.toString()
-                binding.contractor = order.counterpart
+                if (it.isEmpty().not()) {
+                    val order = it[0]
+                    binding.date = CommonFunctions.getDateRussianFormat(order.date)
+                    binding.number = order.number.toString()
+                    binding.contractor = order.counterpart
 
-                var comment: String = "---"
-                if (order.comment.length != 0){
-                    comment = order.comment
+                    var comment: String = "---"
+                    if (order.comment.length != 0) {
+                        comment = order.comment
+                    }
+                    binding.comment = comment
                 }
-                binding.comment = comment
             }
         })
 

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="String" />
+
+        <variable
+            name="qty"
+            type="String" />
+
+        <variable
+            name="qtyCollected"
+            type="String" />
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/tvProductInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Товар"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/tvProduct"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{product}"
+                app:layout_constraintLeft_toLeftOf="@id/tvProductInfo"
+                app:layout_constraintTop_toBottomOf="@id/tvProductInfo"
+                tools:text="Сыр российский молодой, красивый и сексуальный" />
+
+
+            <TextView
+                android:id="@+id/tvQtyInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/collected"
+                app:layout_constraintLeft_toLeftOf="@id/tvProductInfo"
+                app:layout_constraintTop_toBottomOf="@id/tvProduct" />
+
+
+            <TextView
+                android:id="@+id/tvQtyCollected"
+                style="@style/TextAppearance.MaterialComponents.Headline4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{qtyCollected}"
+                android:textColor="@color/red"
+                app:layout_constraintLeft_toLeftOf="@id/tvProductInfo"
+                app:layout_constraintTop_toBottomOf="@id/tvQtyInfo"
+                tools:text="8" />
+
+            <TextView
+                android:id="@+id/tvOutOf"
+                style="@style/TextAppearance.MaterialComponents.Headline4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/out_of"
+                app:layout_constraintLeft_toRightOf="@id/tvQtyCollected"
+                app:layout_constraintTop_toBottomOf="@id/tvQtyInfo" />
+
+            <TextView
+                android:id="@+id/tvQty"
+                style="@style/TextAppearance.MaterialComponents.Headline4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@{qty}"
+                android:textColor="@color/teal_700"
+                app:layout_constraintLeft_toRightOf="@id/tvOutOf"
+                app:layout_constraintTop_toBottomOf="@id/tvQtyInfo"
+                tools:text="8" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </FrameLayout>
+</layout>

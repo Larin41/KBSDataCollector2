@@ -13,10 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KBSDataCollector">
         <activity
+            android:name=".ui.stamps.StampsReading"
+            android:label="@string/title_activity_stamps_reading"
+            android:theme="@style/Theme.KBSDataCollector.NoActionBar"></activity>
+        <activity
             android:name=".ui.assemblyorders.AssemblyOrderActivity"
             android:label="@string/title_activity_assembly_order"
-            android:theme="@style/Theme.KBSDataCollector.NoActionBar"></activity>
-        <activity android:name=".ui.main.MainActivity">
+            android:theme="@style/Theme.KBSDataCollector.NoActionBar" />
+        <activity android:name=".ui.mainactivity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

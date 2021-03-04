@@ -24,7 +24,7 @@ class AssemblyOrderTableGoodsFragment : Fragment() {
     private var _binding: FragmentAssemblyOrderTableGoodsBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var rwAdapter: AsseblyOrderTableGoodsAdapter
+    private lateinit var rwAdapter: AssemblyOrderTableGoodsAdapter
     private lateinit var rwTableGoods: RecyclerView
 
     val model: AssemblyOrderViewModel by activityViewModels() {
@@ -42,7 +42,7 @@ class AssemblyOrderTableGoodsFragment : Fragment() {
         _binding = FragmentAssemblyOrderTableGoodsBinding.inflate(inflater, container, false)
 
 
-        rwAdapter = AsseblyOrderTableGoodsAdapter(model.assemblyOrderTableGoodsWithProducts)
+        rwAdapter = AssemblyOrderTableGoodsAdapter(model.assemblyOrderTableGoodsWithProducts)
         rwTableGoods = binding.root.findViewById<RecyclerView>(R.id.rwGoods)
         rwTableGoods.layoutManager = LinearLayoutManager(context)
         rwTableGoods.adapter = rwAdapter

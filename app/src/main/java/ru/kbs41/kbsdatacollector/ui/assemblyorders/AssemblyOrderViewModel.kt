@@ -31,7 +31,6 @@ class AssemblyOrderViewModel(id: Long) : ViewModel() {
     val assemblyOrderWithTables: LiveData<List<AssemblyOrderWithTables>> =
         repository.getAssemblyOrderWithTables(id).asLiveData()
 
-
 }
 
 class AssemblyOrderViewModelFactory(private val id: Long) : ViewModelProvider.Factory {

@@ -49,15 +49,15 @@ class AsseblyOrderTableStampsAdapter(
 
         init {
             itemView.setOnClickListener {
-                val intent = Intent(context, AssemblyOrderActivity::class.java)
-                intent.putExtra(
-                    "AssemblyOrderId",
-                    list.value!![adapterPosition].assemblyOrderTableStamps.id
-                )
-                ContextCompat.startActivity(context, intent, null)
+                /*
+                 val intent = Intent(context, AssemblyOrderActivity::class.java)
+                 intent.putExtra(
+                     "AssemblyOrderId",
+                     list.value!![adapterPosition].assemblyOrderTableStamps.id
+                 )
+                 ContextCompat.startActivity(context, intent, null)
+             */
             }
         }
-
     }
-
 }

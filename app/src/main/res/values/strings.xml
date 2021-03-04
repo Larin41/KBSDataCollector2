@@ -21,4 +21,8 @@
     <string name="collected">Собрано:</string>
     <string name="out_of">из</string>
     <string name="assembly_order_stamps">МАРКИ</string>
+    <string name="title_activity_stamps_reading">StampsReading</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="information">ИНФОРМАЦИЯ</string>
 </resources>

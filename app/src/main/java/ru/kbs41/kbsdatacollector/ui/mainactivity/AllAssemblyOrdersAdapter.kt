@@ -1,4 +1,4 @@
-package ru.kbs41.kbsdatacollector.ui.main
+package ru.kbs41.kbsdatacollector.ui.mainactivity
 
 import android.content.Context
 import android.content.Intent
