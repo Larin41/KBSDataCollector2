@@ -3,6 +3,7 @@ package ru.kbs41.kbsdatacollector.room.dao
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
+import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderWithTables
 
 @Dao
 interface AssemblyOrderDao {
@@ -24,5 +25,8 @@ interface AssemblyOrderDao {
 
     @Query("SELECT * FROM assembly_orders WHERE guid = :guid")
     fun getAssemblyOrderByGuid(guid: String): List<AssemblyOrder>
+
+    @Query("SELECT * FROM ASSEMBLY_ORDERS WHERE :id")
+    fun getAssemblyOrderWithTables(id: Long): Flow<List<AssemblyOrderWithTables>>
 
 }

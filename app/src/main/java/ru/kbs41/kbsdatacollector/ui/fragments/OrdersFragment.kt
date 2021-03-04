@@ -33,11 +33,15 @@ class OrdersFragment : Fragment() {
     private lateinit var rwOrders: RecyclerView
     private lateinit var rwAdapter: OrdersAdapter
 
+    private lateinit var btn: Button
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
 
         rootView = inflater.inflate(R.layout.orders_fragment, container, false)
 
@@ -46,7 +50,7 @@ class OrdersFragment : Fragment() {
         rwOrders.layoutManager = LinearLayoutManager(context)
         rwOrders.adapter = rwAdapter
 
-
+        btn = rootView.findViewById(R.id.btnSexy)
 /*
         model.test.observe(viewLifecycleOwner, Observer<String> { string ->
             btn.text = string
@@ -62,13 +66,11 @@ class OrdersFragment : Fragment() {
         })
 
 
-        /*
+
         btn.setOnClickListener{
             model.test.value = model.test.value + "1"
             activity?.let { ExchangeMaster().getData(it.application) }
         }
-
-         */
 
         /*
         model.test.observe(viewLifecycleOwner, Observer<List<AssemblyOrder>> { orders ->

@@ -16,7 +16,7 @@ interface AssemblyOrderTableGoodsDao {
     @Query("SELECT * FROM assembly_orders_table_goods WHERE assemblyOrderId = :assemblyOrderId ORDER BY `row`")
     fun getTableGoodsByDocId(assemblyOrderId: Long): Flow<List<AssemblyOrderTableGoods>>
 
-    @Query("SELECT * FROM assembly_orders_table_goods WHERE sourceGuid = :sourceGuid ORDER BY `row`")
-    fun deleteTableBySourceGuid(sourceGuid: String): Flow<List<AssemblyOrderTableGoods>>
+    @Query("DELETE FROM assembly_orders_table_goods WHERE assemblyOrderId = :id")
+    fun deleteByAssemblyOrderId(id: Long)
 
 }

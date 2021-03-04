@@ -55,7 +55,7 @@ class ExchangeMaster {
         }
     }
 
-    suspend fun insertAssemblyOrder(i: DataJSON.Order, database: AppDatabase) {
+    private suspend fun insertAssemblyOrder(i: DataJSON.Order, database: AppDatabase) {
 
         val assemblyOrderDao = database.assemblyOrderDao()
         val assemblyOrderTableGoodsDao = database.assemblyOrderTableGoodsDao()
@@ -90,7 +90,7 @@ class ExchangeMaster {
         }
 
         //СНАЧАЛА УДАЛЯЕМ ВСЁ НАХ
-        assemblyOrderTableGoodsDao.deleteTableBySourceGuid(i.guid)
+        assemblyOrderTableGoodsDao.deleteByAssemblyOrderId(orderId)
 
         for (t in i.tableGoods) {
 
@@ -111,7 +111,7 @@ class ExchangeMaster {
 
     }
 
-    suspend fun insertProduct(i: DataJSON.Good, database: AppDatabase) {
+    private suspend fun insertProduct(i: DataJSON.Good, database: AppDatabase) {
 
         val productDao = database.productDao()
         val barcodeDao = database.barcodeDao()

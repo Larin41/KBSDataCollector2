@@ -12,6 +12,5 @@ data class AssemblyOrderTableGoods(
     val qtyCollected: Double,
     val assemblyOrderId: Long,
     val ProductId: Long
-    //@Embedded val Product: Product?
 ) {
 }
