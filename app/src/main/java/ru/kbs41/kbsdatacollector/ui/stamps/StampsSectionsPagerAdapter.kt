@@ -5,9 +5,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import ru.kbs41.kbsdatacollector.R
-import ru.kbs41.kbsdatacollector.ui.assemblyorders.AssemblyOrderFragment
-import ru.kbs41.kbsdatacollector.ui.assemblyorders.AssemblyOrderTableGoodsFragment
-import ru.kbs41.kbsdatacollector.ui.assemblyorders.AssemblyOrderTableStampsFragment
 
 private val TAB_TITLES = arrayOf(
     R.string.information,
@@ -24,10 +21,10 @@ class StampsSectionsPagerAdapter(private val context: Context, fm: FragmentManag
 
     override fun getItem(position: Int): Fragment {
         return when(position){
-            0 -> StampsFragment()
-            1 -> StampsFragment()
+            0 -> StampsFragmentInfo()
+            1 -> StampsFragmentRw()
             else -> {
-                StampsFragment()
+                StampsFragmentInfo()
             }
         }
     }
@@ -37,7 +34,6 @@ class StampsSectionsPagerAdapter(private val context: Context, fm: FragmentManag
     }
 
     override fun getCount(): Int {
-        // Show 2 total pages.
         return 2
     }
 }

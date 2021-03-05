@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KBSDataCollector">
         <activity
-            android:name=".ui.stamps.StampsReading"
+            android:name=".ui.stamps.StampsReadingActivity"
             android:label="@string/title_activity_stamps_reading"
             android:theme="@style/Theme.KBSDataCollector.NoActionBar"></activity>
         <activity

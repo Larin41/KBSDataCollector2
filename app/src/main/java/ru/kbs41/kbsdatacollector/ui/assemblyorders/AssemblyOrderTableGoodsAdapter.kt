@@ -11,7 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithProducts
-import ru.kbs41.kbsdatacollector.ui.stamps.StampsReading
+import ru.kbs41.kbsdatacollector.ui.stamps.StampsReadingActivity
 
 
 class AssemblyOrderTableGoodsAdapter(
@@ -55,7 +55,7 @@ class AssemblyOrderTableGoodsAdapter(
 
         init {
             itemView.setOnClickListener {
-                val intent = Intent(context, StampsReading::class.java)
+                val intent = Intent(context, StampsReadingActivity::class.java)
                 intent.putExtra("productId", list.value!![adapterPosition].assemblyOrderTableGoods.productId)
                 intent.putExtra("docId", list.value!![adapterPosition].assemblyOrderTableGoods.assemblyOrderId)
                 intent.putExtra("qty", list.value!![adapterPosition].assemblyOrderTableGoods.qty)

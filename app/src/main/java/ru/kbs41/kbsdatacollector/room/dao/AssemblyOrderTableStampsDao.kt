@@ -30,4 +30,8 @@ interface AssemblyOrderTableStampsDao {
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :id ORDER BY id")
     fun getAssemblyOrderTableStampsWithProducts(id: Long): Flow<List<AssemblyOrderTableStampsWithProducts>>
 
+    @Transaction
+    @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId AND ProductId = :productId ORDER BY id")
+    fun getTableStampsByDocIdAndProductIdWithProducts(assemblyOrderId: Long, productId: Long): Flow<List<AssemblyOrderTableStampsWithProducts>>
+
 }

@@ -8,20 +8,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
-import ru.kbs41.kbsdatacollector.CommonFunctions
-import ru.kbs41.kbsdatacollector.databinding.FragmentStampsBinding
 
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
+import ru.kbs41.kbsdatacollector.databinding.FragmentStampsInfoBinding
+
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
 import ru.kbs41.kbsdatacollector.ui.mainactivity.AllAssemblyOrdersAdapter
 
 
-/**
- * A placeholder fragment containing a simple view.
- */
-class StampsFragment : Fragment() {
+class StampsFragmentInfo : Fragment() {
 
-    private var _binding: FragmentStampsBinding? = null
+    private var _binding: FragmentStampsInfoBinding? = null
     private val binding get() = _binding!!
 
 
@@ -47,7 +43,7 @@ class StampsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentStampsBinding.inflate(inflater, container, false)
+        _binding = FragmentStampsInfoBinding.inflate(inflater, container, false)
         val root = binding.root
 
         qty = requireActivity().intent.getDoubleExtra("qty", 0.toDouble())
@@ -58,12 +54,15 @@ class StampsFragment : Fragment() {
 
         model.product.observe(viewLifecycleOwner) {
             binding.product = it[0].name
-            binding.qtyCollected = tableStamps?.size.toString()
+            if (tableStamps == null) {
+                binding.qtyCollected = "0"
+            } else {
+                binding.qtyCollected = tableStamps?.size.toString()
+            }
         }
 
         model.tableStamps.observe(
-            viewLifecycleOwner,
-            Observer<List<AssemblyOrderTableStamps>> { list ->
+            viewLifecycleOwner, { list ->
                 list.let {
                     binding.qtyCollected = it.size.toString()
                 }
@@ -75,8 +74,8 @@ class StampsFragment : Fragment() {
         private const val ARG_SECTION_NUMBER = "section_number"
 
         @JvmStatic
-        fun newInstance(sectionNumber: Int): StampsFragment {
-            return StampsFragment().apply {
+        fun newInstance(sectionNumber: Int): StampsFragmentInfo {
+            return StampsFragmentInfo().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_SECTION_NUMBER, sectionNumber)
                 }

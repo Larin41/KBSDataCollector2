@@ -1,20 +1,43 @@
 package ru.kbs41.kbsdatacollector.ui.stamps
 
 import androidx.lifecycle.*
-import kotlinx.coroutines.flow.Flow
 import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderFullRepository
-import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModel
 
-class StampsViewModel(docId: Long, productId: Long) : ViewModel() {
+class StampsViewModel(_docId: Long, _productId: Long) : ViewModel() {
+
+
+    val docId = _docId
+    val productId = _productId
 
     val repository = AssemblyOrderFullRepository()
 
     val product: LiveData<List<Product>> = repository.getProduct(productId).asLiveData()
 
+    val tableStampsWithProducts: LiveData<List<AssemblyOrderTableStampsWithProducts>> =
+        repository.getAssemblyOrderTableStampsByAssemblyOrderIdAndProductIdWithProducts(docId, productId).asLiveData()
+
     val tableStamps: LiveData<List<AssemblyOrderTableStamps>> =
         repository.getAssemblyOrderTableStampsByAssemblyOrderIdAndProductId(docId, productId)
             .asLiveData()
+
+
+    suspend fun insertNewStamp(barcode: String) {
+
+        val item = product.value?.get(0)?.let {
+            AssemblyOrderTableStamps(
+                0,
+                barcode,
+                docId,
+                productId
+            )
+        }
+
+        if (item != null) {
+            repository.insertAssemblyOrderTableStamps(item)
+        }
+
+    }
 
 }
 

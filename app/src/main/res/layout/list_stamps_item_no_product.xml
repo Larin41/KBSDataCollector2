@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/tvNumber"
-            style="@style/TextAppearance.MaterialComponents.Subtitle1"
+            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -23,17 +23,6 @@
             tools:text="1" />
 
         <TextView
-            android:id="@+id/tvProduct"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tvNumber"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Автошина для Камаза и белаза и дургой подзалупной хуйни" />
-
-        <TextView
             android:id="@+id/tvStamp"
             style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="0dp"
@@ -41,7 +30,7 @@
             android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tvNumber"
-            app:layout_constraintTop_toBottomOf="@id/tvProduct"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="515135135154646d54sa654d65a4s6fg51as5g1a3d54as1das6d51sa5115d1a3s51d35sa" />
 
 

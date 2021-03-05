@@ -41,8 +41,6 @@ class OrdersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-
-
         rootView = inflater.inflate(R.layout.orders_fragment, container, false)
 
         rwAdapterAllAssembly = AllAssemblyOrdersAdapter(model.allOrders)
@@ -51,32 +49,16 @@ class OrdersFragment : Fragment() {
         rwOrders.adapter = rwAdapterAllAssembly
 
         btn = rootView.findViewById(R.id.btnSexy)
-/*
-        model.test.observe(viewLifecycleOwner, Observer<String> { string ->
-            btn.text = string
-        })
-
- */
-
-
 
         model.allOrders.observe(viewLifecycleOwner, Observer<List<AssemblyOrder>> { list ->
             list.let {
                 rwAdapterAllAssembly.notifyDataSetChanged() }
         })
 
-
-
         btn.setOnClickListener{
             model.test.value = model.test.value + "1"
             activity?.let { ExchangeMaster().getData(it.application) }
         }
-
-        /*
-        model.test.observe(viewLifecycleOwner, Observer<List<AssemblyOrder>> { orders ->
-            //Toast.makeText(context, orders.size.toString(), Toast.LENGTH_SHORT).show()
-        })
-         */
 
         return rootView
     }

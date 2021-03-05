@@ -15,10 +15,6 @@ import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStampsWithProducts
 import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModel
 import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModelFactory
 
-
-/**
- * A placeholder fragment containing a simple view.
- */
 class AssemblyOrderTableStampsFragment : Fragment() {
 
     private var _binding: FragmentAssemblyOrderTableGoodsBinding? = null
@@ -27,12 +23,8 @@ class AssemblyOrderTableStampsFragment : Fragment() {
     private lateinit var rwAdapter: AsseblyOrderTableStampsAdapter
     private lateinit var rwTableGoods: RecyclerView
 
-    val model: AssemblyOrderViewModel by activityViewModels() {
+    private val model: AssemblyOrderViewModel by activityViewModels() {
         AssemblyOrderViewModelFactory(requireActivity().intent.getLongExtra("AssemblyOrderId", 0))
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -43,13 +35,13 @@ class AssemblyOrderTableStampsFragment : Fragment() {
 
 
         rwAdapter = AsseblyOrderTableStampsAdapter(model.assemblyOrderTableStampsWithProducts)
-        rwTableGoods = binding.root.findViewById<RecyclerView>(R.id.rwGoods)
+        rwTableGoods = binding.root.findViewById(R.id.rwGoods)
         rwTableGoods.layoutManager = LinearLayoutManager(context)
         rwTableGoods.adapter = rwAdapter
 
         model.assemblyOrderTableStampsWithProducts.observe(
             viewLifecycleOwner,
-            Observer<List<AssemblyOrderTableStampsWithProducts>> { list ->
+            { list ->
                 list.let {
                     rwAdapter.notifyDataSetChanged()
                 }

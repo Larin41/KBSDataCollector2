@@ -44,12 +44,16 @@ class AssemblyOrderFullRepository() {
         return assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductId(docId, productId)
     }
 
+    fun getAssemblyOrderTableStampsByAssemblyOrderIdAndProductIdWithProducts(docId: Long, productId: Long): Flow<List<AssemblyOrderTableStampsWithProducts>> {
+        return assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductIdWithProducts(docId, productId)
+    }
+
     fun getAssemblyOrderTableStampsWithProducts(id: Long): Flow<List<AssemblyOrderTableStampsWithProducts>> {
         return assemblyOrderTableStampsDao.getAssemblyOrderTableStampsWithProducts(id)
     }
 
-    suspend fun insertStamp(stamp: Stamp){
-        stampDao.insert(stamp)
+    suspend fun insertAssemblyOrderTableStamps(item: AssemblyOrderTableStamps){
+        assemblyOrderTableStampsDao.insert(item)
     }
 
 }
