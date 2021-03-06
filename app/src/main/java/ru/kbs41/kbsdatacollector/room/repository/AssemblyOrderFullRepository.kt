@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.take
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.room.AppDatabase
 import ru.kbs41.kbsdatacollector.room.db.*
+import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithProducts
+import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
+import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableStampsWithProducts
 
 class AssemblyOrderFullRepository() {
 
@@ -18,7 +21,7 @@ class AssemblyOrderFullRepository() {
     val productDao = database.productDao()
 
 
-    fun getProduct(id: Long): Flow<List<Product>> {
+    fun getProduct(id: Long): Flow<Product> {
         return productDao.getProductById(id).take(1)
     }
 
@@ -42,12 +45,21 @@ class AssemblyOrderFullRepository() {
         return assemblyOrderTableStampsDao.getTableStampsByDocId(id)
     }
 
-    fun getAssemblyOrderTableStampsByAssemblyOrderIdAndProductId(docId: Long, productId: Long): Flow<List<AssemblyOrderTableStamps>> {
+    fun getAssemblyOrderTableStampsByAssemblyOrderIdAndProductId(
+        docId: Long,
+        productId: Long
+    ): Flow<List<AssemblyOrderTableStamps>> {
         return assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductId(docId, productId)
     }
 
-    fun getAssemblyOrderTableStampsByAssemblyOrderIdAndProductIdWithProducts(docId: Long, productId: Long): Flow<List<AssemblyOrderTableStampsWithProducts>> {
-        return assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductIdWithProducts(docId, productId)
+    fun getAssemblyOrderTableStampsByAssemblyOrderIdAndProductIdWithProducts(
+        docId: Long,
+        productId: Long
+    ): Flow<List<AssemblyOrderTableStampsWithProducts>> {
+        return assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductIdWithProducts(
+            docId,
+            productId
+        )
     }
 
     fun getAssemblyOrderTableStampsByAssemblyOrderIdWithProducts(docId: Long): Flow<List<AssemblyOrderTableStampsWithProducts>> {
@@ -58,11 +70,11 @@ class AssemblyOrderFullRepository() {
         return assemblyOrderTableStampsDao.getAssemblyOrderTableStampsWithProducts(assemblyOrderId)
     }
 
-    suspend fun insertAssemblyOrderTableStamps(item: AssemblyOrderTableStamps){
+    suspend fun insertAssemblyOrderTableStamps(item: AssemblyOrderTableStamps) {
         assemblyOrderTableStampsDao.insert(item)
     }
 
-    fun getTest(docId: Long): Flow<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>> {
+    fun getTableGoodsWithStamps(docId: Long): Flow<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>> {
 
         val queryText: String = """
                SELECT

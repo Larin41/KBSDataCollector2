@@ -4,8 +4,8 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import kotlinx.coroutines.flow.Flow
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoods
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithProducts
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
+import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithProducts
+import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
 
 @Dao

@@ -1,10 +1,10 @@
 package ru.kbs41.kbsdatacollector.ui.assemblyorders
 
 import androidx.lifecycle.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.room.db.*
+import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithProducts
+import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
+import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableStampsWithProducts
 import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderFullRepository
 
 class AssemblyOrderViewModel() : ViewModel() {
@@ -28,7 +28,7 @@ class AssemblyOrderViewModel() : ViewModel() {
 
     fun initProperties(docId: Long) {
 
-        tableQtyQtyCollected = repository.getTest(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
+        tableQtyQtyCollected = repository.getTableGoodsWithStamps(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
 
         assemblyOrders = repository.getAssemblyOrder(docId).asLiveData() as MutableLiveData<List<AssemblyOrder>>
         tableGoods = repository.getAssemblyOrderTableGoods(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableGoods>>

@@ -1,8 +1,9 @@
-package ru.kbs41.kbsdatacollector.room.db
+package ru.kbs41.kbsdatacollector.room.db.pojo
 
 import androidx.room.Embedded
-import androidx.room.Entity
 import androidx.room.Relation
+import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoods
+import ru.kbs41.kbsdatacollector.room.db.Product
 
 
 data class AssemblyOrderTableGoodsWithProducts(

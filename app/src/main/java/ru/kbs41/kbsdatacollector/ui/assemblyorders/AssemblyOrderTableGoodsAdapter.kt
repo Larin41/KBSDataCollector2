@@ -2,6 +2,8 @@ package ru.kbs41.kbsdatacollector.ui.assemblyorders
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +11,15 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.withContext
+import ru.kbs41.kbsdatacollector.CommonFunctions
 import ru.kbs41.kbsdatacollector.R
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithProducts
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
+import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
 import ru.kbs41.kbsdatacollector.ui.stamps.StampsReadingActivity
 
 
 class AssemblyOrderTableGoodsAdapter(
+    private val context: Context,
     private val list: LiveData<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
 ) : RecyclerView.Adapter<AssemblyOrderTableGoodsAdapter.OrdersViewHolder>() {
 
@@ -28,11 +32,16 @@ class AssemblyOrderTableGoodsAdapter(
     override fun onBindViewHolder(holder: OrdersViewHolder, position: Int) {
         val currentItem = list.value!![position]
 
-
         holder.number.text = currentItem.row.toString()
         holder.product.text = currentItem.productName
-        holder.qty.text = currentItem.qty.toString()
-        holder.qtyCollected.text = currentItem.qtyCollected.toString()
+        holder.qty.text = CommonFunctions.getFormattedNumber(currentItem.qty)
+        holder.qtyCollected.text = CommonFunctions.getFormattedNumber(currentItem.qtyCollected)
+        if (currentItem.qty == currentItem.qtyCollected){
+            holder.qtyCollected.setTextColor(ContextCompat.getColor(context, R.color.teal_700))
+        } else {
+            holder.qtyCollected.setTextColor(ContextCompat.getColor(context, R.color.red))
+        }
+
 
     }
 

@@ -24,7 +24,7 @@ class StampsSectionsPagerAdapter(private val context: Context, fm: FragmentManag
             0 -> StampsFragmentInfo()
             1 -> StampsFragmentRw()
             else -> {
-                StampsFragmentInfo()
+                StampsFragmentRw()
             }
         }
     }

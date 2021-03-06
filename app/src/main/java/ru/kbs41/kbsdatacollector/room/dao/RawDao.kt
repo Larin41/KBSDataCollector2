@@ -5,7 +5,7 @@ import androidx.room.RawQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import kotlinx.coroutines.flow.Flow
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoods
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
+import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
 
 
@@ -15,8 +15,6 @@ interface RawDao {
 
     @RawQuery(observedEntities = [AssemblyOrderTableGoods::class, AssemblyOrderTableStamps::class])
     fun getTableGoods(query: SupportSQLiteQuery): Flow<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
-
-
 
 
 }

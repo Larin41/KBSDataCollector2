@@ -8,8 +8,7 @@ import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.R
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStampsWithProducts
+import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableStampsWithProducts
 
 
 class AssemblyOrderTableStampsAdapter(
