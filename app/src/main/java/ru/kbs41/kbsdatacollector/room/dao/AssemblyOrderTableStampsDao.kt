@@ -22,16 +22,19 @@ interface AssemblyOrderTableStampsDao {
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId ORDER BY id")
     fun getTableStampsByDocId(assemblyOrderId: Long): Flow<List<AssemblyOrderTableStamps>>
 
-
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId AND ProductId = :productId ORDER BY id")
     fun getTableStampsByDocIdAndProductId(assemblyOrderId: Long, productId: Long): Flow<List<AssemblyOrderTableStamps>>
 
     @Transaction
-    @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :id ORDER BY id")
-    fun getAssemblyOrderTableStampsWithProducts(id: Long): Flow<List<AssemblyOrderTableStampsWithProducts>>
+    @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId ORDER BY id")
+    fun getAssemblyOrderTableStampsWithProducts(assemblyOrderId: Long): Flow<List<AssemblyOrderTableStampsWithProducts>>
 
     @Transaction
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId AND ProductId = :productId ORDER BY id")
     fun getTableStampsByDocIdAndProductIdWithProducts(assemblyOrderId: Long, productId: Long): Flow<List<AssemblyOrderTableStampsWithProducts>>
+
+    @Transaction
+    @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId ORDER BY id")
+    fun getTableStampsByDocIdWithProducts(assemblyOrderId: Long): Flow<List<AssemblyOrderTableStampsWithProducts>>
 
 }

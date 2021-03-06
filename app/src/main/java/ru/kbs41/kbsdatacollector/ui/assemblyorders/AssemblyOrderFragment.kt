@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.CommonFunctions
 import ru.kbs41.kbsdatacollector.databinding.FragmentAssemblyOrderBinding
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
-import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModel
-import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModelFactory
 import ru.kbs41.kbsdatacollector.ui.mainactivity.AllAssemblyOrdersAdapter
 
 
@@ -29,9 +29,7 @@ class AssemblyOrderFragment : Fragment() {
     private lateinit var rwOrders: RecyclerView
     private lateinit var rwAdapterAllAssembly: AllAssemblyOrdersAdapter
 
-    private val model: AssemblyOrderViewModel by activityViewModels() {
-        AssemblyOrderViewModelFactory(requireActivity().intent.getLongExtra("AssemblyOrderId", 0))
-    }
+    private val model: AssemblyOrderViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

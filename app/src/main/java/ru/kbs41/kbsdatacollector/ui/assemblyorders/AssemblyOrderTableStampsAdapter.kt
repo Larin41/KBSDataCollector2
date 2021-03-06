@@ -1,21 +1,20 @@
 package ru.kbs41.kbsdatacollector.ui.assemblyorders
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.R
+import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStampsWithProducts
 
 
-class AsseblyOrderTableStampsAdapter(
+class AssemblyOrderTableStampsAdapter(
     private val list: LiveData<List<AssemblyOrderTableStampsWithProducts>>
-) : RecyclerView.Adapter<AsseblyOrderTableStampsAdapter.OrdersViewHolder>() {
+) : RecyclerView.Adapter<AssemblyOrderTableStampsAdapter.OrdersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersViewHolder {
         val itemView =
@@ -24,17 +23,17 @@ class AsseblyOrderTableStampsAdapter(
     }
 
     override fun onBindViewHolder(holder: OrdersViewHolder, position: Int) {
-        val currentItem = list.value!![position].assemblyOrderTableStamps
-        val currentProduct = list.value!![position].product
+        val currentItem = list.value?.get(position)?.assemblyOrderTableStamps
+        val currentProduct = list.value?.get(position)?.product
 
-        holder.product.text = currentProduct.name
-        holder.stamp.text = currentItem.barcode
+        holder.product.text = currentProduct?.name
+        holder.stamp.text = currentItem?.barcode
 
     }
 
     override fun getItemCount(): Int {
         var size: Int = 0
-        if (list.value != null) {
+        if (list.value?.isEmpty() == false) {
             size = list.value!!.size
         }
 

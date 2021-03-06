@@ -1,19 +1,22 @@
 package ru.kbs41.kbsdatacollector.ui.assemblyorders
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.databinding.FragmentAssemblyOrderTableGoodsBinding
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithProducts
-import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModel
-import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModelFactory
 
 
 /**
@@ -27,9 +30,7 @@ class AssemblyOrderTableGoodsFragment : Fragment() {
     private lateinit var rwAdapter: AssemblyOrderTableGoodsAdapter
     private lateinit var rwTableGoods: RecyclerView
 
-    val model: AssemblyOrderViewModel by activityViewModels() {
-        AssemblyOrderViewModelFactory(requireActivity().intent.getLongExtra("AssemblyOrderId", 0))
-    }
+    private val model: AssemblyOrderViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,18 +43,19 @@ class AssemblyOrderTableGoodsFragment : Fragment() {
         _binding = FragmentAssemblyOrderTableGoodsBinding.inflate(inflater, container, false)
 
 
-        rwAdapter = AssemblyOrderTableGoodsAdapter(model.assemblyOrderTableGoodsWithProducts)
+        rwAdapter = AssemblyOrderTableGoodsAdapter(model.tableQtyQtyCollected)
         rwTableGoods = binding.root.findViewById<RecyclerView>(R.id.rwGoods)
         rwTableGoods.layoutManager = LinearLayoutManager(context)
         rwTableGoods.adapter = rwAdapter
 
-        model.assemblyOrderTableGoodsWithProducts.observe(
+        model.tableQtyQtyCollected.observe(
             viewLifecycleOwner,
-            Observer<List<AssemblyOrderTableGoodsWithProducts>> { list ->
-                list.let {
+            {
+                it.let {
                     rwAdapter.notifyDataSetChanged()
                 }
             })
+
 
         return binding.root
     }

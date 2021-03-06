@@ -15,7 +15,7 @@ data class AssemblyOrderWithTables(
 
     @Relation(
         parentColumn = "id",
-        entityColumn = "AssemblyOrderId"
+        entityColumn = "assemblyOrderId"
     )
     val tableStamps: List<AssemblyOrderTableStamps>
 

@@ -6,19 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.R
 
-import ru.kbs41.kbsdatacollector.databinding.FragmentStampsInfoBinding
 import ru.kbs41.kbsdatacollector.databinding.FragmentStampsRwBinding
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithProducts
-
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
-import ru.kbs41.kbsdatacollector.ui.assemblyorders.AsseblyOrderTableStampsAdapter
-import ru.kbs41.kbsdatacollector.ui.assemblyorders.AssemblyOrderTableGoodsAdapter
-import ru.kbs41.kbsdatacollector.ui.mainactivity.AllAssemblyOrdersAdapter
 
 
 class StampsFragmentRw : Fragment() {
@@ -27,16 +19,12 @@ class StampsFragmentRw : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var rootView: View
-    private lateinit var rwAdapter: AsseblyOrderTableStampsNoProductAdapter
+    private lateinit var rwAdapter: AssemblyOrderTableStampsNoProductAdapter
     private lateinit var rwTableGoods: RecyclerView
 
     private var qty: Double = 0.toDouble()
 
-    private val model: StampsViewModel by activityViewModels() {
-        val docId = requireActivity().intent.getLongExtra("AssemblyOrderId", 0)
-        val productId = requireActivity().intent.getLongExtra("productId", 0)
-        StampsViewModelFactory(docId, productId)
-    }
+    private val model: StampsViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +43,7 @@ class StampsFragmentRw : Fragment() {
         _binding = FragmentStampsRwBinding.inflate(inflater, container, false)
         val root = binding.root
 
-        rwAdapter = AsseblyOrderTableStampsNoProductAdapter(model.tableStampsWithProducts)
+        rwAdapter = AssemblyOrderTableStampsNoProductAdapter(model.tableStampsWithProducts)
         rwTableGoods = binding.root.findViewById<RecyclerView>(R.id.rwStamps)
         rwTableGoods.layoutManager = LinearLayoutManager(context)
         rwTableGoods.adapter = rwAdapter
@@ -65,7 +53,9 @@ class StampsFragmentRw : Fragment() {
             { list ->
                 list.let {
                     rwAdapter.notifyDataSetChanged()
-                    rwTableGoods.smoothScrollToPosition(model.tableStamps.value!!.size - 1)
+                    if (model.tableStamps.value!!.isNotEmpty()) {
+                        rwTableGoods.smoothScrollToPosition(model.tableStamps.value!!.size - 1)
+                    }
                 }
             })
 

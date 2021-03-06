@@ -9,7 +9,7 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rwGoods"
+            android:id="@+id/rwAllStampsInDoc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:listitem="@layout/list_stamps_item" />

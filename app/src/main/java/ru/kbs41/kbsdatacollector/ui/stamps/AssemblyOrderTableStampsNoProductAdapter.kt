@@ -1,21 +1,19 @@
 package ru.kbs41.kbsdatacollector.ui.stamps
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStampsWithProducts
 
 
-class AsseblyOrderTableStampsNoProductAdapter(
+class AssemblyOrderTableStampsNoProductAdapter(
     private val list: LiveData<List<AssemblyOrderTableStampsWithProducts>>
-) : RecyclerView.Adapter<AsseblyOrderTableStampsNoProductAdapter.OrdersViewHolder>() {
+) : RecyclerView.Adapter<AssemblyOrderTableStampsNoProductAdapter.OrdersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersViewHolder {
         val itemView =

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class AssemblyOrderTableStamps(
     @PrimaryKey(autoGenerate = true) val id: Long,
     val barcode: String,
-    val AssemblyOrderId: Long,
+    val assemblyOrderId: Long,
     val productId: Long
 ) {
 }

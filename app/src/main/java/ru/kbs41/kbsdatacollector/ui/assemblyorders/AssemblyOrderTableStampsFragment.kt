@@ -6,46 +6,41 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.databinding.FragmentAssemblyOrderTableGoodsBinding
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStampsWithProducts
-import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModel
-import ru.kbs41.kbsdatacollector.ui.AssemblyOrderViewModelFactory
+import ru.kbs41.kbsdatacollector.databinding.FragmentAssemblyOrderTableStampsBinding
 
 class AssemblyOrderTableStampsFragment : Fragment() {
 
-    private var _binding: FragmentAssemblyOrderTableGoodsBinding? = null
+    private var _binding: FragmentAssemblyOrderTableStampsBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var rwAdapter: AsseblyOrderTableStampsAdapter
+    private lateinit var rwAdapter: AssemblyOrderTableStampsAdapter
     private lateinit var rwTableGoods: RecyclerView
 
-    private val model: AssemblyOrderViewModel by activityViewModels() {
-        AssemblyOrderViewModelFactory(requireActivity().intent.getLongExtra("AssemblyOrderId", 0))
-    }
+    private val model: AssemblyOrderViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentAssemblyOrderTableGoodsBinding.inflate(inflater, container, false)
+        _binding = FragmentAssemblyOrderTableStampsBinding.inflate(inflater, container, false)
 
-
-        rwAdapter = AsseblyOrderTableStampsAdapter(model.assemblyOrderTableStampsWithProducts)
-        rwTableGoods = binding.root.findViewById(R.id.rwGoods)
+        rwAdapter = AssemblyOrderTableStampsAdapter(model.assemblyOrderTableStampsWithProducts)
+        rwTableGoods = binding.root.findViewById(R.id.rwAllStampsInDoc)
         rwTableGoods.layoutManager = LinearLayoutManager(context)
         rwTableGoods.adapter = rwAdapter
 
         model.assemblyOrderTableStampsWithProducts.observe(
             viewLifecycleOwner,
-            { list ->
-                list.let {
+            {
+                it.let {
                     rwAdapter.notifyDataSetChanged()
                 }
             })
+
 
         return binding.root
     }

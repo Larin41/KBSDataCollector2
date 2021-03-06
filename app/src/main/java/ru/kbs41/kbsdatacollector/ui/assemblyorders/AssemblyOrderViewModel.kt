@@ -1,4 +1,4 @@
-package ru.kbs41.kbsdatacollector.ui
+package ru.kbs41.kbsdatacollector.ui.assemblyorders
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
@@ -6,33 +6,42 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderFullRepository
-import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderRepository
 
-class AssemblyOrderViewModel(id: Long) : ViewModel() {
-
+class AssemblyOrderViewModel() : ViewModel() {
 
     val repository = AssemblyOrderFullRepository()
 
-    val assemblyOrders: LiveData<List<AssemblyOrder>> = repository.getAssemblyOrder(id).asLiveData()
+    lateinit var assemblyOrders: MutableLiveData<List<AssemblyOrder>>
 
-    val tableGoods: LiveData<List<AssemblyOrderTableGoods>> =
-        repository.getAssemblyOrderTableGoods(id).asLiveData()
+    lateinit var tableGoods: MutableLiveData<List<AssemblyOrderTableGoods>>
 
-    val tableStamps: LiveData<List<AssemblyOrderTableStamps>> =
-        repository.getAssemblyOrderTableStamps(id).asLiveData()
+    lateinit var tableStamps: MutableLiveData<List<AssemblyOrderTableStamps>>
 
-    val assemblyOrderTableGoodsWithProducts: LiveData<List<AssemblyOrderTableGoodsWithProducts>> =
-        repository.getAssemblyOrderTableGoodsWithProducts(id).asLiveData()
+    lateinit var assemblyOrderTableGoodsWithProducts: MutableLiveData<List<AssemblyOrderTableGoodsWithProducts>>
 
-    val assemblyOrderTableStampsWithProducts: LiveData<List<AssemblyOrderTableStampsWithProducts>> =
-        repository.getAssemblyOrderTableStampsWithProducts(id).asLiveData()
+    lateinit var assemblyOrderTableStampsWithProducts: MutableLiveData<List<AssemblyOrderTableStampsWithProducts>>
 
-    //TODO: Это экспереминтальная функция, удалить в продакшане, если не задейстованно
-    val assemblyOrderWithTables: LiveData<List<AssemblyOrderWithTables>> =
-        repository.getAssemblyOrderWithTables(id).asLiveData()
+    lateinit var tableStampsWithProducts: MutableLiveData<List<AssemblyOrderTableStampsWithProducts>>
+
+    lateinit var tableQtyQtyCollected: MutableLiveData<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
+
+
+    fun initProperties(docId: Long) {
+
+        tableQtyQtyCollected = repository.getTest(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
+
+        assemblyOrders = repository.getAssemblyOrder(docId).asLiveData() as MutableLiveData<List<AssemblyOrder>>
+        tableGoods = repository.getAssemblyOrderTableGoods(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableGoods>>
+        tableStamps = repository.getAssemblyOrderTableStamps(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableStamps>>
+        assemblyOrderTableGoodsWithProducts = repository.getAssemblyOrderTableGoodsWithProducts(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableGoodsWithProducts>>
+        assemblyOrderTableStampsWithProducts = repository.getAssemblyOrderTableStampsWithProducts(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableStampsWithProducts>>
+        tableStampsWithProducts = repository.getAssemblyOrderTableStampsByAssemblyOrderIdWithProducts(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableStampsWithProducts>>
+
+    }
 
 }
 
+/*
 class AssemblyOrderViewModelFactory(private val id: Long) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AssemblyOrderViewModel::class.java)) {
@@ -42,3 +51,4 @@ class AssemblyOrderViewModelFactory(private val id: Long) : ViewModelProvider.Fa
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+*/

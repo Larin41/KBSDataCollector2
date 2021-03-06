@@ -11,11 +11,12 @@ import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithProducts
+import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
 import ru.kbs41.kbsdatacollector.ui.stamps.StampsReadingActivity
 
 
 class AssemblyOrderTableGoodsAdapter(
-    private val list: LiveData<List<AssemblyOrderTableGoodsWithProducts>>
+    private val list: LiveData<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
 ) : RecyclerView.Adapter<AssemblyOrderTableGoodsAdapter.OrdersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersViewHolder {
@@ -25,12 +26,11 @@ class AssemblyOrderTableGoodsAdapter(
     }
 
     override fun onBindViewHolder(holder: OrdersViewHolder, position: Int) {
-        val currentItem = list.value!![position].assemblyOrderTableGoods
-        val currentProduct = list.value!![position].product
+        val currentItem = list.value!![position]
 
 
         holder.number.text = currentItem.row.toString()
-        holder.product.text = currentProduct.name
+        holder.product.text = currentItem.productName
         holder.qty.text = currentItem.qty.toString()
         holder.qtyCollected.text = currentItem.qtyCollected.toString()
 
@@ -56,9 +56,9 @@ class AssemblyOrderTableGoodsAdapter(
         init {
             itemView.setOnClickListener {
                 val intent = Intent(context, StampsReadingActivity::class.java)
-                intent.putExtra("productId", list.value!![adapterPosition].assemblyOrderTableGoods.productId)
-                intent.putExtra("docId", list.value!![adapterPosition].assemblyOrderTableGoods.assemblyOrderId)
-                intent.putExtra("qty", list.value!![adapterPosition].assemblyOrderTableGoods.qty)
+                intent.putExtra("productId", list.value!![adapterPosition].productId)
+                intent.putExtra("docId", list.value!![adapterPosition].orderID)
+                intent.putExtra("qty", list.value!![adapterPosition].qty)
 
                 ContextCompat.startActivity(context, intent, null)
             }

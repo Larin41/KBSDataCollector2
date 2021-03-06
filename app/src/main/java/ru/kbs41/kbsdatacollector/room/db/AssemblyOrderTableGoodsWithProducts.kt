@@ -1,7 +1,9 @@
 package ru.kbs41.kbsdatacollector.room.db
 
 import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.Relation
+
 
 data class AssemblyOrderTableGoodsWithProducts(
 

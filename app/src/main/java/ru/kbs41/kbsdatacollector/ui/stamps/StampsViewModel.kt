@@ -4,23 +4,29 @@ import androidx.lifecycle.*
 import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderFullRepository
 
-class StampsViewModel(_docId: Long, _productId: Long) : ViewModel() {
-
-
-    val docId = _docId
-    val productId = _productId
+class StampsViewModel() : ViewModel() {
 
     val repository = AssemblyOrderFullRepository()
 
-    val product: LiveData<List<Product>> = repository.getProduct(productId).asLiveData()
+    lateinit var product: LiveData<List<Product>>
 
-    val tableStampsWithProducts: LiveData<List<AssemblyOrderTableStampsWithProducts>> =
-        repository.getAssemblyOrderTableStampsByAssemblyOrderIdAndProductIdWithProducts(docId, productId).asLiveData()
+    lateinit var tableStampsWithProducts: LiveData<List<AssemblyOrderTableStampsWithProducts>>
 
-    val tableStamps: LiveData<List<AssemblyOrderTableStamps>> =
-        repository.getAssemblyOrderTableStampsByAssemblyOrderIdAndProductId(docId, productId)
-            .asLiveData()
+    lateinit var tableStamps: LiveData<List<AssemblyOrderTableStamps>>
 
+    private var docId: Long = 0
+    private var productId: Long = 0
+
+    fun initProperties(_docId: Long, _productId: Long) {
+
+        docId = _docId
+        productId = _productId
+
+        product = repository.getProduct(productId).asLiveData()
+        tableStampsWithProducts = repository.getAssemblyOrderTableStampsByAssemblyOrderIdAndProductIdWithProducts(docId, productId).asLiveData()
+        tableStamps = repository.getAssemblyOrderTableStampsByAssemblyOrderIdAndProductId(docId, productId).asLiveData()
+
+    }
 
     suspend fun insertNewStamp(barcode: String) {
 
@@ -39,15 +45,4 @@ class StampsViewModel(_docId: Long, _productId: Long) : ViewModel() {
 
     }
 
-}
-
-class StampsViewModelFactory(private val docId: Long, private val productId: Long) :
-    ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(StampsViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return StampsViewModel(docId, productId) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
 }

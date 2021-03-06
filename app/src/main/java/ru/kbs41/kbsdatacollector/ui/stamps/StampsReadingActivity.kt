@@ -20,11 +20,7 @@ class StampsReadingActivity : AppCompatActivity() {
     private val receiverAtol = ReceiverAtol()
     private val receiverCaribe = ReceiverCaribe()
 
-    private val model: StampsViewModel by viewModels() {
-        val docId = intent.getLongExtra("AssemblyOrderId", 0)
-        val productId = intent.getLongExtra("productId", 0)
-        StampsViewModelFactory(docId, productId)
-    }
+    private val model: StampsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +30,11 @@ class StampsReadingActivity : AppCompatActivity() {
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.stamps_tabs)
         tabs.setupWithViewPager(viewPager)
+
+        val docId = intent.getLongExtra("docId", 0)
+        val productId = intent.getLongExtra("productId", 0)
+
+        model.initProperties(docId, productId)
 
     }
 

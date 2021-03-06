@@ -29,6 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun barcodeDao(): BarcodeDao
     abstract fun productDao(): ProductDao
     abstract fun stampDao(): StampDao
+    abstract fun rawDao(): RawDao
 
     companion object {
         @Volatile
@@ -41,6 +42,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "dc_database"
                 )
+                    .allowMainThreadQueries() //TODO: удалить перед публикацией
                     .build()
                 INSTANCE = instance
                 // return instance

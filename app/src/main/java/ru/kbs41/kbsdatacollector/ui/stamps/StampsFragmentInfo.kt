@@ -27,11 +27,7 @@ class StampsFragmentInfo : Fragment() {
 
     private var qty: Double = 0.toDouble()
 
-    private val model: StampsViewModel by activityViewModels() {
-        val docId = requireActivity().intent.getLongExtra("AssemblyOrderId", 0)
-        val productId = requireActivity().intent.getLongExtra("productId", 0)
-        StampsViewModelFactory(docId, productId)
-    }
+    private val model: StampsViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
