@@ -1,4 +1,4 @@
-package ru.kbs41.kbsdatacollector.ui.fragments
+package ru.kbs41.kbsdatacollector.ui.mainactivity
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -17,12 +17,11 @@ import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
 import ru.kbs41.kbsdatacollector.ui.MainViewModel
 import ru.kbs41.kbsdatacollector.ui.MainViewModelFactory
-import ru.kbs41.kbsdatacollector.ui.mainactivity.AllAssemblyOrdersAdapter
 
-class OrdersFragment : Fragment() {
+class OrderGoodsFragment : Fragment() {
 
     companion object {
-        fun newInstance() = OrdersFragment()
+        fun newInstance() = OrderGoodsFragment()
     }
 
     private val model: MainViewModel by activityViewModels{
@@ -32,7 +31,6 @@ class OrdersFragment : Fragment() {
     private lateinit var rootView: View
     private lateinit var rwOrders: RecyclerView
     private lateinit var rwAdapterAllAssembly: AllAssemblyOrdersAdapter
-
     private lateinit var btn: Button
 
 
@@ -41,24 +39,37 @@ class OrdersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        rootView = inflater.inflate(R.layout.orders_fragment, container, false)
+        rootView = inflater.inflate(R.layout.fragment_orders, container, false)
 
         rwAdapterAllAssembly = AllAssemblyOrdersAdapter(model.allOrders)
         rwOrders = rootView.findViewById<RecyclerView>(R.id.rwOrders)
         rwOrders.layoutManager = LinearLayoutManager(context)
         rwOrders.adapter = rwAdapterAllAssembly
 
-        btn = rootView.findViewById(R.id.btnSexy)
+
+
+        model.test.observe(viewLifecycleOwner, Observer<String> { string ->
+            btn.text = string
+        })
+
+
 
         model.allOrders.observe(viewLifecycleOwner, Observer<List<AssemblyOrder>> { list ->
             list.let {
                 rwAdapterAllAssembly.notifyDataSetChanged() }
         })
 
+
         btn.setOnClickListener{
             model.test.value = model.test.value + "1"
             activity?.let { ExchangeMaster().getData(it.application) }
         }
+
+        /*
+        model.test.observe(viewLifecycleOwner, Observer<List<AssemblyOrder>> { orders ->
+            //Toast.makeText(context, orders.size.toString(), Toast.LENGTH_SHORT).show()
+        })
+         */
 
         return rootView
     }

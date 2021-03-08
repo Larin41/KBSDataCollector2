@@ -5,6 +5,7 @@ plugins {
 }
 
 apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion 30
@@ -60,9 +61,11 @@ dependencies {
     // You'll probably have to update the version numbers in build.gradle (Project)
 
     // Room components
+    def room_version = "2.2.6"
     implementation "androidx.room:room-ktx:$rootProject.roomVersion"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
     androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
 
     // Lifecycle components
@@ -91,5 +94,13 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$version_retrofit"
 
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
+
+    //Navigation
+    def nav_version = "2.3.3"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    // Feature module Support
+    //implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
 
 }
