@@ -6,14 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.CommonFunctions
 
 import ru.kbs41.kbsdatacollector.databinding.FragmentStampsInfoBinding
-
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
-import ru.kbs41.kbsdatacollector.ui.mainactivity.AllAssemblyOrdersAdapter
 
 
 class StampsFragmentInfo : Fragment() {

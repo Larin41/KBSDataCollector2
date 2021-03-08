@@ -1,4 +1,4 @@
-package ru.kbs41.kbsdatacollector.ui.mainactivity
+package ru.kbs41.kbsdatacollector.ui.mainactivity.orders
 
 import android.content.Context
 import android.content.Intent

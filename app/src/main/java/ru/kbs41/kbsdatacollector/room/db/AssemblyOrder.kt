@@ -15,8 +15,5 @@ data class AssemblyOrder(
     val isCompleted: Boolean = false,
     val isSent: Boolean = false
 ) {
-    init {
-
-    }
 
 }

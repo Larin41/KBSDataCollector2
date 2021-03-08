@@ -8,9 +8,14 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
+import ru.kbs41.kbsdatacollector.ui.mainactivity.orders.OrdersFragment
+import ru.kbs41.kbsdatacollector.ui.mainactivity.settings_act.SettingsFragment
 
 
 class MainActivity : AppCompatActivity() {
+
+    private val ordersFragment = OrdersFragment()
+    private val settingsFragment = SettingsFragment()
 
     private lateinit var navView: NavigationView
     private lateinit var drawerLayout: DrawerLayout
@@ -20,24 +25,39 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //TODO: удалить getData(). Нужно для отладки
+        getData()
+
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.container, ordersFragment)
+            commit()
+
+
         navView = findViewById(R.id.navView)
         drawerLayout = findViewById(R.id.drawerLayout)
 
-        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_opened, R.string.nav_closed)
+        toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, R.string.nav_opened, R.string.nav_closed)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_orders -> supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.container, ordersFragment)
+                    commit()
+                }
+                R.id.nav_settings -> supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.container, settingsFragment)
+                    commit()
+                }
+            }
+            true
+        }
 
 
-        //TODO: удалить getData(). Нужно для отладки
-        getData()
-        val ordersFragment = OrdersFragment()
 
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.container, ordersFragment)
-            commit()
         }
     }
 

@@ -1,4 +1,4 @@
-package ru.kbs41.kbsdatacollector.ui
+package ru.kbs41.kbsdatacollector.ui.mainactivity.settings_act
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle

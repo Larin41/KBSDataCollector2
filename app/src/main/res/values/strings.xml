@@ -33,4 +33,10 @@
     <string name="information">ИНФОРМАЦИЯ</string>
     <string name="assembly_orders">Заказы на сборку</string>
     <string name="settings">Настройки</string>
+    <string name="settings_name">Наименование настройки</string>
+    <string name="server_address">Адрес сервера</string>
+    <string name="server_port">Порт</string>
+    <string name="user">Пользователь</string>
+    <string name="use_https">Использовать HTTPS</string>
+    <string name="password">Пароль</string>
 </resources>

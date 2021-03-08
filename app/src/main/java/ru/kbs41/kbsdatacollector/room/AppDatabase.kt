@@ -18,7 +18,8 @@ import ru.kbs41.kbsdatacollector.room.db.*
         AssemblyOrderTableStamps::class,
         Barcode::class,
         Product::class,
-        Stamp::class
+        Stamp::class,
+        Settings::class
     ], version = 1, exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -30,6 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun stampDao(): StampDao
     abstract fun rawDao(): RawDao
+    abstract fun settingsDao(): SettingsDao
 
     companion object {
         @Volatile
