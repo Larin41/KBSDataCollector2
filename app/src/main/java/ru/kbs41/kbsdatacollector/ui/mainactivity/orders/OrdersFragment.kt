@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.ui.MainViewModel
 
@@ -19,6 +20,13 @@ class OrdersFragment : Fragment() {
     }
 
     private val model: MainViewModel by activityViewModels()
+    /*
+    {
+        MainViewModelFactory(((activity?.application) as App).assemblyOrdersRepository)
+    }
+
+     */
+
 
     private lateinit var rootView: View
     private lateinit var rwOrders: RecyclerView

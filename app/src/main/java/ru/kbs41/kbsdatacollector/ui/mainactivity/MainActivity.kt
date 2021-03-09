@@ -7,8 +7,10 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
+import ru.kbs41.kbsdatacollector.room.AppDatabase
 import ru.kbs41.kbsdatacollector.ui.mainactivity.orders.OrdersFragment
 import ru.kbs41.kbsdatacollector.ui.mainactivity.settings.SettingsFragment
 
@@ -25,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        AppDatabase.getDatabase(application, null)
 
         //TODO: удалить getData(). Нужно для отладки
         getData()

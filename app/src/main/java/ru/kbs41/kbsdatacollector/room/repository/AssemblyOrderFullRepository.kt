@@ -14,7 +14,7 @@ import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableStampsWithProduc
 
 class AssemblyOrderFullRepository() {
 
-    val database: AppDatabase = App().getDatabase()
+    val database: AppDatabase = App().database
     val assemblyOrderDao = database.assemblyOrderDao()
     val assemblyOrderTableGoodsDao = database.assemblyOrderTableGoodsDao()
     val assemblyOrderTableStampsDao = database.assemblyOrderTableStampsDao()

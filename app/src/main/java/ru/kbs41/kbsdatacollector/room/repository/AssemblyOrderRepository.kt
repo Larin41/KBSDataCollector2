@@ -7,11 +7,12 @@ import ru.kbs41.kbsdatacollector.room.AppDatabase
 import ru.kbs41.kbsdatacollector.room.dao.AssemblyOrderDao
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
 
-class AssemblyOrderRepository(_assemblyOrderDao: AssemblyOrderDao) {
+class AssemblyOrderRepository() {
 
 
-    val assemblyOrderDao = _assemblyOrderDao
+
     val database: AppDatabase = App().database
+    val assemblyOrderDao = database.assemblyOrderDao()
     val allSortedAssemblyOrders: Flow<List<AssemblyOrder>> =
         assemblyOrderDao.getSortedNotCompletedFlow()
 

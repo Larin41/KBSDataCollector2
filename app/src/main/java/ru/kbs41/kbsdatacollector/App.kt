@@ -12,6 +12,5 @@ class App : Application() {
     val applicationScope = CoroutineScope(SupervisorJob())
     val database by lazy{ AppDatabase.getDatabase(this, applicationScope) }
     val productRepository by lazy { ProductRepository(database.productDao()) }
-    val assemblyOrdersRepository by lazy { AssemblyOrderRepository(database.assemblyOrderDao()) }
-
+    //val assemblyOrdersRepository by lazy { AssemblyOrderRepository(database.assemblyOrderDao()) }
 }
