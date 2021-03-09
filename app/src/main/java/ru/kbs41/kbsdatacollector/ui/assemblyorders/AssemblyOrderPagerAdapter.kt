@@ -7,9 +7,9 @@ import androidx.fragment.app.FragmentPagerAdapter
 import ru.kbs41.kbsdatacollector.R
 
 private val TAB_TITLES = arrayOf(
-    R.string.assembly_order_main,
     R.string.assembly_order_goods,
-    R.string.assembly_order_stamps
+    R.string.assembly_order_stamps,
+    R.string.information
 
 )
 
@@ -18,11 +18,11 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
 
     override fun getItem(position: Int): Fragment {
         return when(position){
-            0 -> AssemblyOrderFragment()
-            1 -> AssemblyOrderTableGoodsFragment()
-            2 -> AssemblyOrderTableStampsFragment()
+            0 -> AssemblyOrderTableGoodsFragment()
+            1 -> AssemblyOrderTableStampsFragment()
+            2 -> AssemblyOrderFragment()
             else -> {
-                AssemblyOrderFragment()
+                AssemblyOrderTableGoodsFragment()
             }
         }
     }

@@ -7,12 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import androidx.recyclerview.widget.RecyclerView
-import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.ui.MainViewModel
-import ru.kbs41.kbsdatacollector.ui.MainViewModelFactory
+
 
 class OrdersFragment : Fragment() {
 
@@ -20,14 +18,11 @@ class OrdersFragment : Fragment() {
         fun newInstance() = OrdersFragment()
     }
 
-    private val model: MainViewModel by activityViewModels {
-        MainViewModelFactory(((activity?.application) as App).assemblyOrdersRepository)
-    }
+    private val model: MainViewModel by activityViewModels()
 
     private lateinit var rootView: View
     private lateinit var rwOrders: RecyclerView
     private lateinit var rwAdapterAllAssembly: AllAssemblyOrdersAdapter
-
 
 
     override fun onCreateView(

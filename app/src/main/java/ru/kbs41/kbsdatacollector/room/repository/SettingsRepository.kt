@@ -7,7 +7,7 @@ import ru.kbs41.kbsdatacollector.room.db.Settings
 
 class SettingsRepository {
 
-    val database: AppDatabase = App().database
+    val database: AppDatabase = App().getDatabase()
     val settingsDao = database.settingsDao()
 
     fun getAllSettings(): Flow<List<Settings>> {

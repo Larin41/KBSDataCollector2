@@ -1,15 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/nav_orders"
-        android:title="@string/assembly_orders"/>
+    <group android:checkableBehavior="single">
+        <item android:title="@string/documents">
+            <menu>
+                <item
+                    android:id="@+id/nav_orders"
+                    android:icon="@drawable/ic_baseline_home_repair_service_24"
+                    android:title="@string/menu_orders" />
+                <item
+                    android:id="@+id/nav_scanning"
+                    android:icon="@drawable/ic_baseline_list_alt_24"
+                    android:title="@string/menu_scanning" />
+            </menu>
+        </item>
 
-    <item
-        android:id="@+id/nav_settings"
-        android:title="@string/settings"/>
 
+        <item android:title="@string/catalogs">
+            <menu>
+                <item
+                    android:id="@+id/nav_goods"
+                    android:icon="@drawable/ic_baseline_view_comfy_24"
+                    android:title="@string/goods" />
 
+                <item
+                    android:id="@+id/nav_barcodes"
+                    android:icon="@drawable/ic_baseline_qr_code_24"
+                    android:title="@string/barcodes" />
+
+                <item
+                    android:id="@+id/nav_contractors"
+                    android:icon="@drawable/ic_baseline_people_24"
+                    android:title="@string/contractors" />
+            </menu>
+        </item>
+
+        <item android:title="@string/tools">
+            <menu>
+                <item
+                    android:id="@+id/nav_barcode_scanner"
+                    android:icon="@drawable/ic_baseline_qr_code_scanner_24"
+                    android:title="Сканер штрихкодов" />
+
+            </menu>
+        </item>
+
+        <item android:title="@string/settings">
+            <menu>
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@drawable/ic_baseline_settings_24"
+                    android:title="@string/settings" />
+
+            </menu>
+        </item>
+
+    </group>
 
 
 </menu>

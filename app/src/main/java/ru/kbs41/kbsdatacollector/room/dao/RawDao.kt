@@ -16,5 +16,8 @@ interface RawDao {
     @RawQuery(observedEntities = [AssemblyOrderTableGoods::class, AssemblyOrderTableStamps::class])
     fun getTableGoods(query: SupportSQLiteQuery): Flow<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
 
+    @RawQuery(observedEntities = [AssemblyOrderTableGoods::class, AssemblyOrderTableStamps::class])
+    fun getTableGoodsByRowId(query: SupportSQLiteQuery): Flow<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>
+
 
 }

@@ -36,13 +36,11 @@ class AssemblyOrderTableGoodsAdapter(
         holder.product.text = currentItem.productName
         holder.qty.text = CommonFunctions.getFormattedNumber(currentItem.qty)
         holder.qtyCollected.text = CommonFunctions.getFormattedNumber(currentItem.qtyCollected)
-        if (currentItem.qty == currentItem.qtyCollected){
+        if (currentItem.qty == currentItem.qtyCollected) {
             holder.qtyCollected.setTextColor(ContextCompat.getColor(context, R.color.teal_700))
         } else {
             holder.qtyCollected.setTextColor(ContextCompat.getColor(context, R.color.red))
         }
-
-
     }
 
     override fun getItemCount(): Int {
@@ -50,7 +48,6 @@ class AssemblyOrderTableGoodsAdapter(
         if (list.value != null) {
             size = list.value!!.size
         }
-
         return size
     }
 
@@ -68,6 +65,7 @@ class AssemblyOrderTableGoodsAdapter(
                 intent.putExtra("productId", list.value!![adapterPosition].productId)
                 intent.putExtra("docId", list.value!![adapterPosition].orderID)
                 intent.putExtra("qty", list.value!![adapterPosition].qty)
+                intent.putExtra("row", list.value!![adapterPosition].id)
 
                 ContextCompat.startActivity(context, intent, null)
             }

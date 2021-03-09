@@ -31,11 +31,8 @@ class StampsFragmentInfo : Fragment() {
         _binding = FragmentStampsInfoBinding.inflate(inflater, container, false)
         val root = binding.root
 
-        binding.qty = CommonFunctions.getFormattedNumber(model.getQty())
-
-        model.product.observe(viewLifecycleOwner) {
-            binding.product = model.product.value?.name
-        }
+        binding.qty = CommonFunctions.getFormattedNumber(model.currentRowTableGoods.qty)
+        binding.product = model.currentProduct.name
 
         model.tableStampsWithProducts.observe(viewLifecycleOwner) {
             binding.qtyCollected = it.size.toString()

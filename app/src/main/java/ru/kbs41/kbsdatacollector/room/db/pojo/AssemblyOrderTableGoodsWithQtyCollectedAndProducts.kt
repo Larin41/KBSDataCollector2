@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 class AssemblyOrderTableGoodsWithQtyCollectedAndProducts(
+        val id: Long?,
         val row: Int?,
         val orderID: Long?,
         val productName: String?,

@@ -30,7 +30,7 @@
     <string name="title_activity_stamps_reading">StampsReading</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
-    <string name="information">ИНФОРМАЦИЯ</string>
+    <string name="information">ИНФО</string>
     <string name="assembly_orders">Заказы на сборку</string>
     <string name="settings">Настройки</string>
     <string name="settings_name">Наименование настройки</string>
@@ -39,4 +39,12 @@
     <string name="user">Пользователь</string>
     <string name="use_https">Использовать HTTPS</string>
     <string name="password">Пароль</string>
+    <string name="documents">Документы</string>
+    <string name="menu_orders">Заказы</string>
+    <string name="menu_scanning">Сканирование</string>
+    <string name="catalogs">Справочники</string>
+    <string name="goods">Товары</string>
+    <string name="barcodes">Штрихкоды</string>
+    <string name="contractors">Контрагенты</string>
+    <string name="tools">Инструменты</string>
 </resources>

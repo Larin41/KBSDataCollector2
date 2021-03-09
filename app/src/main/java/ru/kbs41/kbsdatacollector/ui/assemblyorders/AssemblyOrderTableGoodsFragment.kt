@@ -37,16 +37,14 @@ class AssemblyOrderTableGoodsFragment : Fragment() {
 
 
         rwAdapter = AssemblyOrderTableGoodsAdapter(requireContext(), model.tableQtyQtyCollected)
-        rwTableGoods = binding.root.findViewById<RecyclerView>(R.id.rwGoods)
+        rwTableGoods = binding.root.findViewById(R.id.rwGoods)
         rwTableGoods.layoutManager = LinearLayoutManager(context)
         rwTableGoods.adapter = rwAdapter
 
         model.tableQtyQtyCollected.observe(
             viewLifecycleOwner,
             {
-                it.let {
-                    rwAdapter.notifyDataSetChanged()
-                }
+                rwAdapter.notifyDataSetChanged()
             })
 
 

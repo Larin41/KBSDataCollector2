@@ -4,12 +4,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
 import ru.kbs41.kbsdatacollector.ui.mainactivity.orders.OrdersFragment
-import ru.kbs41.kbsdatacollector.ui.mainactivity.settings_act.SettingsFragment
+import ru.kbs41.kbsdatacollector.ui.mainactivity.settings.SettingsFragment
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,29 +34,32 @@ class MainActivity : AppCompatActivity() {
             commit()
 
 
-        navView = findViewById(R.id.navView)
-        drawerLayout = findViewById(R.id.drawerLayout)
+            navView = findViewById(R.id.navView)
+            drawerLayout = findViewById(R.id.drawerLayout)
 
-        toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, R.string.nav_opened, R.string.nav_closed)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
+            toggle = ActionBarDrawerToggle(
+                this@MainActivity,
+                drawerLayout,
+                R.string.nav_opened,
+                R.string.nav_closed
+            )
+            drawerLayout.addDrawerListener(toggle)
+            toggle.syncState()
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        navView.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.nav_orders -> supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container, ordersFragment)
-                    commit()
+            navView.setNavigationItemSelectedListener {
+                when (it.itemId) {
+                    R.id.nav_orders -> supportFragmentManager.beginTransaction().apply {
+                        replace(R.id.container, ordersFragment).commit()
+                    }
+                    R.id.nav_settings -> supportFragmentManager.beginTransaction().apply {
+                        replace(R.id.container, settingsFragment).commit()
+                    }
                 }
-                R.id.nav_settings -> supportFragmentManager.beginTransaction().apply {
-                    replace(R.id.container, settingsFragment)
-                    commit()
-                }
+                drawerLayout.closeDrawer(GravityCompat.START)
+                true
             }
-            true
-        }
-
 
 
         }

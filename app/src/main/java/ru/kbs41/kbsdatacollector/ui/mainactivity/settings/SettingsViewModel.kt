@@ -1,4 +1,4 @@
-package ru.kbs41.kbsdatacollector.ui.mainactivity.settings_act
+package ru.kbs41.kbsdatacollector.ui.mainactivity.settings
 
 
 
@@ -12,7 +12,7 @@ import ru.kbs41.kbsdatacollector.room.db.Settings
 
 class SettingsViewModel : ViewModel() {
 
-    private val settingsDao = App().database.settingsDao()
+    private val settingsDao = App().getDatabase().settingsDao()
 
     val currentSetting: MutableLiveData<Settings> = settingsDao.getCurrentSettings().asLiveData() as MutableLiveData<Settings>
     val allSettings: LiveData<List<Settings>> = settingsDao.getAllSettings().asLiveData()

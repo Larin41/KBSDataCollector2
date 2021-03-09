@@ -11,7 +11,7 @@ class AssemblyOrderViewModel() : ViewModel() {
 
     val repository = AssemblyOrderFullRepository()
 
-    lateinit var assemblyOrders: MutableLiveData<List<AssemblyOrder>>
+    lateinit var currentAssemblyOrder: MutableLiveData<AssemblyOrder>
 
     lateinit var tableGoods: MutableLiveData<List<AssemblyOrderTableGoods>>
 
@@ -26,29 +26,61 @@ class AssemblyOrderViewModel() : ViewModel() {
     lateinit var tableQtyQtyCollected: MutableLiveData<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
 
 
-    fun initProperties(docId: Long) {
+    fun fetchData(docId: Long) {
 
-        tableQtyQtyCollected = repository.getTableGoodsWithStamps(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
+        tableQtyQtyCollected = repository.getTableGoodsWithStamps(docId)
+            .asLiveData() as MutableLiveData<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
 
-        assemblyOrders = repository.getAssemblyOrder(docId).asLiveData() as MutableLiveData<List<AssemblyOrder>>
-        tableGoods = repository.getAssemblyOrderTableGoods(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableGoods>>
-        tableStamps = repository.getAssemblyOrderTableStamps(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableStamps>>
-        assemblyOrderTableGoodsWithProducts = repository.getAssemblyOrderTableGoodsWithProducts(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableGoodsWithProducts>>
-        assemblyOrderTableStampsWithProducts = repository.getAssemblyOrderTableStampsWithProducts(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableStampsWithProducts>>
-        tableStampsWithProducts = repository.getAssemblyOrderTableStampsByAssemblyOrderIdWithProducts(docId).asLiveData() as MutableLiveData<List<AssemblyOrderTableStampsWithProducts>>
+        currentAssemblyOrder =
+            repository.getAssemblyOrderFlow(docId).asLiveData() as MutableLiveData<AssemblyOrder>
+        tableGoods = repository.getAssemblyOrderTableGoods(docId)
+            .asLiveData() as MutableLiveData<List<AssemblyOrderTableGoods>>
+        tableStamps = repository.getAssemblyOrderTableStamps(docId)
+            .asLiveData() as MutableLiveData<List<AssemblyOrderTableStamps>>
+        assemblyOrderTableGoodsWithProducts =
+            repository.getAssemblyOrderTableGoodsWithProducts(docId)
+                .asLiveData() as MutableLiveData<List<AssemblyOrderTableGoodsWithProducts>>
+        assemblyOrderTableStampsWithProducts =
+            repository.getAssemblyOrderTableStampsWithProducts(docId)
+                .asLiveData() as MutableLiveData<List<AssemblyOrderTableStampsWithProducts>>
+        tableStampsWithProducts =
+            repository.getAssemblyOrderTableStampsByAssemblyOrderIdWithProducts(docId)
+                .asLiveData() as MutableLiveData<List<AssemblyOrderTableStampsWithProducts>>
 
-    }
 
-}
+        /*
+        tableGoods.observeForever {
 
-/*
-class AssemblyOrderViewModelFactory(private val id: Long) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AssemblyOrderViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return AssemblyOrderViewModel(id) as T
+            if (it == null || currentAssemblyOrder.value == null){
+                return@observeForever
+            }
+
+
+            var needToMakeCompleted = true
+            it.forEach { item ->
+                if (item.qty != item.qtyCollected) {
+                    needToMakeCompleted = false
+                }
+            }
+
+            if (needToMakeCompleted) {
+                val currentOrder = currentAssemblyOrder.value
+                if (currentOrder != null) {
+                    val orderToUpdate = AssemblyOrder(
+                        currentOrder.id,
+                        currentOrder.guid,
+                        currentOrder.date,
+                        currentOrder.number,
+                        currentOrder.counterpart,
+                        currentOrder.comment + " собрано!",
+                        true,
+                        currentOrder.isSent
+                    )
+                    repository.updateAssemblyOrder(orderToUpdate)
+                }
+            }
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
+        */
     }
 }
-*/
+

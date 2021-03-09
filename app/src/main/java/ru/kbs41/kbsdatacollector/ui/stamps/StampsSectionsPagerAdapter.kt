@@ -7,8 +7,8 @@ import androidx.fragment.app.FragmentPagerAdapter
 import ru.kbs41.kbsdatacollector.R
 
 private val TAB_TITLES = arrayOf(
-    R.string.information,
-    R.string.assembly_order_stamps
+    R.string.assembly_order_stamps,
+    R.string.information
 
 )
 
@@ -21,8 +21,8 @@ class StampsSectionsPagerAdapter(private val context: Context, fm: FragmentManag
 
     override fun getItem(position: Int): Fragment {
         return when(position){
-            0 -> StampsFragmentInfo()
-            1 -> StampsFragmentRw()
+            0 -> StampsFragmentRw()
+            1 -> StampsFragmentInfo()
             else -> {
                 StampsFragmentRw()
             }

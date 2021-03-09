@@ -99,7 +99,7 @@ class ExchangeMaster {
                 t.sourceGuid,
                 t.rowNumber,
                 t.qty,
-                0.toDouble(),
+                0.0,
                 orderId,
                 productDao.getProductByGuid(t.productSourceId)[0].id
             )

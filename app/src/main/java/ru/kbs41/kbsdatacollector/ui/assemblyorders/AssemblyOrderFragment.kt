@@ -42,7 +42,7 @@ class AssemblyOrderFragment : Fragment() {
         _binding = FragmentAssemblyOrderBinding.inflate(inflater, container, false)
         val root = binding.root
 
-        val order = model.assemblyOrders.value?.get(0)
+        val order = model.currentAssemblyOrder.value
         if (order != null) {
             binding.date = CommonFunctions.getDateRussianFormat(order.date)
             binding.number = order.number
@@ -58,10 +58,10 @@ class AssemblyOrderFragment : Fragment() {
         }
 
 
-        model.assemblyOrders.observe(viewLifecycleOwner, Observer<List<AssemblyOrder>> { list ->
+        model.currentAssemblyOrder.observe(viewLifecycleOwner, { list ->
             list.let {
-                if (it.isEmpty().not()) {
-                    val order = it[0]
+                if (it != null) {
+                    val order = it
                     binding.date = CommonFunctions.getDateRussianFormat(order.date)
                     binding.number = order.number.toString()
                     binding.contractor = order.counterpart

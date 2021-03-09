@@ -1,8 +1,10 @@
 package ru.kbs41.kbsdatacollector.room.repository
 
 import androidx.sqlite.db.SimpleSQLiteQuery
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.room.AppDatabase
 import ru.kbs41.kbsdatacollector.room.db.*
@@ -12,7 +14,7 @@ import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableStampsWithProduc
 
 class AssemblyOrderFullRepository() {
 
-    val database: AppDatabase = App().database
+    val database: AppDatabase = App().getDatabase()
     val assemblyOrderDao = database.assemblyOrderDao()
     val assemblyOrderTableGoodsDao = database.assemblyOrderTableGoodsDao()
     val assemblyOrderTableStampsDao = database.assemblyOrderTableStampsDao()
@@ -21,12 +23,20 @@ class AssemblyOrderFullRepository() {
     val productDao = database.productDao()
 
 
-    fun getProduct(id: Long): Flow<Product> {
-        return productDao.getProductById(id).take(1)
+    fun getProductFlow(id: Long): Flow<Product> {
+        return productDao.getProductByIdFlow(id)
     }
 
-    fun getAssemblyOrder(id: Long): Flow<List<AssemblyOrder>> {
-        return assemblyOrderDao.getAssemblyOrderById(id).take(1)
+    fun getProduct(id: Long): Product {
+        return productDao.getProductById(id)
+    }
+
+    fun getAssemblyOrderFlow(id: Long): Flow<AssemblyOrder> {
+        return assemblyOrderDao.getAssemblyOrderByIdFlow(id)
+    }
+
+    fun getAssemblyOrder(id: Long): AssemblyOrder {
+        return assemblyOrderDao.getAssemblyOrderById(id)
     }
 
     fun getAssemblyOrderWithTables(id: Long): Flow<List<AssemblyOrderWithTables>> {
@@ -62,6 +72,18 @@ class AssemblyOrderFullRepository() {
         )
     }
 
+    fun updateTableGoods(tableGoods: AssemblyOrderTableGoods){
+        GlobalScope.launch { assemblyOrderTableGoodsDao.update(tableGoods) }
+    }
+
+    fun getOneTableGoodsWithProductById(id: Long): Flow<AssemblyOrderTableGoods> {
+        return assemblyOrderTableGoodsDao.getOneTableGoodsById(id)
+    }
+
+    fun getOneRowTableGoodsWithProductById(id: Long): AssemblyOrderTableGoods {
+        return assemblyOrderTableGoodsDao.getOneRowTableGoodsById(id)
+    }
+
     fun getAssemblyOrderTableStampsByAssemblyOrderIdWithProducts(docId: Long): Flow<List<AssemblyOrderTableStampsWithProducts>> {
         return assemblyOrderTableStampsDao.getTableStampsByDocIdWithProducts(docId)
     }
@@ -78,6 +100,7 @@ class AssemblyOrderFullRepository() {
 
         val queryText: String = """
                SELECT
+                    tg.id AS id,
                     tg.row AS row,
                     tg.assemblyOrderId AS orderID,
                     pr.name AS productName,
@@ -103,6 +126,46 @@ class AssemblyOrderFullRepository() {
                 """
 
         return rawDao.getTableGoods(SimpleSQLiteQuery(queryText))
+
+    }
+
+    fun getTableGoodsWithStampsByRowId(rowId: Long): Flow<AssemblyOrderTableGoodsWithQtyCollectedAndProducts> {
+
+        val queryText: String = """
+               SELECT
+                    tg.id AS id,
+                    tg.row AS row,
+                    tg.assemblyOrderId AS orderID,
+                    pr.name AS productName,
+                    pr.id AS productId,
+                    tg.qty AS qty,
+                    IFNULL(COUNT(ts.barcode),0) AS qtyCollected
+                FROM
+                    assembly_orders_table_goods tg        
+                    
+                    LEFT JOIN products pr
+                    ON tg.productId = pr.id
+                    
+                    LEFT JOIN assembly_orders_table_stamps ts
+                    ON tg.productId = ts.productId AND tg.assemblyOrderId = ts.assemblyOrderId
+
+                WHERE tg.id = $rowId
+
+                GROUP BY
+                    orderID,
+                    productName
+                ORDER BY 
+                    row
+                LIMIT 1
+                """
+
+        return rawDao.getTableGoodsByRowId(SimpleSQLiteQuery(queryText))
+
+    }
+
+    fun updateAssemblyOrder(assemblyOrder: AssemblyOrder) {
+
+        GlobalScope.launch { assemblyOrderDao.update(assemblyOrder) }
 
     }
 

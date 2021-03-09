@@ -34,8 +34,9 @@ class StampsReadingActivity : AppCompatActivity() {
         val docId = intent.getLongExtra("docId", 0)
         val productId = intent.getLongExtra("productId", 0)
         val qty = intent.getDoubleExtra("qty", 0.0)
+        val row = intent.getLongExtra("row", 0)
 
-        model.initProperties(docId, productId, qty, this)
+        model.initProperties(row, docId, productId, qty, this)
 
     }
 

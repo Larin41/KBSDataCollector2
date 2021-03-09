@@ -10,8 +10,8 @@ import ru.kbs41.kbsdatacollector.room.repository.ProductRepository
 class App : Application() {
 
     val applicationScope = CoroutineScope(SupervisorJob())
-
-    val database by lazy { AppDatabase.getDatabase(this, applicationScope) }
+    val database by lazy{ AppDatabase.getDatabase(this, applicationScope) }
     val productRepository by lazy { ProductRepository(database.productDao()) }
     val assemblyOrdersRepository by lazy { AssemblyOrderRepository(database.assemblyOrderDao()) }
+
 }
