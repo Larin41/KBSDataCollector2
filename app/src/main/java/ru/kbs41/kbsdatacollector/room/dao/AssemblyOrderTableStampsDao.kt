@@ -2,6 +2,7 @@ package ru.kbs41.kbsdatacollector.room.dao
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
+import retrofit2.http.DELETE
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
 import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableStampsWithProducts
 
@@ -17,11 +18,20 @@ interface AssemblyOrderTableStampsDao {
     @Delete
     suspend fun delete(assemblyOrderTableStamps: AssemblyOrderTableStamps)
 
+    @Query ("DELETE FROM assembly_orders_table_stamps WHERE id = :id" )
+    suspend fun deleteById(id: Long)
+
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId ORDER BY id")
-    fun getTableStampsByDocId(assemblyOrderId: Long): Flow<List<AssemblyOrderTableStamps>>
+    fun getTableStampsByDocIdFlow(assemblyOrderId: Long): Flow<List<AssemblyOrderTableStamps>>
+
+    @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId ORDER BY id")
+    fun getTableStampsByDocId(assemblyOrderId: Long): List<AssemblyOrderTableStamps>
+
+    @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId AND productId = :productId ORDER BY id")
+    fun getTableStampsByDocIdAndProductId(assemblyOrderId: Long, productId: Long): List<AssemblyOrderTableStamps>
 
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId AND ProductId = :productId ORDER BY id")
-    fun getTableStampsByDocIdAndProductId(assemblyOrderId: Long, productId: Long): Flow<List<AssemblyOrderTableStamps>>
+    fun getTableStampsByDocIdAndProductIdFlow(assemblyOrderId: Long, productId: Long): Flow<List<AssemblyOrderTableStamps>>
 
     @Transaction
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId ORDER BY id")

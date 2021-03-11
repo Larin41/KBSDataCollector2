@@ -47,4 +47,6 @@
     <string name="barcodes">Штрихкоды</string>
     <string name="contractors">Контрагенты</string>
     <string name="tools">Инструменты</string>
+    <string name="delete">удалить</string>
+    <string name="принять">accept</string>
 </resources>

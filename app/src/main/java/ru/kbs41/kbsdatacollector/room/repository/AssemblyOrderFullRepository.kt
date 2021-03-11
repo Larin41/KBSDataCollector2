@@ -43,7 +43,11 @@ class AssemblyOrderFullRepository() {
         return assemblyOrderDao.getAssemblyOrderWithTables(id).take(1)
     }
 
-    fun getAssemblyOrderTableGoods(id: Long): Flow<List<AssemblyOrderTableGoods>> {
+    fun getAssemblyOrderTableGoodsFlow(id: Long): Flow<List<AssemblyOrderTableGoods>> {
+        return assemblyOrderTableGoodsDao.getTableGoodsByDocIdFlow(id)
+    }
+
+    fun getAssemblyOrderTableGoods(id: Long): List<AssemblyOrderTableGoods> {
         return assemblyOrderTableGoodsDao.getTableGoodsByDocId(id)
     }
 
@@ -51,15 +55,27 @@ class AssemblyOrderFullRepository() {
         return assemblyOrderTableGoodsDao.getAssemblyOrderTableGoodsWithProducts(id)
     }
 
-    fun getAssemblyOrderTableStamps(id: Long): Flow<List<AssemblyOrderTableStamps>> {
+    fun getAssemblyOrderTableStampsByDocIdFlow(id: Long): Flow<List<AssemblyOrderTableStamps>> {
+        return assemblyOrderTableStampsDao.getTableStampsByDocIdFlow(id)
+    }
+
+    fun getAssemblyOrderTableStampsByDocId(id: Long): List<AssemblyOrderTableStamps> {
         return assemblyOrderTableStampsDao.getTableStampsByDocId(id)
+    }
+
+    fun getAssemblyOrderTableStampsByDocIdAndProductId(docId: Long, productId: Long): List<AssemblyOrderTableStamps> {
+        return assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductId(docId, productId)
+    }
+
+    fun getAssemblyOrderTableStampsByDocIdAndProductIdFlow(docId: Long, productId: Long): Flow<List<AssemblyOrderTableStamps>> {
+        return assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductIdFlow(docId, productId)
     }
 
     fun getAssemblyOrderTableStampsByAssemblyOrderIdAndProductId(
         docId: Long,
         productId: Long
     ): Flow<List<AssemblyOrderTableStamps>> {
-        return assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductId(docId, productId)
+        return assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductIdFlow(docId, productId)
     }
 
     fun getAssemblyOrderTableStampsByAssemblyOrderIdAndProductIdWithProducts(

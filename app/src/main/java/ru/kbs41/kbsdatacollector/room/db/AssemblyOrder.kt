@@ -12,7 +12,7 @@ data class AssemblyOrder(
     val number: String = "",
     val counterpart: String = "",
     val comment: String = "",
-    val isCompleted: Boolean = false,
+    var isCompleted: Boolean = false,
     val isSent: Boolean = false
 ) {
 

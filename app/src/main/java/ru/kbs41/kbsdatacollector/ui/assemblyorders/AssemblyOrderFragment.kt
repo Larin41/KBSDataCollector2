@@ -42,38 +42,16 @@ class AssemblyOrderFragment : Fragment() {
         _binding = FragmentAssemblyOrderBinding.inflate(inflater, container, false)
         val root = binding.root
 
-        val order = model.currentAssemblyOrder.value
-        if (order != null) {
-            binding.date = CommonFunctions.getDateRussianFormat(order.date)
-            binding.number = order.number
-            binding.contractor = order.counterpart
-            binding.comment = order.comment
+        binding.date = CommonFunctions.getDateRussianFormat(model.currentAssemblyOrder.date)
+        binding.number = model.currentAssemblyOrder.number
+        binding.contractor = model.currentAssemblyOrder.counterpart
+        binding.comment = model.currentAssemblyOrder.comment
 
-            var comment: String = "---"
-            if (order.comment.length != 0) {
-                comment = order.comment
-            }
-            binding.comment = comment
-
+        var comment: String = "---"
+        if (model.currentAssemblyOrder.comment.length != 0) {
+            comment = model.currentAssemblyOrder.comment
         }
-
-
-        model.currentAssemblyOrder.observe(viewLifecycleOwner, { list ->
-            list.let {
-                if (it != null) {
-                    val order = it
-                    binding.date = CommonFunctions.getDateRussianFormat(order.date)
-                    binding.number = order.number.toString()
-                    binding.contractor = order.counterpart
-
-                    var comment: String = "---"
-                    if (order.comment.length != 0) {
-                        comment = order.comment
-                    }
-                    binding.comment = comment
-                }
-            }
-        })
+        binding.comment = comment
 
         return root
 

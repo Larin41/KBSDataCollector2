@@ -32,7 +32,6 @@ class StampsViewModel() : ViewModel() {
     lateinit var tableStamps: LiveData<List<AssemblyOrderTableStamps>>
 
 
-
     fun getQty(): Double {
         return qty
     }
@@ -51,96 +50,52 @@ class StampsViewModel() : ViewModel() {
         docId = _docId
         productId = _productId
 
-        //NOT LIVE DATA
+        //NOT A LIVE DATA
         currentProduct = repository.getProduct(productId)
         currentAssemblyOrder = repository.getAssemblyOrder(docId)
         currentRowTableGoods = repository.getOneRowTableGoodsWithProductById(currentRowTableGoodsId)
 
 
         //LIVE DATA
-        tableGoods = repository.getAssemblyOrderTableGoods(docId).asLiveData()
-        tableStamps = repository.getAssemblyOrderTableStamps(docId).asLiveData()
+        tableGoods = repository.getAssemblyOrderTableGoodsFlow(docId).asLiveData()
+        tableStamps =
+            repository.getAssemblyOrderTableStampsByDocIdAndProductIdFlow(docId, productId)
+                .asLiveData()
         tableStampsWithProducts =
             repository.getAssemblyOrderTableStampsByAssemblyOrderIdAndProductIdWithProducts(
                 docId,
                 productId
             ).asLiveData()
 
-
-
-        //ОБСЕРВЕРЫ
-
-        //ОБСЕРВЕР НА МАРКИ. ЕСЛИ КОЛИЧЕСТВО МАРОК ИЗМЕНИЛОСЬ,
-        //ЗНАЧИТ КОЛЛЕКТЕД В ТАБЛИЦЕ ТОВАРОВ ТОЖЕ ДОЛЖНО ПОМЕНЯТЬСЯ
-        //А ДАЛЕЕ ДОЛЖНО ПОМЕНЯТЬСЯ ЗНАЧЕНИЕ НА КОМПЛЕТЕД В САМОМ ЗАКАЗЕ НА СБОРКУ
         tableStamps.observeForever {
+            if (it != null) {
 
-            val docTableStamps = tableStamps.value
+                val size = it.size.toDouble()
 
-            if (currentRowTableGoods == null || docTableStamps == null) {
-                return@observeForever
+                //UPDATE TABLE GOODS
+                currentRowTableGoods.qtyCollected = size
+                repository.updateTableGoods(currentRowTableGoods)
+
             }
-
-            val qtyCollected = docTableStamps.size.toDouble()
-
-            val uTableGoods = AssemblyOrderTableGoods(
-                currentRowTableGoods.id,
-                currentRowTableGoods.sourceGuid,
-                currentRowTableGoods.row,
-                currentRowTableGoods.qty,
-                qtyCollected,
-                currentRowTableGoods.assemblyOrderId,
-                currentRowTableGoods.productId
-            )
-
-            repository.updateTableGoods(uTableGoods)
-            currentRowTableGoods = repository.getOneRowTableGoodsWithProductById(currentRowTableGoodsId)
 
         }
-
-        //ПОСМОТРИМ ВСЁ ЛИ СОБРАЛИ И ЕСЛИ СОБРАЛИ, ТО СДЕЛАЕМ СОБРАННЫМ
-        tableGoods.observeForever{
-            if (it == null || currentAssemblyOrder == null){
-                return@observeForever
-            }
-
-
-            var needToMakeCompleted = true
-            it.forEach { item ->
-                if (item.qty != item.qtyCollected) {
-                    needToMakeCompleted = false
-                }
-            }
-
-            if (needToMakeCompleted) {
-                if (currentAssemblyOrder != null) {
-                    val orderToUpdate = AssemblyOrder(
-                        currentAssemblyOrder.id,
-                        currentAssemblyOrder.guid,
-                        currentAssemblyOrder.date,
-                        currentAssemblyOrder.number,
-                        currentAssemblyOrder.counterpart,
-                        currentAssemblyOrder.comment + " собрано!",
-                        true,
-                        currentAssemblyOrder.isSent
-                    )
-                    repository.updateAssemblyOrder(orderToUpdate)
-                    currentAssemblyOrder = repository.getAssemblyOrder(docId)
-                }
-            }
-        }
-
-
 
     }
 
     suspend fun insertNewStamp(barcode: String) {
 
-        if (tableStamps.value != null) {
-            if (qty.compareTo(tableStampsWithProducts.value!!.size) <= 0) {
-                GlobalScope.launch(Dispatchers.IO) { SoundEffects().playError(context) }
-                return
-            }
+        val cTableStamps: List<AssemblyOrderTableStamps> =
+            repository.getAssemblyOrderTableStampsByDocIdAndProductId(docId, productId)
+
+        val qtyCollected = cTableStamps.size.toDouble()
+
+        if (qty == qtyCollected) {
+            GlobalScope.launch(Dispatchers.Main) { SoundEffects().playError(context) }
+            return
+        }
+
+        if (currentRowTableGoods.qty == qtyCollected + 1) {
+            GlobalScope.launch(Dispatchers.Main) { SoundEffects().playSuccess(context) }
         }
 
         val newItem = AssemblyOrderTableStamps(
@@ -150,6 +105,9 @@ class StampsViewModel() : ViewModel() {
             currentProduct.id
         )
 
+        //INSERT NEW BARCODE
         repository.insertAssemblyOrderTableStamps(newItem)
+
+
     }
 }

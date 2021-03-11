@@ -28,10 +28,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/stampsMenu"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@id/tvNumber"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="515135135154646d54sa654d65a4s6fg51as5g1a3d54as1das6d51sa5115d1a3s51d35sa" />
+
+        <ImageButton
+            android:id="@+id/stampsMenu"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_baseline_more_vert_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

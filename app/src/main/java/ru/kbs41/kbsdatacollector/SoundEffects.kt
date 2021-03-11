@@ -12,4 +12,11 @@ class SoundEffects {
         }
     }
 
+    suspend fun playSuccess(context: Context){
+        val sound = MediaPlayer.create(context, R.raw.success)
+        sound.setOnPreparedListener{
+            sound.start()
+        }
+    }
+
 }

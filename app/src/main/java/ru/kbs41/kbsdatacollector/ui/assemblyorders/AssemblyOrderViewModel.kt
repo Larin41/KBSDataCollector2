@@ -1,6 +1,12 @@
 package ru.kbs41.kbsdatacollector.ui.assemblyorders
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import ru.kbs41.kbsdatacollector.SoundEffects
 import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithProducts
 import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
@@ -9,9 +15,12 @@ import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderFullRepository
 
 class AssemblyOrderViewModel() : ViewModel() {
 
+    var docId: Long = 0
+    var context: Context? = null
+
     val repository = AssemblyOrderFullRepository()
 
-    lateinit var currentAssemblyOrder: MutableLiveData<AssemblyOrder>
+    lateinit var currentAssemblyOrder: AssemblyOrder
 
     lateinit var tableGoods: MutableLiveData<List<AssemblyOrderTableGoods>>
 
@@ -25,17 +34,23 @@ class AssemblyOrderViewModel() : ViewModel() {
 
     lateinit var tableQtyQtyCollected: MutableLiveData<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
 
+    fun fetchData(_context: Context, _docId: Long) {
 
-    fun fetchData(docId: Long) {
+        docId = _docId
+        context = _context
 
+
+        //NOT LIVE DATA
+        currentAssemblyOrder = repository.getAssemblyOrder(docId)
+
+
+        //LIVE DATA
         tableQtyQtyCollected = repository.getTableGoodsWithStamps(docId)
             .asLiveData() as MutableLiveData<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>>
 
-        currentAssemblyOrder =
-            repository.getAssemblyOrderFlow(docId).asLiveData() as MutableLiveData<AssemblyOrder>
-        tableGoods = repository.getAssemblyOrderTableGoods(docId)
+        tableGoods = repository.getAssemblyOrderTableGoodsFlow(docId)
             .asLiveData() as MutableLiveData<List<AssemblyOrderTableGoods>>
-        tableStamps = repository.getAssemblyOrderTableStamps(docId)
+        tableStamps = repository.getAssemblyOrderTableStampsByDocIdFlow(docId)
             .asLiveData() as MutableLiveData<List<AssemblyOrderTableStamps>>
         assemblyOrderTableGoodsWithProducts =
             repository.getAssemblyOrderTableGoodsWithProducts(docId)
@@ -48,39 +63,28 @@ class AssemblyOrderViewModel() : ViewModel() {
                 .asLiveData() as MutableLiveData<List<AssemblyOrderTableStampsWithProducts>>
 
 
-        /*
-        tableGoods.observeForever {
+    }
 
-            if (it == null || currentAssemblyOrder.value == null){
-                return@observeForever
-            }
+    fun completeOrder() {
 
+        val list = repository.getAssemblyOrderTableGoods(docId)
+        var isCollected = true
 
-            var needToMakeCompleted = true
-            it.forEach { item ->
-                if (item.qty != item.qtyCollected) {
-                    needToMakeCompleted = false
-                }
-            }
-
-            if (needToMakeCompleted) {
-                val currentOrder = currentAssemblyOrder.value
-                if (currentOrder != null) {
-                    val orderToUpdate = AssemblyOrder(
-                        currentOrder.id,
-                        currentOrder.guid,
-                        currentOrder.date,
-                        currentOrder.number,
-                        currentOrder.counterpart,
-                        currentOrder.comment + " собрано!",
-                        true,
-                        currentOrder.isSent
-                    )
-                    repository.updateAssemblyOrder(orderToUpdate)
-                }
+        list.forEach {
+            if (it.qty != it.qtyCollected) {
+                isCollected = false
             }
         }
-        */
+
+        if (isCollected){
+            currentAssemblyOrder.isCompleted = true
+            repository.updateAssemblyOrder(currentAssemblyOrder)
+        } else {
+            Toast.makeText(context!!, "СОБРАН НЕ ВЕСЬ ТОВАР!", Toast.LENGTH_LONG).show()
+            GlobalScope.launch(Dispatchers.Main) { SoundEffects().playError(context!!) }
+        }
+
     }
+
 }
 
