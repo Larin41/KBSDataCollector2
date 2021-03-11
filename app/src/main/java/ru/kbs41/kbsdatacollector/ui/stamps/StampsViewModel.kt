@@ -75,11 +75,8 @@ class StampsViewModel() : ViewModel() {
                 //UPDATE TABLE GOODS
                 currentRowTableGoods.qtyCollected = size
                 repository.updateTableGoods(currentRowTableGoods)
-
             }
-
         }
-
     }
 
     suspend fun insertNewStamp(barcode: String) {
@@ -107,7 +104,6 @@ class StampsViewModel() : ViewModel() {
 
         //INSERT NEW BARCODE
         repository.insertAssemblyOrderTableStamps(newItem)
-
 
     }
 }

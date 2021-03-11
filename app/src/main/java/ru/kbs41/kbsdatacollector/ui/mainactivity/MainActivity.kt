@@ -1,13 +1,14 @@
 package ru.kbs41.kbsdatacollector.ui.mainactivity
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
-import ru.kbs41.kbsdatacollector.App
+import ru.kbs41.kbsdatacollector.ExchangerService
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
 import ru.kbs41.kbsdatacollector.room.AppDatabase
@@ -28,10 +29,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //ИНИЦИАЛИЗАЦИЯ ЭКЗЕМПЛЯРА БАЗЫ ДАННЫХ
         AppDatabase.getDatabase(application, null)
 
+
+        //СТАРТ СЛУЖБЫ
+        val service = Intent(this, ExchangerService::class.java)
+        startService(service)
         //TODO: удалить getData(). Нужно для отладки
-        getData()
+        //getData()
 
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.container, ordersFragment)

@@ -10,7 +10,6 @@ import retrofit2.awaitResponse
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.room.AppDatabase
-import ru.kbs41.kbsdatacollector.room.dao.ProductDao
 import ru.kbs41.kbsdatacollector.room.db.*
 
 class ExchangeMaster {
@@ -59,6 +58,7 @@ class ExchangeMaster {
 
         val assemblyOrderDao = database.assemblyOrderDao()
         val assemblyOrderTableGoodsDao = database.assemblyOrderTableGoodsDao()
+        val assemblyOrderTableStampsDao = database.assemblyOrderTableStampsDao()
         val productDao = database.productDao()
 
         val assablyOrders = assemblyOrderDao.getAssemblyOrderByGuid(i.guid)
@@ -94,7 +94,7 @@ class ExchangeMaster {
 
         for (t in i.tableGoods) {
 
-            val assemblyOrderTableGoods = AssemblyOrderTableGoods(
+            val newRowTableGoods = AssemblyOrderTableGoods(
                 0,
                 t.sourceGuid,
                 t.rowNumber,
@@ -104,7 +104,15 @@ class ExchangeMaster {
                 productDao.getProductByGuid(t.productSourceId)[0].id
             )
 
-            assemblyOrderTableGoodsDao.insert(assemblyOrderTableGoods)
+            //ПОСМОТРИМ, ЧТО ТАМ ВООБЩЕ С ПОДОБРАННЫМИ МАРКАМИ
+            val tableStamps = assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductId(
+                newRowTableGoods.assemblyOrderId,
+                newRowTableGoods.productId
+            )
+
+            newRowTableGoods.qtyCollected = tableStamps.size.toDouble()
+
+            assemblyOrderTableGoodsDao.insert(newRowTableGoods)
         }
 
         //TODO: удалить лишние товары из таблицы марок STAMPS
