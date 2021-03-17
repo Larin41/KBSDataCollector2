@@ -20,7 +20,14 @@ import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
 
 class ExchangerService : Service() {
 
+    private lateinit var context: Context
+
     private lateinit var assemblyOrderDao: AssemblyOrderDao
+
+    override fun onCreate() {
+        super.onCreate()
+        context = applicationContext
+    }
 
     override fun onBind(intent: Intent?): IBinder? {
         TODO("Not yet implemented")
@@ -29,7 +36,7 @@ class ExchangerService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         //TODO: УДАЛИТЬ ДЕБАГГЕР
-        waitForDebugger()
+        //waitForDebugger()
 
         startExchange()
         observeDocuments()
@@ -39,7 +46,7 @@ class ExchangerService : Service() {
 
     private fun observeDocuments() {
 
-        assemblyOrderDao = App().database.assemblyOrderDao()
+        assemblyOrderDao = App(context).database.assemblyOrderDao()
 
         val assemblyOrders: LiveData<List<AssemblyOrder>> =
             assemblyOrderDao.getAssemblyOrderCompleteNotSent().asLiveData()
@@ -50,8 +57,7 @@ class ExchangerService : Service() {
 
                 Log.d("ExchangerService", "new order for sending")
 
-                //TODO: отправить на сервер
-
+                ExchangeMaster().sendOrdersTo1C(item)
 
                 item.isSent = true
                 GlobalScope.launch(Dispatchers.IO) { assemblyOrderDao.update(item) }
@@ -64,6 +70,10 @@ class ExchangerService : Service() {
     private fun startExchange() {
         GlobalScope.launch(Dispatchers.IO) {
             while (true) {
+
+                //TODO: Это дебаг НАХ
+                //return@launch
+
                 SystemClock.sleep(10000)
                 ExchangeMaster().getData(application)
                 Log.d("ExchangerService", "Exchange in process")

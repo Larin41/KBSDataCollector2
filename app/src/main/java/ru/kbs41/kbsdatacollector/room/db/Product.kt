@@ -5,16 +5,15 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "products")
 data class Product(
-    @PrimaryKey(autoGenerate = true) val id: Long,
-    val name: String,
-    val unit: String?,
-    val isAlcohol: Boolean?,
-    val hasStamp: Boolean?,
-    val guid: String?,
-    val isFolder: Boolean?,
-    val parentGuid: String?,
-    val parentId: Long?
-
+    @PrimaryKey(autoGenerate = true) var id: Long = 0,
+    var name: String = "",
+    var unit: String? = "",
+    var isAlcohol: Boolean? = false,
+    var hasStamp: Boolean? = false,
+    var guid: String? = "",
+    var isFolder: Boolean? = false,
+    var parentGuid: String? = "",
+    var parentId: Long? = 0
 ) {
 
 

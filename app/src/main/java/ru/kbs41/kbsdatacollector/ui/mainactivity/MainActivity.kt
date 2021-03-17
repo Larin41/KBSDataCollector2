@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.ExchangerService
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
@@ -32,12 +35,13 @@ class MainActivity : AppCompatActivity() {
         //ИНИЦИАЛИЗАЦИЯ ЭКЗЕМПЛЯРА БАЗЫ ДАННЫХ
         AppDatabase.getDatabase(application, null)
 
-
         //СТАРТ СЛУЖБЫ
         val service = Intent(this, ExchangerService::class.java)
         startService(service)
+
+
         //TODO: удалить getData(). Нужно для отладки
-        //getData()
+        getData()
 
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.container, ordersFragment)
@@ -85,7 +89,6 @@ class MainActivity : AppCompatActivity() {
         if (toggle.onOptionsItemSelected(item)) {
             return true
         }
-
         return super.onOptionsItemSelected(item)
     }
 

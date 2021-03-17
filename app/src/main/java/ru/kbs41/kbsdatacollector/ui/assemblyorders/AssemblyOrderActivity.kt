@@ -26,7 +26,11 @@ class AssemblyOrderActivity() : AppCompatActivity() {
 
         val fb: FloatingActionButton = findViewById(R.id.fbAcceptAssemblyOrder)
         fb.setOnClickListener{
-            model.completeOrder()
+            val mayClose = model.completeOrder()
+            if (mayClose){
+                finish()
+            }
+
         }
 
     }

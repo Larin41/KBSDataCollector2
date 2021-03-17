@@ -30,7 +30,7 @@ interface AssemblyOrderDao {
     fun getAssemblyOrderById(id: Long): AssemblyOrder
 
     @Query("SELECT * FROM assembly_orders WHERE guid = :guid LIMIT 1")
-    fun getAssemblyOrderByGuid(guid: String): List<AssemblyOrder>
+    fun getAssemblyOrderByGuid(guid: String): AssemblyOrder?
 
     @Transaction
     @Query("SELECT * FROM ASSEMBLY_ORDERS WHERE :id LIMIT 1")

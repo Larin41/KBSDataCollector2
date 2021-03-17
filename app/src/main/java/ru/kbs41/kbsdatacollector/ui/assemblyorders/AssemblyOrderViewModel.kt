@@ -65,7 +65,7 @@ class AssemblyOrderViewModel() : ViewModel() {
 
     }
 
-    fun completeOrder() {
+    fun completeOrder(): Boolean {
 
         val list = repository.getAssemblyOrderTableGoods(docId)
         var isCollected = true
@@ -79,9 +79,11 @@ class AssemblyOrderViewModel() : ViewModel() {
         if (isCollected){
             currentAssemblyOrder.isCompleted = true
             repository.updateAssemblyOrder(currentAssemblyOrder)
+            return true
         } else {
             Toast.makeText(context!!, "СОБРАН НЕ ВЕСЬ ТОВАР!", Toast.LENGTH_LONG).show()
             GlobalScope.launch(Dispatchers.Main) { SoundEffects().playError(context!!) }
+            return false
         }
 
     }

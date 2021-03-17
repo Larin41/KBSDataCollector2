@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.App
+import ru.kbs41.kbsdatacollector.retrofit.models.DataOutgoing
 import ru.kbs41.kbsdatacollector.room.AppDatabase
 import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithProducts
@@ -29,6 +30,10 @@ class AssemblyOrderFullRepository() {
 
     fun getProduct(id: Long): Product {
         return productDao.getProductById(id)
+    }
+
+    fun getAssemblyOrderTableStampsByBarcode(barcode: String) : AssemblyOrderTableStamps?{
+        return assemblyOrderTableStampsDao.getTableStampsByBarcode(barcode)
     }
 
     fun getAssemblyOrderFlow(id: Long): Flow<AssemblyOrder> {
@@ -63,11 +68,17 @@ class AssemblyOrderFullRepository() {
         return assemblyOrderTableStampsDao.getTableStampsByDocId(id)
     }
 
-    fun getAssemblyOrderTableStampsByDocIdAndProductId(docId: Long, productId: Long): List<AssemblyOrderTableStamps> {
+    fun getAssemblyOrderTableStampsByDocIdAndProductId(
+        docId: Long,
+        productId: Long
+    ): List<AssemblyOrderTableStamps> {
         return assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductId(docId, productId)
     }
 
-    fun getAssemblyOrderTableStampsByDocIdAndProductIdFlow(docId: Long, productId: Long): Flow<List<AssemblyOrderTableStamps>> {
+    fun getAssemblyOrderTableStampsByDocIdAndProductIdFlow(
+        docId: Long,
+        productId: Long
+    ): Flow<List<AssemblyOrderTableStamps>> {
         return assemblyOrderTableStampsDao.getTableStampsByDocIdAndProductIdFlow(docId, productId)
     }
 
@@ -88,7 +99,7 @@ class AssemblyOrderFullRepository() {
         )
     }
 
-    fun updateTableGoods(tableGoods: AssemblyOrderTableGoods){
+    fun updateTableGoods(tableGoods: AssemblyOrderTableGoods) {
         GlobalScope.launch { assemblyOrderTableGoodsDao.update(tableGoods) }
     }
 
@@ -177,6 +188,67 @@ class AssemblyOrderFullRepository() {
 
         return rawDao.getTableGoodsByRowId(SimpleSQLiteQuery(queryText))
 
+    }
+
+    fun getTableGoodsForSending(docId: Long): List<DataOutgoing.OrderModel.TableGoodsModel> {
+
+        val queryText: String = """
+                SELECT
+                    pr.name productName,
+                    pr.guid productGuid,
+                    tg.qty qty,
+                    tg.qtyCollected qtyCollected
+                FROM 
+                    assembly_orders_table_goods tg
+                    
+                    LEFT JOIN products pr
+                    ON tg.productId = pr.id
+                    
+                WHERE
+                    assemblyOrderId = $docId
+                """
+
+        return rawDao.getTableGoodsForSending(SimpleSQLiteQuery(queryText))
+    }
+
+    fun getTableStampsForSending(docId: Long): List<DataOutgoing.OrderModel.TableStampsModel> {
+
+        val queryText: String = """
+                SELECT
+                    pr.name productName,
+                    pr.guid productGuid,
+                    ts.barcode stamp
+                FROM 
+                    assembly_orders_table_stamps ts
+                    
+                    LEFT JOIN products pr
+                    ON ts.productId = pr.id
+                    
+                WHERE
+                    ts.assemblyOrderId = $docId
+                """
+
+        return rawDao.getTableStampsForSending(SimpleSQLiteQuery(queryText))
+    }
+
+    fun getTableStampsByGuidAndProduct(guid: String, productId: Long): List<AssemblyOrderTableStamps?> {
+
+        val queryText: String = """
+                SELECT
+                    *
+                FROM
+                    assembly_orders_table_stamps
+                WHERE 
+                    productId = $productId AND
+                    assemblyOrderId IN (SELECT
+                                            id
+                                        FROM
+                                            assembly_orders
+                                        WHERE
+                                            guid = """" + guid + """")
+                """
+
+        return rawDao.getTableStampsByGuidAndProduct(SimpleSQLiteQuery(queryText))
     }
 
     fun updateAssemblyOrder(assemblyOrder: AssemblyOrder) {

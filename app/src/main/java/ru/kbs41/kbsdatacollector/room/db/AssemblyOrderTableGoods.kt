@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 data class AssemblyOrderTableGoods(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val sourceGuid: String = "",
-    val row: Int = -1,
-    var qty: Double = -1.0,
-    var qtyCollected: Double = -1.0,
-    val assemblyOrderId: Long = -1,
-    val productId: Long = -1
+    val row: Int = 0,
+    var qty: Double = 0.0,
+    var qtyCollected: Double = 0.0,
+    val assemblyOrderId: Long = 0,
+    val productId: Long = 0
 ) {
 }

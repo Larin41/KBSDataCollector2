@@ -1,10 +1,12 @@
 package ru.kbs41.kbsdatacollector.ui.stamps
 
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.kbs41.kbsdatacollector.SoundEffects
 import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableStampsWithProducts
@@ -15,7 +17,8 @@ class StampsViewModel() : ViewModel() {
     private lateinit var context: Context
 
     private var currentRowTableGoodsId: Long = 0
-    private var qty: Double = 0.0
+    var qty: MutableLiveData<Double> = MutableLiveData(0.0)
+    var qtyCollected: MutableLiveData<Double> = MutableLiveData(0.0)
     private var docId: Long = 0
     private var productId: Long = 0
 
@@ -31,11 +34,6 @@ class StampsViewModel() : ViewModel() {
     lateinit var tableGoods: LiveData<List<AssemblyOrderTableGoods>>
     lateinit var tableStamps: LiveData<List<AssemblyOrderTableStamps>>
 
-
-    fun getQty(): Double {
-        return qty
-    }
-
     fun initProperties(
         _currentRowTableGoodsId: Long,
         _docId: Long,
@@ -46,7 +44,7 @@ class StampsViewModel() : ViewModel() {
 
         context = _context
         currentRowTableGoodsId = _currentRowTableGoodsId
-        qty = _qty
+        qty.value = _qty
         docId = _docId
         productId = _productId
 
@@ -75,23 +73,37 @@ class StampsViewModel() : ViewModel() {
                 //UPDATE TABLE GOODS
                 currentRowTableGoods.qtyCollected = size
                 repository.updateTableGoods(currentRowTableGoods)
+
+                qtyCollected.value = size
             }
         }
     }
 
     suspend fun insertNewStamp(barcode: String) {
 
+
+        //ПРОВЕРИМ МАРКУ НА ДУБЛЬ, ЧТОБЫ НЕДОПУСТИТЬ СЧИТЫВАНИЯ ОДНОЙ МАРКИ НЕСКОЛЬКО РАЗ
+        val existedEntry = repository.getAssemblyOrderTableStampsByBarcode(barcode)
+
+        if (existedEntry != null) {
+            GlobalScope.launch(Dispatchers.Main) {
+                SoundEffects().playError(context)
+                Toast.makeText(context, "Данная марка уже была считана!", Toast.LENGTH_SHORT).show()
+            }
+            return
+        }
+
         val cTableStamps: List<AssemblyOrderTableStamps> =
             repository.getAssemblyOrderTableStampsByDocIdAndProductId(docId, productId)
 
-        val qtyCollected = cTableStamps.size.toDouble()
+        val pQtyCollected = cTableStamps.size.toDouble()
 
-        if (qty == qtyCollected) {
+        if (qty.value == pQtyCollected) {
             GlobalScope.launch(Dispatchers.Main) { SoundEffects().playError(context) }
             return
         }
 
-        if (currentRowTableGoods.qty == qtyCollected + 1) {
+        if (currentRowTableGoods.qty == pQtyCollected + 1) {
             GlobalScope.launch(Dispatchers.Main) { SoundEffects().playSuccess(context) }
         }
 
@@ -101,6 +113,7 @@ class StampsViewModel() : ViewModel() {
             currentAssemblyOrder.id,
             currentProduct.id
         )
+
 
         //INSERT NEW BARCODE
         repository.insertAssemblyOrderTableStamps(newItem)

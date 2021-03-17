@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -39,6 +41,17 @@ class StampsFragmentRw : Fragment() {
         rwTableGoods = binding.root.findViewById<RecyclerView>(R.id.rwStamps)
         rwTableGoods.layoutManager = LinearLayoutManager(context)
         rwTableGoods.adapter = rwAdapter
+
+        model.qtyCollected.observe(
+            viewLifecycleOwner,
+            {
+                if(it == model.qty.value){
+                    binding.tvQtyCollected.setTextColor(ContextCompat.getColor(requireContext(), R.color.teal_700))
+                } else {
+                    binding.tvQtyCollected.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                }
+            }
+        )
 
         model.tableStampsWithProducts.observe(
             viewLifecycleOwner,

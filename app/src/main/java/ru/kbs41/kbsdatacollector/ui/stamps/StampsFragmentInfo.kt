@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import ru.kbs41.kbsdatacollector.CommonFunctions
+import ru.kbs41.kbsdatacollector.R
 
 import ru.kbs41.kbsdatacollector.databinding.FragmentStampsInfoBinding
 
@@ -37,6 +39,17 @@ class StampsFragmentInfo : Fragment() {
         model.tableStampsWithProducts.observe(viewLifecycleOwner) {
             binding.qtyCollected = it.size.toString()
         }
+
+        model.qtyCollected.observe(
+            viewLifecycleOwner,
+            {
+                if(it == model.qty.value){
+                    binding.tvQtyCollected.setTextColor(ContextCompat.getColor(requireContext(), R.color.teal_700))
+                } else {
+                    binding.tvQtyCollected.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                }
+            }
+        )
 
         return root
     }

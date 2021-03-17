@@ -1,13 +1,14 @@
-package ru.kbs41.kbsdatacollector.retrofit
+package ru.kbs41.kbsdatacollector.retrofit.models
 
 import java.sql.Date
 
-data class DataJSON(
-    val goods: List<Good>,
-    val orders: List<Order>
+data class DataIncome(
+    val errorDescription: String,
+    val goods: List<Good>?,
+    val orders: List<Order>?
 ) {
     data class Good(
-        val barcodes: List<Barcode>,
+        val barcodes: List<Barcode>?,
         val guid: String,
         val hasStamp: Boolean,
         val isAlcohol: Boolean,
