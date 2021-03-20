@@ -26,13 +26,12 @@
             android:id="@+id/tvProduct"
             style="@style/TextAppearance.MaterialComponents.Headline6"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cbCompleted"
             app:layout_constraintStart_toEndOf="@+id/tvNumber"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Автошина для Камаза и белаза и дургой подзалупной хуйни" />
+            tools:text="Автошина для белаза и камаза и конечно для самолета" />
 
         <TextView
             android:id="@+id/tvQtyCollectedInfo"
@@ -79,6 +78,14 @@
             app:layout_constraintStart_toEndOf="@id/tvQtyInfo"
             app:layout_constraintTop_toBottomOf="@id/tvProduct"
             tools:text="10" />
+
+        <CheckBox
+            android:id="@+id/cbCompleted"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

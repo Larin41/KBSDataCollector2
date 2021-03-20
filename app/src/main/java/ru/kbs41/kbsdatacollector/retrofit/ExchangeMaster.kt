@@ -130,6 +130,10 @@ class ExchangeMaster {
         assemblyOrder.counterpart = i.contractor
         assemblyOrder.comment = i.comment
 
+        //ДАЖЕ ЕСЛИ У НАС ВСЁ И ТАК СОБРАНО, ТО СТАТУС СОБРАННОСТИ МЫ СБРАСЫВАЕМ
+        assemblyOrder.isCompleted = false
+        assemblyOrder.isSent = false
+
         //СИСТЕМА СДЕЛАЕТ UPDATE, ТАК КАК ПОЛИТИКА РЕШЕНИЯ КОНФЛИКТА - REPLACE
         val orderId = assemblyOrderDao.insert(assemblyOrder)
 
@@ -156,8 +160,9 @@ class ExchangeMaster {
                 tg.rowNumber,
                 tg.qty,
                 0.0,
+                product!!.hasStamp!!,
                 orderId,
-                product!!.id
+                product!!.id!!
             )
 
             //ПОПРОБУЕМ НАЙТИ УЖЕ ПОЛУЧЕННЫЕ МАРКИ, А ЕСЛИ НАХОДИМ, ТО СЧИТАЕМ ИХ КОЛИЧЕСТВО

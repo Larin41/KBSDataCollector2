@@ -49,4 +49,5 @@
     <string name="tools">Инструменты</string>
     <string name="delete">удалить</string>
     <string name="принять">accept</string>
+    <string name="products_not_collected">СОБРАН НЕ ВЕСЬ ТОВАР!</string>
 </resources>

@@ -10,6 +10,7 @@ data class AssemblyOrderTableGoods(
     val row: Int = 0,
     var qty: Double = 0.0,
     var qtyCollected: Double = 0.0,
+    var needStamp: Boolean = false,
     val assemblyOrderId: Long = 0,
     val productId: Long = 0
 ) {

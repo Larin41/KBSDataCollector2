@@ -16,7 +16,7 @@ interface SettingsDao {
     @Query("SELECT * FROM settings")
     fun getAllSettings(): Flow<List<Settings>>
 
-    @Query("SELECT * FROM settings WHERE isCurrent = 1 LIMIT 1")
-    fun getCurrentSettings(): Flow<Settings>
+    @Query("SELECT * FROM settings WHERE id = 1 LIMIT 1")
+    fun getCurrentSettings(): Settings
 
 }

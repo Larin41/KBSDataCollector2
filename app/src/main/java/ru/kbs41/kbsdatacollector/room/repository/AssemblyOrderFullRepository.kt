@@ -56,6 +56,10 @@ class AssemblyOrderFullRepository() {
         return assemblyOrderTableGoodsDao.getTableGoodsByDocId(id)
     }
 
+    fun getAssemblyOrderTableGoodsByRowId(id: Long): AssemblyOrderTableGoods {
+        return assemblyOrderTableGoodsDao.assemblyOrderTableGoodsDao(id)
+    }
+
     fun getAssemblyOrderTableGoodsWithProducts(id: Long): Flow<List<AssemblyOrderTableGoodsWithProducts>> {
         return assemblyOrderTableGoodsDao.getAssemblyOrderTableGoodsWithProducts(id)
     }
@@ -132,8 +136,14 @@ class AssemblyOrderFullRepository() {
                     tg.assemblyOrderId AS orderID,
                     pr.name AS productName,
                     pr.id AS productId,
+                    pr.hasStamp AS productHasStamps,
                     tg.qty AS qty,
-                    IFNULL(COUNT(ts.barcode),0) AS qtyCollected
+                    CASE pr.hasStamp
+                        WHEN 1
+                            THEN IFNULL(COUNT(ts.barcode),0) 	
+                        ELSE tg.qtyCollected
+                    END qtyCollected
+                    
                 FROM
                     assembly_orders_table_goods tg        
                     
@@ -142,9 +152,9 @@ class AssemblyOrderFullRepository() {
                     
                     LEFT JOIN assembly_orders_table_stamps ts
                     ON tg.productId = ts.productId AND tg.assemblyOrderId = ts.assemblyOrderId
-
+                
                 WHERE tg.assemblyOrderId = $docId
-
+                
                 GROUP BY
                     orderID,
                     productName

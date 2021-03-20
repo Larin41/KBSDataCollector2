@@ -36,7 +36,7 @@ class AssemblyOrderTableGoodsFragment : Fragment() {
         _binding = FragmentAssemblyOrderTableGoodsBinding.inflate(inflater, container, false)
 
 
-        rwAdapter = AssemblyOrderTableGoodsAdapter(requireContext(), model.tableQtyQtyCollected)
+        rwAdapter = AssemblyOrderTableGoodsAdapter(requireContext(), model, model.tableQtyQtyCollected)
         rwTableGoods = binding.root.findViewById(R.id.rwGoods)
         rwTableGoods.layoutManager = LinearLayoutManager(context)
         rwTableGoods.adapter = rwAdapter
@@ -46,6 +46,7 @@ class AssemblyOrderTableGoodsFragment : Fragment() {
             {
                 rwAdapter.notifyDataSetChanged()
             })
+
 
 
         return binding.root

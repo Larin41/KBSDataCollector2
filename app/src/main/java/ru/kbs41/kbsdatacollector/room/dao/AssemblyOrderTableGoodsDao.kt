@@ -26,6 +26,9 @@ interface AssemblyOrderTableGoodsDao {
     @Query("SELECT * FROM assembly_orders_table_goods WHERE assemblyOrderId = :assemblyOrderId ORDER BY `row`")
     fun getTableGoodsByDocId(assemblyOrderId: Long): List<AssemblyOrderTableGoods>
 
+    @Query("SELECT * FROM assembly_orders_table_goods WHERE id = :id LIMIT 1")
+    fun assemblyOrderTableGoodsDao(id: Long): AssemblyOrderTableGoods
+
     @Query("DELETE FROM assembly_orders_table_goods WHERE assemblyOrderId = :id")
     fun deleteByAssemblyOrderId(id: Long)
 

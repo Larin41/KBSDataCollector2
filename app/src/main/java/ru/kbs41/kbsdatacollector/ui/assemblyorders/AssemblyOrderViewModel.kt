@@ -6,6 +6,7 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.SoundEffects
 import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithProducts
@@ -65,6 +66,17 @@ class AssemblyOrderViewModel() : ViewModel() {
 
     }
 
+    fun setQtyCollectedTableGoods(tableGoodsId: Long, setZero: Boolean = false) {
+        var tableGoodsRow = repository.getAssemblyOrderTableGoodsByRowId(tableGoodsId)
+        if (setZero){
+            tableGoodsRow.qtyCollected = 0.0
+        } else {
+            tableGoodsRow.qtyCollected = tableGoodsRow.qty
+        }
+
+        repository.updateTableGoods(tableGoodsRow)
+    }
+
     fun completeOrder(): Boolean {
 
         val list = repository.getAssemblyOrderTableGoods(docId)
@@ -81,7 +93,7 @@ class AssemblyOrderViewModel() : ViewModel() {
             repository.updateAssemblyOrder(currentAssemblyOrder)
             return true
         } else {
-            Toast.makeText(context!!, "СОБРАН НЕ ВЕСЬ ТОВАР!", Toast.LENGTH_LONG).show()
+            Toast.makeText(context!!, context!!.getString(R.string.products_not_collected), Toast.LENGTH_SHORT).show()
             GlobalScope.launch(Dispatchers.Main) { SoundEffects().playError(context!!) }
             return false
         }

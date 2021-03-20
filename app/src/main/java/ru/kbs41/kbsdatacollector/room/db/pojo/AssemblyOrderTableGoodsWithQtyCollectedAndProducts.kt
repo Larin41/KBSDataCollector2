@@ -10,6 +10,7 @@ class AssemblyOrderTableGoodsWithQtyCollectedAndProducts(
         val row: Int?,
         val orderID: Long?,
         val productName: String?,
+        val productHasStamps: Boolean?,
         val productId: Long?,
         val qty: Double?,
         val qtyCollected: Double?

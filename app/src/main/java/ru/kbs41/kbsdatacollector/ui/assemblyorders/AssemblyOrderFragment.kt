@@ -40,7 +40,6 @@ class AssemblyOrderFragment : Fragment() {
     ): View? {
 
         _binding = FragmentAssemblyOrderBinding.inflate(inflater, container, false)
-        val root = binding.root
 
         binding.date = CommonFunctions.getDateRussianFormat(model.currentAssemblyOrder.date)
         binding.number = model.currentAssemblyOrder.number
@@ -53,7 +52,7 @@ class AssemblyOrderFragment : Fragment() {
         }
         binding.comment = comment
 
-        return root
+        return binding.root
 
     }
 
