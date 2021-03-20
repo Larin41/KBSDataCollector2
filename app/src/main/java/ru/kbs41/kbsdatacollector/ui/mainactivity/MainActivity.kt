@@ -65,10 +65,14 @@ class MainActivity : AppCompatActivity() {
             navView.setNavigationItemSelectedListener {
                 when (it.itemId) {
                     R.id.nav_orders -> supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.container, ordersFragment).commit()
+                        replace(R.id.container, ordersFragment)
+                            .addToBackStack(OrdersFragment::class.java.name)
+                            .commit()
                     }
                     R.id.nav_settings -> supportFragmentManager.beginTransaction().apply {
-                        replace(R.id.container, settingsFragment).commit()
+                        replace(R.id.container, settingsFragment)
+                            .addToBackStack(SettingsFragment::class.java.name)
+                            .commit()
                     }
                 }
                 drawerLayout.closeDrawer(GravityCompat.START)
@@ -92,5 +96,14 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onBackPressed() {
+
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
+
+    }
 
 }

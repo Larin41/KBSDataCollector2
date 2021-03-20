@@ -4,18 +4,16 @@ package ru.kbs41.kbsdatacollector.retrofit
 import android.app.Application
 import android.content.Context
 import android.media.RingtoneManager
+import android.util.Base64
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
 import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.models.DataIncome
 import ru.kbs41.kbsdatacollector.retrofit.models.DataOutgoing
-import ru.kbs41.kbsdatacollector.retrofit.models.RequestModel
 import ru.kbs41.kbsdatacollector.retrofit.models.SendingStatus
 import ru.kbs41.kbsdatacollector.room.AppDatabase
 import ru.kbs41.kbsdatacollector.room.dao.ProductDao
@@ -24,9 +22,28 @@ import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderFullRepository
 
 class ExchangeMaster {
 
-    fun getBaseURL(): String {
 
-        return "http://192.168.1.50"
+    private var baseUrl: String = ""
+    private var auth: String = ""
+
+    private fun fetchData() {
+        val settingsDao = App().database.settingsDao()
+        val settings = settingsDao.getCurrentSettings()
+
+        //АДРЕС СЕРВЕРА
+        baseUrl = if (settings.useHttps == true) {
+            "https://"
+        } else {
+            "http://"
+        }
+        baseUrl += settings.server + ":" + settings.port
+
+        //АВТОРИЗАЦИЯ
+        auth = "Basic " + Base64.encodeToString(
+            "${settings.user}:${settings.password}".toByteArray(),
+            Base64.NO_WRAP
+        )
+
     }
 
 
@@ -69,7 +86,7 @@ class ExchangeMaster {
 
                         val body: DataIncome? = response.body()
 
-                        if (body == null){
+                        if (body == null) {
                             return@launch
                         }
 

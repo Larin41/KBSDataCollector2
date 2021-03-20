@@ -6,23 +6,48 @@ import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.kbs41.kbsdatacollector.App
 
 object RetrofitClient {
 
-    private val AUTH = "Basic "+ Base64.encodeToString("Exchange:6831296".toByteArray(), Base64.NO_WRAP)
+    //TODO: ПОКА ЧТО ДЛЯ ПРИНЯТИЯ ИЗМЕНЕНИЙ НУЖНО ПЕРЕЗАГРУЗИТЬ ПРОГРАММУ
 
     private fun getBaseURL(): String {
+        val settingsDao = App().database.settingsDao()
+        val settings = settingsDao.getCurrentSettings()
 
-        return "http://192.168.1.50"
+        //АДРЕС СЕРВЕРА
+        var baseUrl = if (settings.useHttps == true) {
+            "https://"
+        } else {
+            "http://"
+        }
+        baseUrl += settings.server + ":" + settings.port
+
+        return baseUrl
     }
 
+
+    private fun getAuth(): String {
+
+        val settingsDao = App().database.settingsDao()
+        val settings = settingsDao.getCurrentSettings()
+
+        //АВТОРИЗАЦИЯ
+        val auth = "Basic " + Base64.encodeToString(
+            "${settings.user}:${settings.password}".toByteArray(),
+            Base64.NO_WRAP
+        )
+
+        return auth
+    }
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor { chain ->
             val original = chain.request()
 
             val requestBuilder = original.newBuilder()
-                .addHeader("Authorization", AUTH)
+                .addHeader("Authorization", getAuth())
                 .method(original.method(), original.body())
 
             val request = requestBuilder.build()
@@ -31,7 +56,7 @@ object RetrofitClient {
 
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
 
-    val instance: Api by lazy{
+    val instance: Api by lazy {
         val retrofit = Retrofit.Builder()
             .baseUrl(getBaseURL())
             .addConverterFactory(GsonConverterFactory.create(gson))
