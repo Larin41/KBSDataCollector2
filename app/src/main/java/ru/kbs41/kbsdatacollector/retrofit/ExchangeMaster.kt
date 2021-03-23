@@ -11,6 +11,7 @@ import androidx.core.app.NotificationManagerCompat
 import kotlinx.coroutines.*
 import retrofit2.*
 import ru.kbs41.kbsdatacollector.App
+import ru.kbs41.kbsdatacollector.AppNotificationManager
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.models.DataIncome
 import ru.kbs41.kbsdatacollector.retrofit.models.DataOutgoing
@@ -19,6 +20,8 @@ import ru.kbs41.kbsdatacollector.room.AppDatabase
 import ru.kbs41.kbsdatacollector.room.dao.ProductDao
 import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderFullRepository
+import java.io.IOError
+import java.io.IOException
 
 class ExchangeMaster {
 
@@ -31,51 +34,44 @@ class ExchangeMaster {
         val settings = settingsDao.getCurrentSettings()
 
         //АДРЕС СЕРВЕРА
-        baseUrl = if (settings.useHttps == true) {
+        baseUrl = if (settings!!.useHttps == true) {
             "https://"
         } else {
             "http://"
         }
-        baseUrl += settings.server + ":" + settings.port
+        baseUrl += settings!!.server + ":" + settings!!.port
 
         //АВТОРИЗАЦИЯ
         auth = "Basic " + Base64.encodeToString(
-            "${settings.user}:${settings.password}".toByteArray(),
+            "${settings!!.user}:${settings!!.password}".toByteArray(),
             Base64.NO_WRAP
         )
 
     }
 
 
-    private fun notifyAboutNewOrder(context: Context) {
-        val CHANNEL_ID = "Download is done"
-        val NOTIFICATION_ID = 1
 
-        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-
-        var builder = NotificationCompat.Builder(context, "CHANNEL_ID")
-            .setChannelId(CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_baseline_list_24)
-            .setSound(soundUri)
-            .setContentTitle("Новый заказ")
-            //.setContentText("Much longer text that cannot fit one line...")
-            .setStyle(
-                NotificationCompat.BigTextStyle()
-                    .bigText("Поступили новые заказы")
-            )
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
-        with(NotificationManagerCompat.from(context)) {
-            notify(NOTIFICATION_ID, builder.build())
-        }
-    }
 
     fun getData(application: Application) {
 
+        try {
+            getDataViaHttp(application)
+        } catch (e: IOException) {
+            Log.d("1C_TO_APP", e.message!!)
+        } finally {
+            //DO NOTHING
+        }
+
+
+    }
+
+    private fun getDataViaHttp(application: Application) {
+
         val context = application.applicationContext
         val deviceId = 1
-
-        RetrofitClient.instance.getData(deviceId)
+        val retrofit = RetrofitClient()
+        retrofit.initInstance()
+        retrofit.instance.getData(deviceId)
             ?.enqueue(object : Callback<DataIncome> {
                 override fun onResponse(
                     call: Call<DataIncome>,
@@ -108,7 +104,7 @@ class ExchangeMaster {
 
                             //ЕСЛИ ЗАКАЗЫ ВСЁ ТАКИ ПРИШЛИ, ТО ОПОВЕСТИМ ОБ ЭТОМ ПОЛЬЗОВАТЕЛЯ
                             if (body.orders != null) {
-                                notifyAboutNewOrder(context)
+                                AppNotificationManager.notifyUser()
                             }
                         }
                     }
@@ -306,20 +302,30 @@ class ExchangeMaster {
         )
 
         //ПОПРОБУЕМ ОТПРАВИТЬ ДАННЫЕ
-        RetrofitClient.instance.sendOrder(data)
-            ?.enqueue(object : Callback<SendingStatus> {
-                override fun onResponse(
-                    call: Call<SendingStatus>,
-                    response: Response<SendingStatus>
-                ) {
+        try {
+            val retrofit = RetrofitClient()
+            retrofit.initInstance()
+            retrofit.instance.sendOrder(data)
+                ?.enqueue(object : Callback<SendingStatus> {
+                    override fun onResponse(
+                        call: Call<SendingStatus>,
+                        response: Response<SendingStatus>
+                    ) {
 
-                    Log.d("POST_TO_1C", "PIZDATO")
-                }
+                        Log.d("APP_TO_1C", "PIZDATO")
+                    }
 
-                override fun onFailure(call: Call<SendingStatus>, t: Throwable) {
-                    Log.d("POST_TO_1C", "HUEVO")
-                }
-            })
+                    override fun onFailure(call: Call<SendingStatus>, t: Throwable) {
+                        Log.d("APP_TO_1C", "HUEVO")
+                    }
+                })
+        } catch (e: IOException) {
+            Log.d("APP_TO_1C", e.message!!)
+        } finally {
+            //DO NOTHING
+        }
+
+
     }
 }
 

@@ -15,6 +15,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
+import ru.kbs41.kbsdatacollector.retrofit.RetrofitClient
 import ru.kbs41.kbsdatacollector.room.dao.AssemblyOrderDao
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
 

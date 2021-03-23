@@ -15,6 +15,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import ru.kbs41.kbsdatacollector.databinding.SettingsFragmentBinding
+import ru.kbs41.kbsdatacollector.retrofit.RetrofitClient
 
 class SettingsFragment : Fragment() {
 
@@ -64,6 +65,5 @@ class SettingsFragment : Fragment() {
         return binding.root
 
     }
-
 
 }

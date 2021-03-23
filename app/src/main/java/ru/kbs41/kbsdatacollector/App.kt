@@ -25,4 +25,9 @@ class App(_context: Context? = null) : Application() {
         }
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        AppNotificationManager.instance(applicationContext)
+    }
+
 }

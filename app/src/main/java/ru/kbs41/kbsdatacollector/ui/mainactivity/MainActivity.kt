@@ -2,6 +2,7 @@ package ru.kbs41.kbsdatacollector.ui.mainactivity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,9 +15,11 @@ import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.ExchangerService
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
+import ru.kbs41.kbsdatacollector.retrofit.RetrofitClient
 import ru.kbs41.kbsdatacollector.room.AppDatabase
 import ru.kbs41.kbsdatacollector.ui.mainactivity.orders.OrdersFragment
 import ru.kbs41.kbsdatacollector.ui.mainactivity.settings.SettingsFragment
+import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,14 +37,18 @@ class MainActivity : AppCompatActivity() {
 
         //ИНИЦИАЛИЗАЦИЯ ЭКЗЕМПЛЯРА БАЗЫ ДАННЫХ
         AppDatabase.getDatabase(application, null)
+        try {
 
-        //СТАРТ СЛУЖБЫ
-        val service = Intent(this, ExchangerService::class.java)
-        startService(service)
+            //СТАРТ СЛУЖБЫ
+            val service = Intent(this, ExchangerService::class.java)
+            startService(service)
 
+            //TODO: удалить getData(). Нужно для отладки
+            getData()
+        } catch (e: IOException) {
+            Log.d("1C_TO_APP", e.message!!)
+        }
 
-        //TODO: удалить getData(). Нужно для отладки
-        getData()
 
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.container, ordersFragment)

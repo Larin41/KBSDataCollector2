@@ -7,14 +7,20 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.kbs41.kbsdatacollector.App
+import java.io.IOException
 
-object RetrofitClient {
+class RetrofitClient {
 
     //TODO: ПОКА ЧТО ДЛЯ ПРИНЯТИЯ ИЗМЕНЕНИЙ НУЖНО ПЕРЕЗАГРУЗИТЬ ПРОГРАММУ
+    private val settingsDao = App().database.settingsDao()
+    val settings = settingsDao.getCurrentSettings()
+
 
     private fun getBaseURL(): String {
-        val settingsDao = App().database.settingsDao()
-        val settings = settingsDao.getCurrentSettings()
+
+        if (settings == null){
+            throw IOException("Не настроено подключение")
+        }
 
         //АДРЕС СЕРВЕРА
         var baseUrl = if (settings.useHttps == true) {
@@ -30,12 +36,13 @@ object RetrofitClient {
 
     private fun getAuth(): String {
 
-        val settingsDao = App().database.settingsDao()
-        val settings = settingsDao.getCurrentSettings()
+         if(settings == null) {
+            throw IOException("Не настроено подключение")
+        }
 
         //АВТОРИЗАЦИЯ
         val auth = "Basic " + Base64.encodeToString(
-            "${settings.user}:${settings.password}".toByteArray(),
+            "${settings!!.user}:${settings!!.password}".toByteArray(),
             Base64.NO_WRAP
         )
 
@@ -56,14 +63,17 @@ object RetrofitClient {
 
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
 
-    val instance: Api by lazy {
+    lateinit var instance: Api
+
+    fun initInstance(){
         val retrofit = Retrofit.Builder()
             .baseUrl(getBaseURL())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okHttpClient)
             .build()
 
-        retrofit.create(Api::class.java)
+        instance = retrofit.create(Api::class.java)
     }
+
 
 }
