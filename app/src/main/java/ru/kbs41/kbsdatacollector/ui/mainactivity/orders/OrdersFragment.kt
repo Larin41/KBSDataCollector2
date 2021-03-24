@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,6 +45,9 @@ class OrdersFragment : Fragment() {
         rwOrders = rootView.findViewById(R.id.rwOrders)
         rwOrders.layoutManager = LinearLayoutManager(context)
         rwOrders.adapter = rwAdapterAllAssembly
+
+        val actionBar = (activity as AppCompatActivity).supportActionBar
+        actionBar?.title = "Заказы"
 
         model.allOrders.observe(viewLifecycleOwner, { list ->
             list.let {

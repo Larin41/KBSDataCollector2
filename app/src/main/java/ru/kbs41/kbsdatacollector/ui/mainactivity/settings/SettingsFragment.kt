@@ -1,21 +1,19 @@
 package ru.kbs41.kbsdatacollector.ui.mainactivity.settings
 
-import androidx.lifecycle.ViewModelProvider
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Debug
-import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.ImageButton
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
+import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.databinding.SettingsFragmentBinding
-import ru.kbs41.kbsdatacollector.retrofit.RetrofitClient
 
 class SettingsFragment : Fragment() {
 
@@ -37,7 +35,11 @@ class SettingsFragment : Fragment() {
         _binding = SettingsFragmentBinding.inflate(inflater, container, false)
 
         model.fetchData(binding)
-        
+
+        val actionBar = (activity as AppCompatActivity).supportActionBar
+        actionBar?.title = "Настройки"
+
+
         binding.etRepresentation.doAfterTextChanged {
             binding.representation = it.toString()
         }

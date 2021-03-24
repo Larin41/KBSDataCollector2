@@ -1,16 +1,12 @@
 package ru.kbs41.kbsdatacollector.ui.mainactivity.settings
 
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.databinding.SettingsFragmentBinding
-import ru.kbs41.kbsdatacollector.retrofit.RetrofitClient
 import ru.kbs41.kbsdatacollector.room.db.Settings
 
 

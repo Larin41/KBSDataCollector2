@@ -4,6 +4,7 @@ package ru.kbs41.kbsdatacollector.retrofit
 import android.app.Application
 import android.content.Context
 import android.media.RingtoneManager
+import android.os.Debug
 import android.util.Base64
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -29,28 +30,6 @@ class ExchangeMaster {
     private var baseUrl: String = ""
     private var auth: String = ""
 
-    private fun fetchData() {
-        val settingsDao = App().database.settingsDao()
-        val settings = settingsDao.getCurrentSettings()
-
-        //АДРЕС СЕРВЕРА
-        baseUrl = if (settings!!.useHttps == true) {
-            "https://"
-        } else {
-            "http://"
-        }
-        baseUrl += settings!!.server + ":" + settings!!.port
-
-        //АВТОРИЗАЦИЯ
-        auth = "Basic " + Base64.encodeToString(
-            "${settings!!.user}:${settings!!.password}".toByteArray(),
-            Base64.NO_WRAP
-        )
-
-    }
-
-
-
 
     fun getData(application: Application) {
 
@@ -70,7 +49,12 @@ class ExchangeMaster {
         val context = application.applicationContext
         val deviceId = 1
         val retrofit = RetrofitClient()
+
+        Debug.waitForDebugger()
+
         retrofit.initInstance()
+
+
         retrofit.instance.getData(deviceId)
             ?.enqueue(object : Callback<DataIncome> {
                 override fun onResponse(
@@ -302,28 +286,23 @@ class ExchangeMaster {
         )
 
         //ПОПРОБУЕМ ОТПРАВИТЬ ДАННЫЕ
-        try {
-            val retrofit = RetrofitClient()
-            retrofit.initInstance()
-            retrofit.instance.sendOrder(data)
-                ?.enqueue(object : Callback<SendingStatus> {
-                    override fun onResponse(
-                        call: Call<SendingStatus>,
-                        response: Response<SendingStatus>
-                    ) {
 
-                        Log.d("APP_TO_1C", "PIZDATO")
-                    }
+        val retrofit = RetrofitClient()
+        retrofit.initInstance()
+        retrofit.instance.sendOrder(data)
+            ?.enqueue(object : Callback<SendingStatus> {
+                override fun onResponse(
+                    call: Call<SendingStatus>,
+                    response: Response<SendingStatus>
+                ) {
 
-                    override fun onFailure(call: Call<SendingStatus>, t: Throwable) {
-                        Log.d("APP_TO_1C", "HUEVO")
-                    }
-                })
-        } catch (e: IOException) {
-            Log.d("APP_TO_1C", e.message!!)
-        } finally {
-            //DO NOTHING
-        }
+                    Log.d("APP_TO_1C", "PIZDATO")
+                }
+
+                override fun onFailure(call: Call<SendingStatus>, t: Throwable) {
+                    Log.d("APP_TO_1C", "HUEVO")
+                }
+            })
 
 
     }

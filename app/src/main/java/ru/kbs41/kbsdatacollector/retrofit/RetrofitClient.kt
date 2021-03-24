@@ -2,6 +2,7 @@ package ru.kbs41.kbsdatacollector.retrofit
 
 
 import android.util.Base64
+import android.util.Log
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -18,8 +19,17 @@ class RetrofitClient {
 
     private fun getBaseURL(): String {
 
-        if (settings == null){
+        if (settings == null) {
             throw IOException("Не настроено подключение")
+        }
+
+        if (settings.server.isEmpty()
+            || settings.port.isEmpty()
+            || settings.deviceId == 0
+            || settings.user.isEmpty()
+            || settings.password.isEmpty()
+        ) {
+            throw IOException("Введены не все настройки подключения к серверу")
         }
 
         //АДРЕС СЕРВЕРА
@@ -36,7 +46,7 @@ class RetrofitClient {
 
     private fun getAuth(): String {
 
-         if(settings == null) {
+        if (settings == null) {
             throw IOException("Не настроено подключение")
         }
 
@@ -65,7 +75,8 @@ class RetrofitClient {
 
     lateinit var instance: Api
 
-    fun initInstance(){
+    fun initInstance() {
+
         val retrofit = Retrofit.Builder()
             .baseUrl(getBaseURL())
             .addConverterFactory(GsonConverterFactory.create(gson))
@@ -73,6 +84,7 @@ class RetrofitClient {
             .build()
 
         instance = retrofit.create(Api::class.java)
+
     }
 
 

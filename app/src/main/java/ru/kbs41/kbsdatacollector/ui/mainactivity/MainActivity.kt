@@ -9,13 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.ExchangerService
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
-import ru.kbs41.kbsdatacollector.retrofit.RetrofitClient
 import ru.kbs41.kbsdatacollector.room.AppDatabase
 import ru.kbs41.kbsdatacollector.ui.mainactivity.orders.OrdersFragment
 import ru.kbs41.kbsdatacollector.ui.mainactivity.settings.SettingsFragment
@@ -67,7 +63,8 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.addDrawerListener(toggle)
             toggle.syncState()
 
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            val actionBar = supportActionBar
+            actionBar?.setDisplayHomeAsUpEnabled(true)
 
             navView.setNavigationItemSelectedListener {
                 when (it.itemId) {
