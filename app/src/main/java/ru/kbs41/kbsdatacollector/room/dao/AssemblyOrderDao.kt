@@ -37,6 +37,11 @@ interface AssemblyOrderDao {
     fun getAssemblyOrderWithTables(id: Long): Flow<List<AssemblyOrderWithTables>>
 
     @Query("SELECT * FROM assembly_orders WHERE isCompleted = 1 AND isSent = 0")
-    fun getAssemblyOrderCompleteNotSent(): Flow<List<AssemblyOrder>>
+    fun getAssemblyOrderCompleteNotSentFlow(): Flow<List<AssemblyOrder>>
+
+    @Query("SELECT * FROM assembly_orders WHERE isCompleted = 1 AND isSent = 0")
+    fun getAssemblyOrderCompleteNotSent(): List<AssemblyOrder>
+
+
 
 }

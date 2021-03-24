@@ -40,6 +40,10 @@ class AssemblyOrderFullRepository() {
         return assemblyOrderDao.getAssemblyOrderByIdFlow(id)
     }
 
+    fun getAssemblyOrderCompleteNotSent(): List<AssemblyOrder> {
+        return assemblyOrderDao.getAssemblyOrderCompleteNotSent()
+    }
+
     fun getAssemblyOrder(id: Long): AssemblyOrder {
         return assemblyOrderDao.getAssemblyOrderById(id)
     }

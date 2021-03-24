@@ -3,17 +3,12 @@ package ru.kbs41.kbsdatacollector.retrofit
 
 import android.app.Application
 import android.content.Context
-import android.media.RingtoneManager
 import android.os.Debug
-import android.util.Base64
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import kotlinx.coroutines.*
 import retrofit2.*
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.AppNotificationManager
-import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.retrofit.models.DataIncome
 import ru.kbs41.kbsdatacollector.retrofit.models.DataOutgoing
 import ru.kbs41.kbsdatacollector.retrofit.models.SendingStatus
@@ -21,7 +16,6 @@ import ru.kbs41.kbsdatacollector.room.AppDatabase
 import ru.kbs41.kbsdatacollector.room.dao.ProductDao
 import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderFullRepository
-import java.io.IOError
 import java.io.IOException
 
 class ExchangeMaster {
@@ -50,7 +44,7 @@ class ExchangeMaster {
         val deviceId = 1
         val retrofit = RetrofitClient()
 
-        Debug.waitForDebugger()
+        //Debug.waitForDebugger()
 
         retrofit.initInstance()
 
@@ -268,7 +262,18 @@ class ExchangeMaster {
         return product.id
     }
 
-    fun sendOrdersTo1C(order: AssemblyOrder) {
+    fun sendAllOrdersTo1C() {
+        val repository = AssemblyOrderFullRepository()
+
+        val assemblyOrders = repository.getAssemblyOrderCompleteNotSent()
+
+        assemblyOrders.forEach {
+            sendOrderTo1C(it)
+        }
+
+    }
+
+    fun sendOrderTo1C(order: AssemblyOrder) {
 
         val repository = AssemblyOrderFullRepository()
         val tableGoods = repository.getTableGoodsForSending(order.id)
@@ -296,7 +301,14 @@ class ExchangeMaster {
                     response: Response<SendingStatus>
                 ) {
 
+                    Debug.waitForDebugger()
                     Log.d("APP_TO_1C", "PIZDATO")
+                    //ПРИ УСПЕШНОЙ ВЫГРУЗКЕ ОБНОВИМ СТАТУС ОТПРАВЛЕННОСТИ ДОКУМЕНТА
+                    if (response.code() == 200) {
+                        order.isSent = true
+                        repository.updateAssemblyOrder(order)
+                    }
+
                 }
 
                 override fun onFailure(call: Call<SendingStatus>, t: Throwable) {

@@ -3,19 +3,16 @@ package ru.kbs41.kbsdatacollector
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.os.Debug.waitForDebugger
+import android.content.IntentFilter
 import android.os.IBinder
 import android.os.SystemClock
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
-import ru.kbs41.kbsdatacollector.retrofit.RetrofitClient
 import ru.kbs41.kbsdatacollector.room.dao.AssemblyOrderDao
 import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
 
@@ -38,7 +35,7 @@ class ExchangerService : Service() {
 
         //TODO: УДАЛИТЬ ДЕБАГГЕР
         //waitForDebugger()
-
+        registerReceiver(NetworkChanging(), IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"))
         startExchange()
         observeDocuments()
         return START_STICKY
@@ -50,7 +47,7 @@ class ExchangerService : Service() {
         assemblyOrderDao = App(context).database.assemblyOrderDao()
 
         val assemblyOrders: LiveData<List<AssemblyOrder>> =
-            assemblyOrderDao.getAssemblyOrderCompleteNotSent().asLiveData()
+            assemblyOrderDao.getAssemblyOrderCompleteNotSentFlow().asLiveData()
 
         assemblyOrders.observeForever {
 
@@ -58,10 +55,8 @@ class ExchangerService : Service() {
 
                 Log.d("ExchangerService", "new order for sending")
 
-                ExchangeMaster().sendOrdersTo1C(item)
+                ExchangeMaster().sendOrderTo1C(item)
 
-                item.isSent = true
-                GlobalScope.launch(Dispatchers.IO) { assemblyOrderDao.update(item) }
             }
 
         }
@@ -70,13 +65,16 @@ class ExchangerService : Service() {
 
     private fun startExchange() {
         GlobalScope.launch(Dispatchers.IO) {
+            val eMaster = ExchangeMaster()
+
             while (true) {
 
                 //TODO: Это дебаг НАХ
                 //return@launch
 
                 SystemClock.sleep(10000)
-                ExchangeMaster().getData(application)
+
+                eMaster.getData(application)
                 Log.d("ExchangerService", "Exchange in process")
             }
         }

@@ -7,11 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
+import androidx.transition.Visibility
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.databinding.SettingsFragmentBinding
 
@@ -39,6 +41,24 @@ class SettingsFragment : Fragment() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar?.title = "Настройки"
 
+        setActions()
+
+        return binding.root
+
+    }
+
+    private fun setActions() {
+
+        binding.btnCheckPassword.setOnClickListener {
+            if (binding.etPasswordForSettings.text.toString().equals("6831296")) {
+                binding.etPasswordForSettings.setText("")
+                binding.passwordLayout.visibility = View.GONE
+                binding.settingsLayout.visibility = View.VISIBLE
+            } else {
+                Toast.makeText(requireContext(), "Вы ввели неверный пароль", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
 
         binding.etRepresentation.doAfterTextChanged {
             binding.representation = it.toString()
@@ -63,9 +83,6 @@ class SettingsFragment : Fragment() {
             binding.password = it.toString()
             model.updateSettings()
         }
-
-        return binding.root
-
     }
 
 }
