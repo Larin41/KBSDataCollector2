@@ -1,5 +1,6 @@
 package ru.kbs41.kbsdatacollector.retrofit.models
 
+import ru.kbs41.kbsdatacollector.room.db.AssemblyOrderTableStamps
 import java.sql.Date
 
 data class DataIncome(
@@ -39,13 +40,22 @@ data class DataIncome(
         val date: Date,
         val guid: String,
         val number: String,
-        val tableGoods: List<TableGood>
+        val tableGoods: List<TableGood>,
+        val tableStamps: List<TableStamps>
     ) {
         data class TableGood(
+            val sourceGuid: String,
             val productSourceId: String,
             val qty: Double,
-            val rowNumber: Int,
-            val sourceGuid: String
+            val rowNumber: Int
         )
+
+        data class TableStamps(
+            val sourceGuid: String,
+            val rowNumber: Int,
+            val productSourceId: String,
+            val stamp: String
+        )
+
     }
 }

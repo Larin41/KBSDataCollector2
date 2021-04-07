@@ -48,7 +48,6 @@ class ExchangeMaster {
 
         retrofit.initInstance()
 
-
         retrofit.instance.getData(deviceId)
             ?.enqueue(object : Callback<DataIncome> {
                 override fun onResponse(
@@ -61,6 +60,7 @@ class ExchangeMaster {
                         val body: DataIncome? = response.body()
 
                         if (body == null) {
+                            Log.d("1C_TO_APP", "Null body")
                             return@launch
                         }
 
@@ -89,7 +89,7 @@ class ExchangeMaster {
                 }
 
                 override fun onFailure(call: Call<DataIncome>, t: Throwable) {
-                    Log.d("GET_FROM_1C", "HUEVO")
+                    Log.d("1C_TO_APP", "HUEVO")
                 }
             })
 
@@ -174,8 +174,15 @@ class ExchangeMaster {
                 item!!.assemblyOrderId = orderId
                 assemblyOrderTableStampsDao.run { update(item) }
             }
+
+
+
         }
 
+        i.tableStamps.forEach { ts ->
+            val product = productDao.getProductByGuid(ts.productSourceId)
+
+        }
 
         //УДАЛИМ ЛИШНИЕ МАРКИ, ПО ТОВАРАМ КОТОРЫЕ НАМ НЕ НУЖНЫ
         //ТАКОЙ СЛУЧАЙ МОЖЕТ ВОЗНИКНУТЬ, КОГДА ЗАКАЗ НА СБОРКУ ПРИХОДИТ ЕЩЁ ОДИН РАЗ
@@ -301,7 +308,7 @@ class ExchangeMaster {
                     response: Response<SendingStatus>
                 ) {
 
-                    Debug.waitForDebugger()
+                    //Debug.waitForDebugger()
                     Log.d("APP_TO_1C", "PIZDATO")
                     //ПРИ УСПЕШНОЙ ВЫГРУЗКЕ ОБНОВИМ СТАТУС ОТПРАВЛЕННОСТИ ДОКУМЕНТА
                     if (response.code() == 200) {

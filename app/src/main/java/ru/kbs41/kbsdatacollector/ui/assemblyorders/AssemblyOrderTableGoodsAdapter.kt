@@ -37,6 +37,8 @@ class AssemblyOrderTableGoodsAdapter(
 
         if (currentItem.productHasStamps == true) {
             holder.cbCompleted.visibility = View.GONE
+        } else {
+            holder.cbCompleted.visibility = View.VISIBLE
         }
 
         holder.tableGoodsId = currentItem.id!!
@@ -46,8 +48,10 @@ class AssemblyOrderTableGoodsAdapter(
         holder.qtyCollected.text = CommonFunctions.getFormattedNumber(currentItem.qtyCollected)
         if (currentItem.qty == currentItem.qtyCollected) {
             holder.qtyCollected.setTextColor(ContextCompat.getColor(context, R.color.teal_700))
+            holder.cbCompleted.isChecked = true
         } else {
             holder.qtyCollected.setTextColor(ContextCompat.getColor(context, R.color.red))
+            holder.cbCompleted.isChecked = false
         }
     }
 
