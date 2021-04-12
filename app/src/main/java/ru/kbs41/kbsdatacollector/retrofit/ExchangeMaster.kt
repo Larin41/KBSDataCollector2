@@ -34,8 +34,6 @@ class ExchangeMaster {
         } finally {
             //DO NOTHING
         }
-
-
     }
 
     private fun getDataViaHttp(application: Application) {
