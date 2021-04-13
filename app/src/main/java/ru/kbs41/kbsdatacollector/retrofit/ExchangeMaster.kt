@@ -177,10 +177,10 @@ class ExchangeMaster {
 
         }
 
-        i.tableStamps.forEach { ts ->
-            val product = productDao.getProductByGuid(ts.productSourceId)
+        /*    i.tableStamps.forEach { ts ->
+                val product = productDao.getProductByGuid(ts.productSourceId)
 
-        }
+            }*/
 
         //УДАЛИМ ЛИШНИЕ МАРКИ, ПО ТОВАРАМ КОТОРЫЕ НАМ НЕ НУЖНЫ
         //ТАКОЙ СЛУЧАЙ МОЖЕТ ВОЗНИКНУТЬ, КОГДА ЗАКАЗ НА СБОРКУ ПРИХОДИТ ЕЩЁ ОДИН РАЗ
@@ -297,6 +297,7 @@ class ExchangeMaster {
 
         //ПОПРОБУЕМ ОТПРАВИТЬ ДАННЫЕ
 
+        Log.d("APP_TO_1C", "Start sending")
         val retrofit = RetrofitClient()
         retrofit.initInstance()
         retrofit.instance.sendOrder(data)
@@ -310,6 +311,7 @@ class ExchangeMaster {
                     Log.d("APP_TO_1C", "PIZDATO")
                     //ПРИ УСПЕШНОЙ ВЫГРУЗКЕ ОБНОВИМ СТАТУС ОТПРАВЛЕННОСТИ ДОКУМЕНТА
                     if (response.code() == 200) {
+                        Log.d("APP_TO_1C", "Response 200")
                         order.isSent = true
                         repository.updateAssemblyOrder(order)
                     }

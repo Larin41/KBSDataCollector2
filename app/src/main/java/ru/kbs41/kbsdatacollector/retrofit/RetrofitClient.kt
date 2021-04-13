@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.kbs41.kbsdatacollector.App
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class RetrofitClient {
 
@@ -60,6 +61,9 @@ class RetrofitClient {
     }
 
     private val okHttpClient = OkHttpClient.Builder()
+//        .readTimeout(90, TimeUnit.SECONDS)
+//        .writeTimeout(90, TimeUnit.SECONDS)
+//        .connectTimeout(90, TimeUnit.SECONDS)
         .addInterceptor { chain ->
             val original = chain.request()
 
