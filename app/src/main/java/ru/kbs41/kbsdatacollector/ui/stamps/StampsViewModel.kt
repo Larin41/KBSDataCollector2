@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.kbs41.kbsdatacollector.BarcodeDatamatrix
 import ru.kbs41.kbsdatacollector.SoundEffects
 import ru.kbs41.kbsdatacollector.room.db.*
 import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableStampsWithProducts
@@ -79,11 +80,19 @@ class StampsViewModel() : ViewModel() {
         }
     }
 
+    fun parseStamp(barcode: String): String{
+        val barcodeDatamatrix = BarcodeDatamatrix()
+        barcodeDatamatrix.parseDataMatrixBarcode(barcode)
+        return barcodeDatamatrix.finalData
+    }
+
     suspend fun insertNewStamp(barcode: String) {
+
+        val barcodeParsed = parseStamp(barcode)
 
 
         //ПРОВЕРИМ МАРКУ НА ДУБЛЬ, ЧТОБЫ НЕДОПУСТИТЬ СЧИТЫВАНИЯ ОДНОЙ МАРКИ НЕСКОЛЬКО РАЗ
-        val existedEntry = repository.getAssemblyOrderTableStampsByBarcode(barcode)
+        val existedEntry = repository.getAssemblyOrderTableStampsByBarcode(barcodeParsed)
 
         if (existedEntry != null) {
             GlobalScope.launch(Dispatchers.Main) {
@@ -109,7 +118,7 @@ class StampsViewModel() : ViewModel() {
 
         val newItem = AssemblyOrderTableStamps(
             0,
-            barcode,
+            barcodeParsed,
             currentAssemblyOrder.id,
             currentProduct.id
         )
