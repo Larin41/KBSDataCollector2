@@ -8,19 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import ru.kbs41.kbsdatacollector.R
-import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.Product
 import ru.kbs41.kbsdatacollector.dataSources.network.ExchangeMaster
 
 class GoodsFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = GoodsFragment()
-    }
 
     private val viewModel: GoodsViewModel by activityViewModels()
 
@@ -34,7 +28,7 @@ class GoodsFragment : Fragment() {
     ): View? {
 
 
-        rootView = inflater.inflate(R.layout.goods_fragment, container, false)
+        rootView = inflater.inflate(R.layout.fragment_goods, container, false)
 
         val swipeRefreshLayout = rootView.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshGoods)
         swipeRefreshLayout.setOnRefreshListener {
@@ -51,7 +45,7 @@ class GoodsFragment : Fragment() {
         rwGoods.adapter = rwGoodsAdapter
 
 
-        viewModel.allProducts.observe(viewLifecycleOwner, Observer<List<Product>> { list ->
+        viewModel.allProducts.observe(viewLifecycleOwner, { list ->
             list.let {
                 rwGoodsAdapter.notifyDataSetChanged()
             }

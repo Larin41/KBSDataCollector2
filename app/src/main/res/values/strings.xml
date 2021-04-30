@@ -52,4 +52,5 @@
     <string name="products_not_collected">СОБРАН НЕ ВЕСЬ ТОВАР!</string>
     <string name="please_enter_password_for_settings">Введите пароль для доступа к настройкам</string>
     <string name="accept">Принять</string>
+    <string name="title_activity_simple_scanning_document">SimpleScanningDocument</string>
 </resources>

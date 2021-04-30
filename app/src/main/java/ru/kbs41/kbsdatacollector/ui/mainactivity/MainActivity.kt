@@ -17,12 +17,14 @@ import ru.kbs41.kbsdatacollector.dataSources.network.ExchangeMaster
 import ru.kbs41.kbsdatacollector.ui.mainactivity.goods.GoodsFragment
 import ru.kbs41.kbsdatacollector.ui.mainactivity.orders.OrdersFragment
 import ru.kbs41.kbsdatacollector.ui.mainactivity.settings.SettingsFragment
+import ru.kbs41.kbsdatacollector.ui.mainactivity.simpleScanning.SimpleScanningFragment
 import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
 
     private val ordersFragment = OrdersFragment()
+    private val simpleScanningFragment = SimpleScanningFragment()
     private val goodsFragment = GoodsFragment()
     private val settingsFragment = SettingsFragment()
 
@@ -78,6 +80,12 @@ class MainActivity : AppCompatActivity() {
                             .commit()
                     }
 
+                    R.id.nav_simple_scanning -> supportFragmentManager.beginTransaction().apply {
+                        replace(R.id.container, simpleScanningFragment)
+                            .addToBackStack(OrdersFragment::class.java.name)
+                            .commit()
+                    }
+
                     R.id.nav_goods -> supportFragmentManager.beginTransaction().apply {
                         replace(R.id.container, goodsFragment)
                             .addToBackStack(OrdersFragment::class.java.name)
@@ -89,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                             .addToBackStack(SettingsFragment::class.java.name)
                             .commit()
                     }
+
                 }
                 drawerLayout.closeDrawer(GravityCompat.START)
                 true

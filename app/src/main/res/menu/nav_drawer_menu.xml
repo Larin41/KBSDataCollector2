@@ -8,10 +8,10 @@
                     android:id="@+id/nav_orders"
                     android:icon="@drawable/ic_baseline_home_repair_service_24"
                     android:title="@string/menu_orders" />
-                <!--<item
-                    android:id="@+id/nav_scanning"
+                <item
+                    android:id="@+id/nav_simple_scanning"
                     android:icon="@drawable/ic_baseline_list_alt_24"
-                    android:title="@string/menu_scanning" />-->
+                    android:title="@string/menu_scanning" />
             </menu>
         </item>
 

@@ -14,6 +14,10 @@ import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.ProductDao
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.rawData.RawDao
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.settings.Settings
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.settings.SettingsDao
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanning
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanningDao
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanningTableGoods
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanningTableGoodsDao
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.stamps.Stamp
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.stamps.StampDao
 
@@ -22,6 +26,8 @@ import ru.kbs41.kbsdatacollector.dataSources.dataBase.stamps.StampDao
         AssemblyOrder::class,
         AssemblyOrderTableGoods::class,
         AssemblyOrderTableStamps::class,
+        SimpleScanning::class,
+        SimpleScanningTableGoods::class,
         Barcode::class,
         Product::class,
         Stamp::class,
@@ -33,6 +39,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun assemblyOrderDao(): AssemblyOrderDao
     abstract fun assemblyOrderTableGoodsDao(): AssemblyOrderTableGoodsDao
     abstract fun assemblyOrderTableStampsDao(): AssemblyOrderTableStampsDao
+    abstract fun simpleScanningDao(): SimpleScanningDao
+    abstract fun simpleScanningTableGoodsDao(): SimpleScanningTableGoodsDao
     abstract fun barcodeDao(): BarcodeDao
     abstract fun productDao(): ProductDao
     abstract fun stampDao(): StampDao
