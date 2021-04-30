@@ -7,7 +7,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.databinding.SettingsFragmentBinding
-import ru.kbs41.kbsdatacollector.room.db.Settings
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.settings.Settings
 
 
 class SettingsViewModel : ViewModel() {

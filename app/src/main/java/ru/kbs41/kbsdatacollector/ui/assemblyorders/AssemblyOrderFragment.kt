@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
-import ru.kbs41.kbsdatacollector.CommonFunctions
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.databinding.FragmentAssemblyOrderBinding
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
 import ru.kbs41.kbsdatacollector.ui.mainactivity.orders.AllAssemblyOrdersAdapter
 
 
@@ -42,7 +39,7 @@ class AssemblyOrderFragment : Fragment() {
 
         _binding = FragmentAssemblyOrderBinding.inflate(inflater, container, false)
 
-        binding.date = CommonFunctions.getDateRussianFormat(model.currentAssemblyOrder.date)
+        binding.date = FormatManager.getDateRussianFormat(model.currentAssemblyOrder.date)
         binding.number = model.currentAssemblyOrder.number
         binding.contractor = model.currentAssemblyOrder.counterpart
         binding.comment = model.currentAssemblyOrder.comment

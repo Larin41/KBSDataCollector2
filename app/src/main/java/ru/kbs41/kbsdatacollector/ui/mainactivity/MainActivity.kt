@@ -6,13 +6,14 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import ru.kbs41.kbsdatacollector.ExchangerService
 import ru.kbs41.kbsdatacollector.R
-import ru.kbs41.kbsdatacollector.retrofit.ExchangeMaster
-import ru.kbs41.kbsdatacollector.room.AppDatabase
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.AppDatabase
+import ru.kbs41.kbsdatacollector.dataSources.network.ExchangeMaster
 import ru.kbs41.kbsdatacollector.ui.mainactivity.orders.OrdersFragment
 import ru.kbs41.kbsdatacollector.ui.mainactivity.settings.SettingsFragment
 import java.io.IOException
@@ -37,7 +38,8 @@ class MainActivity : AppCompatActivity() {
 
             //СТАРТ СЛУЖБЫ
             val service = Intent(this, ExchangerService::class.java)
-            startService(service)
+            //startService(service)
+            ContextCompat.startForegroundService(this, service)
 
             //TODO: удалить getData(). Нужно для отладки
             getData()
@@ -88,8 +90,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getData() {
-        val em = ExchangeMaster()
-        em.getData(application)
+        ExchangeMaster.getData(application)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

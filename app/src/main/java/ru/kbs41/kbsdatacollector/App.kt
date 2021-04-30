@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import ru.kbs41.kbsdatacollector.room.AppDatabase
-import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderRepository
-import ru.kbs41.kbsdatacollector.room.repository.ProductRepository
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.AppDatabase
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.repository.ProductRepository
+import ru.kbs41.kbsdatacollector.notificationManager.AppNotificationManager
 
 class App(_context: Context? = null) : Application() {
 

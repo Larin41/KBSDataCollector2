@@ -13,9 +13,9 @@ import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import ru.kbs41.kbsdatacollector.CommonFunctions
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.R
-import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.pojo.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
 import ru.kbs41.kbsdatacollector.ui.stamps.StampsReadingActivity
 
 
@@ -44,8 +44,8 @@ class AssemblyOrderTableGoodsAdapter(
         holder.tableGoodsId = currentItem.id!!
         holder.number.text = currentItem.row.toString()
         holder.product.text = currentItem.productName
-        holder.qty.text = CommonFunctions.getFormattedNumber(currentItem.qty)
-        holder.qtyCollected.text = CommonFunctions.getFormattedNumber(currentItem.qtyCollected)
+        holder.qty.text = FormatManager.getFormattedNumber(currentItem.qty)
+        holder.qtyCollected.text = FormatManager.getFormattedNumber(currentItem.qtyCollected)
         if (currentItem.qty == currentItem.qtyCollected) {
             holder.qtyCollected.setTextColor(ContextCompat.getColor(context, R.color.teal_700))
             holder.cbCompleted.isChecked = true

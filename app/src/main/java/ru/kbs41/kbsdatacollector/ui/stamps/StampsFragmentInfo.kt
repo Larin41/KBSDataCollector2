@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import ru.kbs41.kbsdatacollector.CommonFunctions
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.R
 
 import ru.kbs41.kbsdatacollector.databinding.FragmentStampsInfoBinding
@@ -33,7 +33,7 @@ class StampsFragmentInfo : Fragment() {
         _binding = FragmentStampsInfoBinding.inflate(inflater, container, false)
         val root = binding.root
 
-        binding.qty = CommonFunctions.getFormattedNumber(model.currentRowTableGoods.qty)
+        binding.qty = FormatManager.getFormattedNumber(model.currentRowTableGoods.qty)
         binding.product = model.currentProduct.name
 
         model.tableStampsWithProducts.observe(viewLifecycleOwner) {

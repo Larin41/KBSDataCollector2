@@ -6,12 +6,14 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.kbs41.kbsdatacollector.BarcodeDatamatrix
-import ru.kbs41.kbsdatacollector.SoundEffects
-import ru.kbs41.kbsdatacollector.room.db.*
-import ru.kbs41.kbsdatacollector.room.db.pojo.AssemblyOrderTableStampsWithProducts
-import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderFullRepository
+import ru.kbs41.kbsdatacollector.soundManager.SoundEffects
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrderTableGoods
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrderTableStamps
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.pojo.AssemblyOrderTableStampsWithProducts
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.Product
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.repository.AssemblyOrderFullRepository
 
 class StampsViewModel() : ViewModel() {
 

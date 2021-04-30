@@ -2,9 +2,8 @@ package ru.kbs41.kbsdatacollector.ui
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import ru.kbs41.kbsdatacollector.room.AppDatabase
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
-import ru.kbs41.kbsdatacollector.room.repository.AssemblyOrderRepository
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.repository.AssemblyOrderRepository
 
 //class MainViewModel(private val repository: AssemblyOrderRepository) : ViewModel() {
 class MainViewModel() : ViewModel() {

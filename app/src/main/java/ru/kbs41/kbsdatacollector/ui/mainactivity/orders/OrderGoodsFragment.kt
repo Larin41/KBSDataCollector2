@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.R
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
 import ru.kbs41.kbsdatacollector.ui.MainViewModel
 
 class OrderGoodsFragment : Fragment() {

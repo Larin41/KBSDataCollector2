@@ -5,16 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ru.kbs41.kbsdatacollector.CommonFunctions
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.R
 
 import ru.kbs41.kbsdatacollector.databinding.FragmentStampsRwBinding
-import java.text.DecimalFormat
 
 
 class StampsFragmentRw : Fragment() {
@@ -65,7 +63,7 @@ class StampsFragmentRw : Fragment() {
             })
 
         qty = requireActivity().intent.getDoubleExtra("qty", 0.0)
-        binding.qty = CommonFunctions.getFormattedNumber(qty)
+        binding.qty = FormatManager.getFormattedNumber(qty)
 
         return root
     }

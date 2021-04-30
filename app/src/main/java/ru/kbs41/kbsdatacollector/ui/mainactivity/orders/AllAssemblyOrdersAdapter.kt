@@ -6,13 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
-import ru.kbs41.kbsdatacollector.CommonFunctions
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.R
-import ru.kbs41.kbsdatacollector.room.db.AssemblyOrder
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
 import ru.kbs41.kbsdatacollector.ui.assemblyorders.AssemblyOrderActivity
 
 
@@ -30,7 +29,7 @@ class AllAssemblyOrdersAdapter(
     override fun onBindViewHolder(holder: OrdersViewHolder, position: Int) {
         val currentItem = list.value!![position]
         val number = currentItem.number
-        val date = CommonFunctions.getDateRussianFormat(currentItem.date)
+        val date = FormatManager.getDateRussianFormat(currentItem.date)
 
         holder.contractor.text = currentItem.counterpart
         holder.dateNumber.text = "№$number от $date"
