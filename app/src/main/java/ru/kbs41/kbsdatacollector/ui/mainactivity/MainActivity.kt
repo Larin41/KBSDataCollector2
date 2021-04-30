@@ -14,6 +14,7 @@ import ru.kbs41.kbsdatacollector.ExchangerService
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.AppDatabase
 import ru.kbs41.kbsdatacollector.dataSources.network.ExchangeMaster
+import ru.kbs41.kbsdatacollector.ui.mainactivity.goods.GoodsFragment
 import ru.kbs41.kbsdatacollector.ui.mainactivity.orders.OrdersFragment
 import ru.kbs41.kbsdatacollector.ui.mainactivity.settings.SettingsFragment
 import java.io.IOException
@@ -22,6 +23,7 @@ import java.io.IOException
 class MainActivity : AppCompatActivity() {
 
     private val ordersFragment = OrdersFragment()
+    private val goodsFragment = GoodsFragment()
     private val settingsFragment = SettingsFragment()
 
     private lateinit var navView: NavigationView
@@ -75,6 +77,13 @@ class MainActivity : AppCompatActivity() {
                             .addToBackStack(OrdersFragment::class.java.name)
                             .commit()
                     }
+
+                    R.id.nav_goods -> supportFragmentManager.beginTransaction().apply {
+                        replace(R.id.container, goodsFragment)
+                            .addToBackStack(OrdersFragment::class.java.name)
+                            .commit()
+                    }
+
                     R.id.nav_settings -> supportFragmentManager.beginTransaction().apply {
                         replace(R.id.container, settingsFragment)
                             .addToBackStack(SettingsFragment::class.java.name)
@@ -90,7 +99,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getData() {
-        ExchangeMaster.getData(application)
+        ExchangeMaster.getOrdersFrom1C(application)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

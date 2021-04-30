@@ -16,24 +16,26 @@
         </item>
 
 
-        <!--<item android:title="@string/catalogs">
+        <item android:title="@string/catalogs">
             <menu>
                 <item
                     android:id="@+id/nav_goods"
                     android:icon="@drawable/ic_baseline_view_comfy_24"
                     android:title="@string/goods" />
 
-                <item
-                    android:id="@+id/nav_barcodes"
-                    android:icon="@drawable/ic_baseline_qr_code_24"
-                    android:title="@string/barcodes" />
 
-                <item
-                    android:id="@+id/nav_contractors"
-                    android:icon="@drawable/ic_baseline_people_24"
-                    android:title="@string/contractors" />
+<!--                <item-->
+<!--                    android:id="@+id/nav_barcodes"-->
+<!--                    android:icon="@drawable/ic_baseline_qr_code_24"-->
+<!--                    android:title="@string/barcodes" />-->
+
+<!--                <item-->
+<!--                    android:id="@+id/nav_contractors"-->
+<!--                    android:icon="@drawable/ic_baseline_people_24"-->
+<!--                    android:title="@string/contractors" />-->
+
             </menu>
-        </item>-->
+        </item>
 
         <!--<item android:title="@string/tools">
             <menu>

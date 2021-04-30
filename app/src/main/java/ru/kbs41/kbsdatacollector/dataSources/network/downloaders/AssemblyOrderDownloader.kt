@@ -4,7 +4,7 @@ import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrderTableGoods
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.rawData.RawQuery
-import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.DataIncome
+import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.IncomeDataOrders
 
 class AssemblyOrderDownloader {
 
@@ -15,13 +15,13 @@ class AssemblyOrderDownloader {
     val assemblyOrderTableGoodsDao = database.assemblyOrderTableGoodsDao()
     val assemblyOrderTableStampsDao = database.assemblyOrderTableStampsDao()
 
-    suspend fun downloadDocuments(orders: List<DataIncome.Order>?) {
+    suspend fun downloadDocuments(orders: List<IncomeDataOrders.Order>?) {
         orders?.forEach {
             downloadDocument(it)
         }
     }
 
-    suspend fun downloadDocument(order: DataIncome.Order) {
+    suspend fun downloadDocument(order: IncomeDataOrders.Order) {
 
         var assemblyOrder: AssemblyOrder = downloadAssemblyOrder(order)
         clearTableGoods(assemblyOrder)
@@ -52,7 +52,7 @@ class AssemblyOrderDownloader {
 
     private suspend fun downloadrTableGoods(
         assemblyOrder: AssemblyOrder,
-        tableGoods: List<DataIncome.Order.TableGood>
+        tableGoods: List<IncomeDataOrders.Order.TableGood>
     ) {
 
         tableGoods.forEach { tg ->
@@ -86,7 +86,7 @@ class AssemblyOrderDownloader {
         }
     }
 
-    private suspend fun downloadAssemblyOrder(i: DataIncome.Order): AssemblyOrder {
+    private suspend fun downloadAssemblyOrder(i: IncomeDataOrders.Order): AssemblyOrder {
 
         var assemblyOrder = assemblyOrderDao.getAssemblyOrderByGuid(i.guid)
 

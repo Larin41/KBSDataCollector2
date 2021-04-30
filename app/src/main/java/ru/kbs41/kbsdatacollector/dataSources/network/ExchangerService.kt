@@ -73,7 +73,7 @@ class ExchangerService : Service() {
 
                 SystemClock.sleep(10000)
 
-                ExchangeMaster.getData(application)
+                ExchangeMaster.getOrdersFrom1C(application)
                 Log.d("ExchangerService", "Exchange in process")
             }
         }

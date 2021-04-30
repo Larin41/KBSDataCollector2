@@ -5,17 +5,22 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
-import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.DataIncome
+import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.IncomeDataOrders
 import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.DataOutgoing
+import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.IncomeGoodsModel
 import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.SendingStatus
 
 interface Api {
 
-    @GET("/torg/hs/KBS_TSD/getOrders")
-    fun getData(@Header("deviceId") deviceId: Int,
-                @Header("requiredData") requiredData: String): Call<DataIncome>
+    @GET("/torg/hs/KBS_TSD/getData")
+    fun getOrders(@Header("deviceId") deviceId: String,
+                  @Header("requiredData") requiredData: String): Call<IncomeDataOrders>
 
-    @POST("/torg/hs/KBS_TSD/postOrder")
+    @GET("/torg/hs/KBS_TSD/getData")
+    fun getGoods(@Header("deviceId") deviceId: String,
+                  @Header("requiredData") requiredData: String): Call<IncomeGoodsModel>
+
+    @POST("/torg/hs/KBS_TSD/postData")
     fun sendOrder(@Body outgoingDataModel: DataOutgoing): Call<SendingStatus>
 
 

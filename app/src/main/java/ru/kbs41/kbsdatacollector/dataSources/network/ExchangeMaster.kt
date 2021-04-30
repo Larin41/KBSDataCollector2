@@ -2,11 +2,12 @@ package ru.kbs41.kbsdatacollector.dataSources.network
 
 
 import android.app.Application
+import android.os.Debug
 import android.util.Log
 import kotlinx.coroutines.*
 import retrofit2.*
 import ru.kbs41.kbsdatacollector.notificationManager.AppNotificationManager
-import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.DataIncome
+import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.IncomeDataOrders
 import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.DataOutgoing
 import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.SendingStatus
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
@@ -18,10 +19,34 @@ import java.io.IOException
 
 object ExchangeMaster {
 
-    fun getData(application: Application) {
+    fun getAllGoodsFrom1C() {
+
+        //Debug.waitForDebugger()
+
+        val settings = mapOf(
+            "deviceId" to "1",
+            "requiredData" to "allGoods"
+        )
 
         try {
-            fetchOrders(application)
+            getData(settings)
+        } catch (e: IOException) {
+            Log.d("1C_TO_APP", e.message!!)
+        } finally {
+            //DO NOTHING
+        }
+
+    }
+
+    fun getOrdersFrom1C(application: Application) {
+
+        val settings = mapOf(
+            "deviceId" to "1",
+            "requiredData" to "newOrders"
+        )
+
+        try {
+            getData(settings)
         } catch (e: IOException) {
             Log.d("1C_TO_APP", e.message!!)
         } finally {
@@ -29,25 +54,35 @@ object ExchangeMaster {
         }
     }
 
-    private fun fetchOrders(application: Application) {
+    private fun getData(settings: Map<String, String>) {
 
-        val deviceId = 1
-        val requiredData = "newOrders"
+        Debug.waitForDebugger()
         val retrofit = RetrofitClient()
-
-        //Debug.waitForDebugger()
 
         retrofit.initInstance()
 
-        retrofit.instance.getData(deviceId, requiredData)
-            ?.enqueue(object : Callback<DataIncome> {
+        if (settings["requiredData"]!! == "newOrders") {
+            getNewOrders(retrofit, settings)
+        }
+
+        if (settings["requiredData"]!! == "allGoods") {
+            getAllGoods(retrofit, settings)
+        }
+
+
+    }
+
+    private fun getAllGoods(retrofit: RetrofitClient, settings: Map<String, String>) {
+        retrofit.instance.getOrders(settings["deviceId"]!!, settings["requiredData"]!!)
+            ?.enqueue(object : Callback<IncomeDataOrders> {
                 override fun onResponse(
-                    call: Call<DataIncome>,
-                    response: Response<DataIncome>
+                    call: Call<IncomeDataOrders>,
+                    response: Response<IncomeDataOrders>
                 ) {
                     GlobalScope.launch(Dispatchers.IO) {
 
-                        val body: DataIncome? = response.body()
+                        Debug.waitForDebugger()
+                        val body: IncomeDataOrders? = response.body()
                         if (body == null) {
                             Log.d("1C_TO_APP", "Null body")
                             return@launch
@@ -55,26 +90,71 @@ object ExchangeMaster {
 
                         Log.d("1C_TO_APP", body.result)
 
-                        if (body.result != "Ok") { return@launch }
+                        if (body.result != "Ok") {
+                            return@launch
+                        }
 
                         if (response.isSuccessful) {
-                            val goodsDownloader = GoodsDownloader()
-                            goodsDownloader.downloadCatalogs(body.goods)
-
-                            val assemblyOrderDownloader = AssemblyOrderDownloader()
-                            assemblyOrderDownloader.downloadDocuments(body.orders)
-
-                            if (body.orders != null) {
-                                AppNotificationManager.notifyUser()
-                            }
+                            downloadGoods(body)
                         }
                     }
                 }
 
-                override fun onFailure(call: Call<DataIncome>, t: Throwable) {
+                override fun onFailure(call: Call<IncomeDataOrders>, t: Throwable) {
                     Log.d("1C_TO_APP", "Couldn't download data")
                 }
             })
+    }
+
+    private suspend fun downloadGoods(body: IncomeDataOrders) {
+        Debug.waitForDebugger()
+        GoodsDownloader().downloadCatalogs(body.goods)
+    }
+
+    private fun getNewOrders(retrofit: RetrofitClient, settings: Map<String, String>) {
+        retrofit.instance.getOrders(settings["deviceId"]!!, settings["requiredData"]!!)
+            ?.enqueue(object : Callback<IncomeDataOrders> {
+                override fun onResponse(
+                    call: Call<IncomeDataOrders>,
+                    response: Response<IncomeDataOrders>
+                ) {
+                    GlobalScope.launch(Dispatchers.IO) {
+
+                        val body: IncomeDataOrders? = response.body()
+                        if (body == null) {
+                            Log.d("1C_TO_APP", "Null body")
+                            return@launch
+                        }
+
+                        Log.d("1C_TO_APP", body.result)
+
+                        if (body.result != "Ok") {
+                            return@launch
+                        }
+
+                        if (response.isSuccessful) {
+                            downloadNewOrders(body)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<IncomeDataOrders>, t: Throwable) {
+                    Log.d("1C_TO_APP", "Couldn't download data")
+                }
+            })
+    }
+
+
+    private suspend fun downloadNewOrders(body: IncomeDataOrders) {
+        val goodsDownloader = GoodsDownloader()
+        goodsDownloader.downloadCatalogs(body.goods)
+
+        val assemblyOrderDownloader = AssemblyOrderDownloader()
+        assemblyOrderDownloader.downloadDocuments(body.orders)
+
+        if (body.orders != null) {
+            AppNotificationManager.notifyUser()
+        }
     }
 
     fun sendAllOrdersTo1C() {
@@ -88,7 +168,6 @@ object ExchangeMaster {
     }
 
     suspend fun sendOrderTo1C(order: AssemblyOrder) {
-
 
 
         //ПОДГОТОВИМ ДАННЫЕ ДЛЯ ОТПРАВКИ
@@ -119,7 +198,11 @@ object ExchangeMaster {
                     //ПРИ УСПЕШНОЙ ВЫГРУЗКЕ ОБНОВИМ СТАТУС ОТПРАВЛЕННОСТИ ДОКУМЕНТА
                     if (response.code() == 200) {
                         Log.d("APP_TO_1C", "Response 200")
-                        GlobalScope.launch(Dispatchers.IO) { AssemblyOrderSender.makeOrderIsSent(order) }
+                        GlobalScope.launch(Dispatchers.IO) {
+                            AssemblyOrderSender.makeOrderIsSent(
+                                order
+                            )
+                        }
                     }
 
                 }

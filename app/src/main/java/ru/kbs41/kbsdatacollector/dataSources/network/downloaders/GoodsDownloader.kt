@@ -1,11 +1,12 @@
 package ru.kbs41.kbsdatacollector.dataSources.network.downloaders
 
+import android.os.Debug
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.barcodes.Barcode
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.Product
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.ProductDao
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.stamps.Stamp
-import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.DataIncome
+import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.IncomeDataOrders
 
 class GoodsDownloader {
 
@@ -15,13 +16,14 @@ class GoodsDownloader {
     val stampsDao = database.stampDao()
 
 
-    suspend fun downloadCatalogs(goodsList: List<DataIncome.Good>?) {
+    suspend fun downloadCatalogs(goodsList: List<IncomeDataOrders.Good>?) {
+        Debug.waitForDebugger()
         goodsList?.forEach {
             downloadCatalog(it)
         }
     }
 
-    suspend fun downloadCatalog(i: DataIncome.Good) {
+    suspend fun downloadCatalog(i: IncomeDataOrders.Good) {
 
         val product = downloadProduct(i)
         downloadBarcodes(product, i.barcodes)
@@ -31,7 +33,7 @@ class GoodsDownloader {
 
     private suspend fun downloadStamps(
         product: Product,
-        stamps: List<DataIncome.Good.Stamp>?
+        stamps: List<IncomeDataOrders.Good.Stamp>?
     ) {
         stamps?.forEach { bc ->
             val stampNote = stampsDao.getOneNoteByStamp(bc.stamp)
@@ -47,14 +49,18 @@ class GoodsDownloader {
 
     private suspend fun downloadBarcodes(
         product: Product,
-        barcodes: List<DataIncome.Good.Barcode>?
+        barcodes: List<IncomeDataOrders.Good.Barcode>?
     ) {
 
         barcodes?.forEach { bc ->
             val barcodeNote = barcodeDao.getOneNoteByBarcode(bc.barcode)
+            var id: Long = 0
+            if (barcodeNote != null) {
+                id = barcodeNote.id
+            }
 
             val barcode: Barcode = Barcode(
-                barcodeNote.id,
+                id,
                 bc.barcode,
                 product.id
             )
@@ -64,7 +70,7 @@ class GoodsDownloader {
 
     }
 
-    suspend private fun downloadProduct(i: DataIncome.Good): Product {
+    suspend private fun downloadProduct(i: IncomeDataOrders.Good): Product {
         //ПРОБУЕМ НАЙТИ ТОВАР ПО ГУИД
         var product = productDao.getProductByGuid(i.guid)
         if (product == null) {

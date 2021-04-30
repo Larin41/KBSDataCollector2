@@ -18,6 +18,9 @@ interface ProductDao {
     @Query("DELETE FROM products")
     suspend fun deleteAll()
 
+    @Query("SELECT * FROM products")
+    fun getAllFlow(): Flow<List<Product>>
+
     @Query("SELECT * FROM products ORDER BY name ASC")
     fun getAlphabetizedProducts(): Flow<List<Product>>
 
