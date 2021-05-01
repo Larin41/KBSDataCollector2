@@ -13,10 +13,16 @@ interface SimpleScanningDao {
     @Delete
     suspend fun delete(simpleScanning: SimpleScanning)
 
+    @Query("SELECT * FROM simple_scanning WHERE id = :id")
+    fun getById(id: Long): SimpleScanning?
+
     @Query("SELECT * FROM simple_scanning")
     suspend fun getAll(): List<SimpleScanning>
 
     @Query("SELECT * FROM simple_scanning")
     fun getAllFlow(): Flow<List<SimpleScanning>>
+
+    @Query("SELECT * FROM simple_scanning ORDER BY id DESC LIMIT 1")
+    fun getDocWithLastestId(): SimpleScanning?
 
 }

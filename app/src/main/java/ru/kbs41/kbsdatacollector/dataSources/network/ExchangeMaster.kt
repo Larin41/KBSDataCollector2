@@ -56,7 +56,7 @@ object ExchangeMaster {
 
     private fun getData(settings: Map<String, String>) {
 
-        Debug.waitForDebugger()
+        //Debug.waitForDebugger()
         val retrofit = RetrofitClient()
 
         retrofit.initInstance()
@@ -81,7 +81,7 @@ object ExchangeMaster {
                 ) {
                     GlobalScope.launch(Dispatchers.IO) {
 
-                        Debug.waitForDebugger()
+                        //Debug.waitForDebugger()
                         val body: IncomeDataOrders? = response.body()
                         if (body == null) {
                             Log.d("1C_TO_APP", "Null body")
@@ -107,7 +107,7 @@ object ExchangeMaster {
     }
 
     private suspend fun downloadGoods(body: IncomeDataOrders) {
-        Debug.waitForDebugger()
+        //Debug.waitForDebugger()
         GoodsDownloader().downloadCatalogs(body.goods)
     }
 
@@ -199,9 +199,7 @@ object ExchangeMaster {
                     if (response.code() == 200) {
                         Log.d("APP_TO_1C", "Response 200")
                         GlobalScope.launch(Dispatchers.IO) {
-                            AssemblyOrderSender.makeOrderIsSent(
-                                order
-                            )
+                            AssemblyOrderSender.makeOrderIsSent(order)
                         }
                     }
 

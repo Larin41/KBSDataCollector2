@@ -85,31 +85,34 @@
                 tools:text="03.03.2021 18:00:03" />
 
 
-
-            <TextView
-                android:id="@+id/tvCommentInfo"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tiPassword"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="@string/comment"
+                android:hint="@string/comment"
+                app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvNumberSymbol" />
+                app:layout_constraintTop_toBottomOf="@id/tvNumberSymbol">
 
-            <TextView
-                android:id="@+id/tvComment"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="@{comment}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvCommentInfo"
-                tools:text="Сука срочно собрать всё это говно и загрузить клиенту в его автомобиль" />
+                <EditText
+                    android:id="@+id/etComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:inputType="textMultiLine"
+                    android:singleLine="false"
+                    android:text="@{comment}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
