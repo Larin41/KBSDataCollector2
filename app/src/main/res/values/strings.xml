@@ -55,4 +55,5 @@
     <string name="comment">Комментарий</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
+    <string name="scanning">Сканирование</string>
 </resources>

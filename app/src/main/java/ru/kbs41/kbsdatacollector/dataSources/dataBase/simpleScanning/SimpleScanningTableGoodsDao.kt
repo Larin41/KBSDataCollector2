@@ -19,7 +19,7 @@ interface SimpleScanningTableGoodsDao {
     @Query("SELECT * FROM simple_scanning_table_goods")
     suspend fun getAll(): List<SimpleScanningTableGoods>
 
-    @Query("SELECT * FROM simple_scanning_table_goods WHERE simpleScanning = :docId AND productId = :productId LIMIT 1")
+    @Query("SELECT * FROM simple_scanning_table_goods WHERE simpleScanning = :docId AND productId = :productId ORDER BY id DESC LIMIT 1 ")
     fun getByDocAndProduct(docId: Long, productId: Long): SimpleScanningTableGoods?
 
 

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Debug
 import android.widget.Toast
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.App
@@ -25,11 +26,11 @@ class SimpleScanningViewModel() : ViewModel() {
 
     val id: MutableLiveData<Long> = MutableLiveData(0L)
     val date: MutableLiveData<Date> = MutableLiveData(Date())
+    val comment: MutableLiveData<String> = MutableLiveData("")
 
     lateinit var tableGoods: LiveData<List<SimpleScanningTableGoods>>
 
     lateinit var simpleScanning: SimpleScanning
-
 
 
     fun fetchData(_docId: Long, _context: Context) {
@@ -55,7 +56,13 @@ class SimpleScanningViewModel() : ViewModel() {
 
         if (barcodeNote == null) {
             GlobalScope.launch { SoundEffects().playError(context) }
-            Toast.makeText(context, "Незвестный штрихкод", Toast.LENGTH_SHORT).show()
+            GlobalScope.launch(Dispatchers.Main) {
+                Toast.makeText(
+                    context,
+                    "Незвестный штрихкод",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
             return
         }
 
@@ -83,6 +90,7 @@ class SimpleScanningViewModel() : ViewModel() {
         simpleScanning = simpleScanningDao.getById(_docId)!!
         date.value = simpleScanning.date
         id.apply { id.value = simpleScanning.id }
+        comment.apply { comment.value = simpleScanning.comment }
 
     }
 

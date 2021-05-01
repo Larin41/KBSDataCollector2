@@ -16,10 +16,10 @@ interface SimpleScanningDao {
     @Query("SELECT * FROM simple_scanning WHERE id = :id")
     fun getById(id: Long): SimpleScanning?
 
-    @Query("SELECT * FROM simple_scanning")
+    @Query("SELECT * FROM simple_scanning ORDER BY id DESC")
     suspend fun getAll(): List<SimpleScanning>
 
-    @Query("SELECT * FROM simple_scanning")
+    @Query("SELECT * FROM simple_scanning ORDER BY id DESC")
     fun getAllFlow(): Flow<List<SimpleScanning>>
 
     @Query("SELECT * FROM simple_scanning ORDER BY id DESC LIMIT 1")

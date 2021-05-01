@@ -72,7 +72,11 @@ class SimpleScanningTableGoodsAdapter(
                         R.id.menu_item_delete -> {
 
                             val dao = App().database.assemblyOrderTableStampsDao()
-                            GlobalScope.launch(Dispatchers.IO) { simpleScanningTableGoodsDao.delete(note) }
+                            GlobalScope.launch(Dispatchers.IO) {
+                                simpleScanningTableGoodsDao.delete(
+                                    note
+                                )
+                            }
 
                             true
                         }
@@ -93,7 +97,6 @@ class SimpleScanningTableGoodsAdapter(
                 }
                 popupMenu.show()
             }
-
 
 
             val addBtn = itemView.findViewById<MaterialButton>(R.id.addQty)

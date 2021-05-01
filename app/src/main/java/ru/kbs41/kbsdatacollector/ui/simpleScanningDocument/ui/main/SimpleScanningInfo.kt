@@ -52,6 +52,10 @@ class SimpleScanningInfo : Fragment() {
             binding.date = FormatManager.getDateRussianFormat(it)
         })
 
+        model.comment.observe(viewLifecycleOwner, {
+            binding.comment = it
+        })
+
         binding.etComment.addTextChangedListener {
             model.updateComment(it.toString())
         }
