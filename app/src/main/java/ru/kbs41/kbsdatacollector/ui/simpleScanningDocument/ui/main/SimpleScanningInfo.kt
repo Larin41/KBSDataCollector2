@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -50,6 +51,10 @@ class SimpleScanningInfo : Fragment() {
         model.date.observe(viewLifecycleOwner, {
             binding.date = FormatManager.getDateRussianFormat(it)
         })
+
+        binding.etComment.addTextChangedListener {
+            model.updateComment(it.toString())
+        }
 
         return root
     }

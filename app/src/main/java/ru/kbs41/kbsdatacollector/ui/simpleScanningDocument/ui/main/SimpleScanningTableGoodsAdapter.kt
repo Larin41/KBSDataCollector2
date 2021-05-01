@@ -1,18 +1,23 @@
 package ru.kbs41.kbsdatacollector.ui.simpleScanningDocument.ui.main
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanningTableGoods
+import java.lang.Exception
 
 
 class SimpleScanningTableGoodsAdapter(
@@ -56,10 +61,43 @@ class SimpleScanningTableGoodsAdapter(
         var product: TextView = itemView.findViewById(R.id.tvProduct)
         var qty: TextView = itemView.findViewById(R.id.etQty)
         lateinit var note: SimpleScanningTableGoods
+        private val menu: ImageButton = itemView.findViewById(R.id.stampsMenu)
 
         init {
 
+            menu.setOnClickListener {
+                val popupMenu = PopupMenu(context, it)
+                popupMenu.setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.menu_item_delete -> {
+
+                            val dao = App().database.assemblyOrderTableStampsDao()
+                            GlobalScope.launch(Dispatchers.IO) { simpleScanningTableGoodsDao.delete(note) }
+
+                            true
+                        }
+                        else -> false
+                    }
+                }
+
+                popupMenu.inflate(R.menu.stamps_menu)
+                try {
+                    val fieldMPopUp = PopupMenu::class.java.getDeclaredField("mPopup")
+                    fieldMPopUp.isAccessible = true
+                    val mPopup = fieldMPopUp.get(popupMenu)
+                    mPopup.javaClass
+                        .getDeclaredMethod("setForceShowIcon", Boolean::class.java)
+                        .invoke(mPopup, true)
+                } catch (e: Exception) {
+                    Log.e("Stamps", "Error showing menu")
+                }
+                popupMenu.show()
+            }
+
+
+
             val addBtn = itemView.findViewById<MaterialButton>(R.id.addQty)
+
             addBtn.setOnClickListener {
 
                 var counterPlus: Double = 0.0

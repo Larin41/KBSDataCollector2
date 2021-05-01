@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface SimpleScanningDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(simpleScanning: SimpleScanning) : Long
+    fun insert(simpleScanning: SimpleScanning) : Long
 
     @Delete
     suspend fun delete(simpleScanning: SimpleScanning)
