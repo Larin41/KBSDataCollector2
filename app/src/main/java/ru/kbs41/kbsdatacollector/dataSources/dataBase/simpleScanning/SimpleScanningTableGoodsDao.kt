@@ -1,7 +1,8 @@
 package ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
-import ru.kbs41.kbsdatacollector.dataSources.dataBase.settings.Settings
+
 
 @Dao
 interface SimpleScanningTableGoodsDao {
@@ -12,7 +13,13 @@ interface SimpleScanningTableGoodsDao {
     @Delete
     suspend fun delete(simpleScanningTableGoods: SimpleScanningTableGoods)
 
+    @Query("SELECT * FROM simple_scanning_table_goods WHERE simpleScanning = :docId")
+    fun getByDocId(docId: Long): LiveData<List<SimpleScanningTableGoods>>
+
     @Query("SELECT * FROM simple_scanning_table_goods")
     suspend fun getAll(): List<SimpleScanningTableGoods>
+
+
+
 
 }

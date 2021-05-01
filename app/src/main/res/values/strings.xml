@@ -53,4 +53,6 @@
     <string name="accept">Принять</string>
     <string name="title_activity_simple_scanning_document">SimpleScanningDocument</string>
     <string name="comment">Комментарий</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
 </resources>

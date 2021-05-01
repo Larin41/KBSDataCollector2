@@ -9,7 +9,7 @@ import ru.kbs41.kbsdatacollector.ui.stamps.StampsFragmentInfo
 import ru.kbs41.kbsdatacollector.ui.stamps.StampsFragmentRw
 
 private val TAB_TITLES = arrayOf(
-    R.string.assembly_order_stamps,
+    R.string.goods,
     R.string.information
 )
 
@@ -19,10 +19,10 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
 
     override fun getItem(position: Int): Fragment {
         return when(position){
-            0 -> SimpleScanningInfo()
+            0 -> SimpleScanningTableGoodsFragment()
             1 -> SimpleScanningInfo()
             else -> {
-                SimpleScanningInfo()
+                SimpleScanningTableGoodsFragment()
             }
         }
     }

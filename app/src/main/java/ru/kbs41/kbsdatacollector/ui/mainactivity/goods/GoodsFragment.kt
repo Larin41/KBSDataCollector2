@@ -32,7 +32,7 @@ class GoodsFragment : Fragment() {
 
         val swipeRefreshLayout = rootView.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshGoods)
         swipeRefreshLayout.setOnRefreshListener {
-            Debug.waitForDebugger()
+            //Debug.waitForDebugger()
             ExchangeMaster.getAllGoodsFrom1C()
         }
 
