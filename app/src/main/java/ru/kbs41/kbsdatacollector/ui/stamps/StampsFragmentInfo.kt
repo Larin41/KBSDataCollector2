@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.R
 
 import ru.kbs41.kbsdatacollector.databinding.FragmentStampsInfoBinding
+import java.lang.Exception
 
 
 class StampsFragmentInfo : Fragment() {
@@ -18,7 +20,7 @@ class StampsFragmentInfo : Fragment() {
     private var _binding: FragmentStampsInfoBinding? = null
     private val binding get() = _binding!!
 
-    private val model: StampsViewModel by activityViewModels()
+    lateinit var viewModel: StampsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,25 +35,49 @@ class StampsFragmentInfo : Fragment() {
         _binding = FragmentStampsInfoBinding.inflate(inflater, container, false)
         val root = binding.root
 
-        binding.qty = FormatManager.getFormattedNumber(model.currentRowTableGoods.qty)
-        binding.product = model.currentProduct.name
+        binding.qty = FormatManager.getFormattedNumber(viewModel.currentRowTableGoods.qty)
+        binding.product = viewModel.currentProduct.name
 
-        model.tableStampsWithProducts.observe(viewLifecycleOwner) {
+        return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel = activity?.run {
+            ViewModelProvider(this).get(StampsViewModel::class.java)
+        } ?: throw Exception("Invalid activity")
+
+        subscribeObservers()
+
+    }
+
+    private fun subscribeObservers() {
+        viewModel.tableStampsWithProducts.observe(viewLifecycleOwner) {
             binding.qtyCollected = it.size.toString()
         }
 
-        model.qtyCollected.observe(
+        viewModel.qtyCollected.observe(
             viewLifecycleOwner,
             {
-                if(it == model.qty.value){
-                    binding.tvQtyCollected.setTextColor(ContextCompat.getColor(requireContext(), R.color.teal_700))
+                if (it == viewModel.qty.value) {
+                    binding.tvQtyCollected.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.teal_700
+                        )
+                    )
                 } else {
-                    binding.tvQtyCollected.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+                    binding.tvQtyCollected.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.red
+                        )
+                    )
                 }
             }
         )
 
-        return root
     }
 
     companion object {

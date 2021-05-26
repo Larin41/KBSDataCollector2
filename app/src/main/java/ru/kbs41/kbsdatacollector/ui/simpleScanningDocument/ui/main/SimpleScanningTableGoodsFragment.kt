@@ -1,21 +1,26 @@
 package ru.kbs41.kbsdatacollector.ui.simpleScanningDocument.ui.main
 
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.R
-import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
-import ru.kbs41.kbsdatacollector.databinding.FragmentSimpleScanningInfoBinding
 import ru.kbs41.kbsdatacollector.databinding.FragmentSimpleScanningTableGoodsBinding
-import ru.kbs41.kbsdatacollector.ui.assemblyorders.AssemblyOrderTableStampsAdapter
-import ru.kbs41.kbsdatacollector.ui.mainactivity.simpleScanning.SimpleScanningAdapter
 import ru.kbs41.kbsdatacollector.ui.simpleScanningDocument.SimpleScanningViewModel
 import ru.kbs41.kbsdatacollector.ui.stamps.StampsFragmentInfo
+import java.lang.Exception
+
 
 //
 class SimpleScanningTableGoodsFragment : Fragment() {
@@ -52,7 +57,31 @@ class SimpleScanningTableGoodsFragment : Fragment() {
             viewLifecycleOwner,
             {
                 it.let {
-                    rwAdapter.notifyDataSetChanged()
+                    GlobalScope.launch(Dispatchers.Main) {
+                        rwAdapter.notifyDataSetChanged()
+
+                        val lastestPosition = model.getLastestPosition()
+                        rwTableGoods.scrollToPosition(lastestPosition)
+                        //Debug.waitForDebugger()
+                        delay(1000)
+                        val currentView =
+                            rwTableGoods.findViewHolderForAdapterPosition(lastestPosition)?.itemView
+                        Log.d("CurrentView", currentView.toString())
+
+                        try {
+                            currentView?.setBackgroundColor(Color.GREEN)
+                            delay(600)
+                            currentView?.setBackgroundColor(resources.getColor(R.color.gray))
+                        } catch (e: Exception){
+                            Log.d("CurrentView", e.toString())
+                        } finally {
+
+                        }
+
+
+                    }
+
+
                 }
             })
 

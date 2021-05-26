@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
@@ -14,17 +13,21 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.Constants
 import ru.kbs41.kbsdatacollector.R
+import androidx.lifecycle.ViewModelProvider
 
 class StampsReadingActivity : AppCompatActivity() {
 
     private val receiverAtol = ReceiverAtol()
     private val receiverCaribe = ReceiverCaribe()
 
-    private val model: StampsViewModel by viewModels()
+    lateinit var viewModel: StampsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stamps_reading)
+
+        viewModel = ViewModelProvider(this).get(StampsViewModel::class.java)
+
         val sectionsPagerAdapter = StampsSectionsPagerAdapter(this, supportFragmentManager)
         val viewPager: ViewPager = findViewById(R.id.stamps_view_pager)
         viewPager.adapter = sectionsPagerAdapter
@@ -36,7 +39,7 @@ class StampsReadingActivity : AppCompatActivity() {
         val qty = intent.getDoubleExtra("qty", 0.0)
         val row = intent.getLongExtra("row", 0)
 
-        model.initProperties(row, docId, productId, qty, this)
+        viewModel.initProperties(row, docId, productId, qty, this)
 
     }
 
@@ -61,7 +64,7 @@ class StampsReadingActivity : AppCompatActivity() {
 
             val barcode = intent!!.getStringExtra(Constants.EXTRA_BARCODE_ATOL_SMART_LITE)
 
-            GlobalScope.launch(Dispatchers.IO) { model.insertNewStamp(barcode!!) }
+            GlobalScope.launch(Dispatchers.IO) { viewModel.insertNewStamp(barcode!!) }
 
         }
 
@@ -76,7 +79,7 @@ class StampsReadingActivity : AppCompatActivity() {
 
             val barcodeStr = String(barocode!!, 0, barocodelen)
 
-            GlobalScope.launch(Dispatchers.IO) { model.insertNewStamp(barcodeStr) }
+            GlobalScope.launch(Dispatchers.IO) { viewModel.insertNewStamp(barcodeStr) }
 
         }
 

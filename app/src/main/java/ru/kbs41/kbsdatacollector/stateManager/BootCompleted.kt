@@ -13,15 +13,12 @@ class BootCompleted : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        Log.d("HUIPIZDA", "onReceive")
         //ИНИЦИАЛИЗАЦИЯ ЭКЗЕМПЛЯРА БАЗЫ ДАННЫХ
         AppDatabase.getDatabase(context, null)
-        Log.d("HUIPIZDA", "DB is OK")
-
 
         val service = Intent(context, ExchangerService::class.java)
-        //context.startService(service)
-        ContextCompat.startForegroundService(context, service)
+        context.startService(service)
+        //ContextCompat.startForegroundService(context, service)
 
 
         Log.d("BOOT", "BOOT COMPLETED")

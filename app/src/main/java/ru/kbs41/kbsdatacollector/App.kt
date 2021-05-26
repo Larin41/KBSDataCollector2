@@ -7,6 +7,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.AppDatabase
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.Product
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.repository.ProductRepository
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanning
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanningTableGoods
@@ -39,6 +40,7 @@ class App(_context: Context? = null) : Application() {
     private fun createTestData() {
 
         GlobalScope.launch {
+            val productDao = database.productDao()
             val simpleScanningDao = database.simpleScanningDao()
             val simpleScanningTableGoodsDao = database.simpleScanningTableGoodsDao()
 
@@ -52,12 +54,12 @@ class App(_context: Context? = null) : Application() {
             )
             val docId = simpleScanningDao.insert(simpleScanning)
 
-            val list = listOf<Int>(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+            val list = listOf<Int>(1, 2, 3, 4, 5)
 
             list.forEach {
                 val simpleScanningTableGoods = SimpleScanningTableGoods(
                     0,
-                    "guid $it",
+                    productDao.getProductById(it.toLong()).guid!!,
                     it.toDouble(),
                     docId,
                     it.toLong()

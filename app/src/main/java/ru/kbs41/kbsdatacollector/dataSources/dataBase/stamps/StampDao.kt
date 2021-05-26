@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface StampDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(stamp: Stamp)
+    fun insert(stamp: Stamp)
 
     @Delete
     suspend fun delete(stamp: Stamp)

@@ -36,8 +36,8 @@ class AssemblyOrderFullRepository() {
         return productDao.getProductById(id)
     }
 
-    fun getAssemblyOrderTableStampsByBarcode(barcode: String) : AssemblyOrderTableStamps?{
-        return assemblyOrderTableStampsDao.getTableStampsByBarcode(barcode)
+    fun getAssemblyOrderTableStampsByBarcode(barcode: String, docId: Long) : AssemblyOrderTableStamps?{
+        return assemblyOrderTableStampsDao.getTableStampsByBarcodeAndDoc(barcode, docId)
     }
 
     fun getAssemblyOrderFlow(id: Long): Flow<AssemblyOrder> {

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,10 +31,15 @@ class GoodsFragment : Fragment() {
 
         rootView = inflater.inflate(R.layout.fragment_goods, container, false)
 
+        val progressBar = rootView.findViewById<ProgressBar>(R.id.pbGoodsDownload)
+        progressBar.visibility = View.GONE
+
         val swipeRefreshLayout = rootView.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshGoods)
         swipeRefreshLayout.setOnRefreshListener {
             //Debug.waitForDebugger()
-            ExchangeMaster.getAllGoodsFrom1C()
+            progressBar?.visibility = View.VISIBLE
+            ExchangeMaster.getAllGoodsFrom1C(progressBar)
+            swipeRefreshLayout.isRefreshing = false
         }
 
         val actionBar = (activity as AppCompatActivity).supportActionBar

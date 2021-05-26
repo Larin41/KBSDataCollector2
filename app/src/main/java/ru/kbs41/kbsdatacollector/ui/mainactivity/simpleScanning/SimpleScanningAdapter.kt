@@ -6,14 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanning
-import ru.kbs41.kbsdatacollector.ui.simpleScanningDocument.SimpleScanningDocument
+import ru.kbs41.kbsdatacollector.ui.simpleScanningDocument.SimpleScanningActivity
 
 
 class SimpleScanningAdapter(
@@ -53,7 +52,7 @@ class SimpleScanningAdapter(
         init {
             itemView.setOnClickListener {
 
-                val intent = Intent(context, SimpleScanningDocument::class.java)
+                val intent = Intent(context, SimpleScanningActivity::class.java)
                 intent.putExtra("simpleScanningId", list.value!![adapterPosition].id)
                 ContextCompat.startActivity(context, intent, null)
             }

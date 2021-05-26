@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.QUICKBOOT_POWERON" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".App"
@@ -20,12 +21,12 @@
         android:theme="@style/Theme.KBSDataCollector"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.simpleScanningDocument.SimpleScanningDocument"
+            android:name=".ui.simpleScanningDocument.SimpleScanningActivity"
             android:label="@string/title_activity_simple_scanning_document"
-            android:theme="@style/Theme.KBSDataCollector.NoActionBar"></activity>
+            android:theme="@style/Theme.KBSDataCollector.NoActionBar"/>
 
         <service
-            android:name=".dataSources.network.ExchangerService"
+            android:name=".ExchangerService"
             android:enabled="true"
             android:exported="true" />
 

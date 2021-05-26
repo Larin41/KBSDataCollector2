@@ -10,6 +10,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.ExchangerService
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.AppDatabase
@@ -41,9 +45,13 @@ class MainActivity : AppCompatActivity() {
         try {
 
             //СТАРТ СЛУЖБЫ
-            val service = Intent(this, ExchangerService::class.java)
-            //startService(service)
-            ContextCompat.startForegroundService(this, service)
+            GlobalScope.launch {
+                val service = Intent(applicationContext, ExchangerService::class.java)
+                //delay(6000)
+                //startService(service)
+                //ContextCompat.startForegroundService(this@MainActivity, service)
+            }
+
 
             //TODO: удалить getData(). Нужно для отладки
             getData()

@@ -28,6 +28,9 @@ class SimpleScanningViewModel() : ViewModel() {
     val date: MutableLiveData<Date> = MutableLiveData(Date())
     val comment: MutableLiveData<String> = MutableLiveData("")
 
+    var currentProductId: Long = 0L
+    var latestPosition: Int = 0
+
     lateinit var tableGoods: LiveData<List<SimpleScanningTableGoods>>
 
     lateinit var simpleScanning: SimpleScanning
@@ -45,7 +48,7 @@ class SimpleScanningViewModel() : ViewModel() {
 
         if (id.value?.toLong() != null) {
             tableGoods =
-                simpleScanningTableGoodsDao.getByDocId(id.value!!)
+                simpleScanningTableGoodsDao.getByDocIdLiveData(id.value!!)
         }
 
     }
@@ -82,7 +85,8 @@ class SimpleScanningViewModel() : ViewModel() {
         }
 
         //Debug.waitForDebugger()
-        GlobalScope.launch { simpleScanningTableGoodsDao.insert(rowTableGoods) }
+        simpleScanningTableGoodsDao.insert(rowTableGoods)
+        currentProductId = rowTableGoods.productId
 
     }
 
@@ -105,13 +109,34 @@ class SimpleScanningViewModel() : ViewModel() {
             false
         )
 
-        id.apply { id.value = simpleScanningDao.insert(simpleScanning) }
+        simpleScanning.id = simpleScanningDao.insert(simpleScanning)
+        id.let { id.value = simpleScanning.id }
 
     }
 
     fun updateComment(comment: String) {
         simpleScanning.comment = comment
         simpleScanningDao.insert(simpleScanning)
+    }
+
+    fun sendSimpleScanning(){
+        simpleScanning.isCompleted = true
+        simpleScanning.isSent = false
+        simpleScanningDao.insert(simpleScanning)
+    }
+
+    fun getLastestPosition(): Int {
+
+        var index: Int = 0
+
+        tableGoods.value?.forEach {
+            if (it.productId == currentProductId){
+                index = tableGoods.value!!.indexOf(it)
+                return index
+            }
+        }
+
+        return 0
     }
 }
 

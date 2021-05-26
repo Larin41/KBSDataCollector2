@@ -15,7 +15,10 @@ class NetworkChanging : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
 
         if (isOnline(context!!)) {
-            GlobalScope.launch(Dispatchers.IO) { ExchangeMaster.sendAllOrdersTo1C() }
+            GlobalScope.launch(Dispatchers.IO) {
+                ExchangeMaster.sendAllOrdersTo1C()
+                ExchangeMaster.sendAllSimpleScanningTo1C()
+            }
         }
 
     }

@@ -8,13 +8,16 @@ import androidx.room.*
 interface SimpleScanningTableGoodsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(simpleScanningTableGoods: SimpleScanningTableGoods)
+    fun insert(simpleScanningTableGoods: SimpleScanningTableGoods)
 
     @Delete
     suspend fun delete(simpleScanningTableGoods: SimpleScanningTableGoods)
 
     @Query("SELECT * FROM simple_scanning_table_goods WHERE simpleScanning = :docId")
-    fun getByDocId(docId: Long): LiveData<List<SimpleScanningTableGoods>>
+    fun getByDocIdLiveData(docId: Long): LiveData<List<SimpleScanningTableGoods>>
+
+    @Query("SELECT * FROM simple_scanning_table_goods WHERE simpleScanning = :docId")
+    fun getByDocId(docId: Long): List<SimpleScanningTableGoods>
 
     @Query("SELECT * FROM simple_scanning_table_goods")
     suspend fun getAll(): List<SimpleScanningTableGoods>

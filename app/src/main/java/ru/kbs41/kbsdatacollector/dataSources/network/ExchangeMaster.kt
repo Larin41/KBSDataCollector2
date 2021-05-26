@@ -4,6 +4,8 @@ package ru.kbs41.kbsdatacollector.dataSources.network
 import android.app.Application
 import android.os.Debug
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import kotlinx.coroutines.*
 import retrofit2.*
 import ru.kbs41.kbsdatacollector.notificationManager.AppNotificationManager
@@ -11,15 +13,18 @@ import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.IncomeDataO
 import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.DataOutgoing
 import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.SendingStatus
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanning
 import ru.kbs41.kbsdatacollector.dataSources.network.downloaders.AssemblyOrderDownloader
 import ru.kbs41.kbsdatacollector.dataSources.network.downloaders.GoodsDownloader
 import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.RetrofitClient
+import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.IncomeGoodsModel
 import ru.kbs41.kbsdatacollector.dataSources.network.senders.AssemblyOrderSender
+import ru.kbs41.kbsdatacollector.dataSources.network.senders.SimpleScanningSender
 import java.io.IOException
 
 object ExchangeMaster {
 
-    fun getAllGoodsFrom1C() {
+    fun getAllGoodsFrom1C(progressBar: ProgressBar? = null) {
 
         //Debug.waitForDebugger()
 
@@ -29,7 +34,7 @@ object ExchangeMaster {
         )
 
         try {
-            getData(settings)
+            getData(settings, progressBar)
         } catch (e: IOException) {
             Log.d("1C_TO_APP", e.message!!)
         } finally {
@@ -48,13 +53,13 @@ object ExchangeMaster {
         try {
             getData(settings)
         } catch (e: IOException) {
-            Log.d("1C_TO_APP", e.message!!)
+            Log.d("GoodsFrom1C", e.message!!)
         } finally {
             //DO NOTHING
         }
     }
 
-    private fun getData(settings: Map<String, String>) {
+    private fun getData(settings: Map<String, String>, progressBar: ProgressBar? = null) {
 
         //Debug.waitForDebugger()
         val retrofit = RetrofitClient()
@@ -66,49 +71,49 @@ object ExchangeMaster {
         }
 
         if (settings["requiredData"]!! == "allGoods") {
-            getAllGoods(retrofit, settings)
+            getAllGoods(retrofit, settings, progressBar)
         }
 
 
     }
 
-    private fun getAllGoods(retrofit: RetrofitClient, settings: Map<String, String>) {
-        retrofit.instance.getOrders(settings["deviceId"]!!, settings["requiredData"]!!)
-            ?.enqueue(object : Callback<IncomeDataOrders> {
+    private fun getAllGoods(retrofit: RetrofitClient, settings: Map<String, String>, progressBar: ProgressBar? = null) {
+        retrofit.instance.getGoods(settings["deviceId"]!!, settings["requiredData"]!!)
+            ?.enqueue(object : Callback<IncomeGoodsModel> {
                 override fun onResponse(
-                    call: Call<IncomeDataOrders>,
-                    response: Response<IncomeDataOrders>
+                    call: Call<IncomeGoodsModel>,
+                    response: Response<IncomeGoodsModel>
                 ) {
                     GlobalScope.launch(Dispatchers.IO) {
 
                         //Debug.waitForDebugger()
-                        val body: IncomeDataOrders? = response.body()
+                        val body: IncomeGoodsModel? = response.body()
                         if (body == null) {
-                            Log.d("1C_TO_APP", "Null body")
+                            Log.d("GoodsFrom1C", "Null body")
                             return@launch
                         }
 
-                        Log.d("1C_TO_APP", body.result)
+                        Log.d("GoodsFrom1C", body.result)
+                        Log.d("GoodsFrom1C", response.isSuccessful.toString())
+                        downloadGoods(body, progressBar)
 
-                        if (body.result != "Ok") {
-                            return@launch
-                        }
-
-                        if (response.isSuccessful) {
-                            downloadGoods(body)
-                        }
                     }
                 }
 
-                override fun onFailure(call: Call<IncomeDataOrders>, t: Throwable) {
-                    Log.d("1C_TO_APP", "Couldn't download data")
+                override fun onFailure(call: Call<IncomeGoodsModel>, t: Throwable) {
+                    Log.d("GoodsFrom1C", "Couldn't download data")
                 }
             })
     }
 
-    private suspend fun downloadGoods(body: IncomeDataOrders) {
+    private fun downloadGoods(body: IncomeGoodsModel?, progressBar: ProgressBar? = null) {
         //Debug.waitForDebugger()
-        GoodsDownloader().downloadCatalogs(body.goods)
+        if (body?.goods != null) {
+            GoodsDownloader().downloadCatalogs(body.goods, progressBar)
+        }
+
+        GlobalScope.launch (Dispatchers.Main) { progressBar?.visibility = View.GONE }
+
     }
 
     private fun getNewOrders(retrofit: RetrofitClient, settings: Map<String, String>) {
@@ -146,8 +151,8 @@ object ExchangeMaster {
 
 
     private suspend fun downloadNewOrders(body: IncomeDataOrders) {
-        val goodsDownloader = GoodsDownloader()
-        goodsDownloader.downloadCatalogs(body.goods)
+//        val goodsDownloader = GoodsDownloader()
+//        goodsDownloader.downloadCatalogs(body.goods)
 
         val assemblyOrderDownloader = AssemblyOrderDownloader()
         assemblyOrderDownloader.downloadDocuments(body.orders)
@@ -167,23 +172,35 @@ object ExchangeMaster {
         }
     }
 
-    suspend fun sendOrderTo1C(order: AssemblyOrder) {
+    fun sendAllSimpleScanningTo1C() {
+
+        GlobalScope.launch {
+            val simpleScanning = SimpleScanningSender.getAllAssemblyOrdersForSending()
+            simpleScanning.forEach {
+                sendSimpleScanningTo1C(it)
+            }
+        }
+    }
+
+    suspend fun sendSimpleScanningTo1C(simpleScanning: SimpleScanning) {
 
 
         //ПОДГОТОВИМ ДАННЫЕ ДЛЯ ОТПРАВКИ
         val data = DataOutgoing(
+            "scanning",
             DataOutgoing.OrderModel(
-                order.guid,
-                order.date,
-                order.number,
-                AssemblyOrderSender.getAssemblyOrderTableGoods(order),
-                AssemblyOrderSender.getAssemblyOrderTableStamps(order)
+                simpleScanning.guid,
+                simpleScanning.date,
+                simpleScanning.id.toString(),
+                simpleScanning.comment,
+                SimpleScanningSender.getTableGoods(simpleScanning),
+                null
             )
         )
 
         //ПОПРОБУЕМ ОТПРАВИТЬ ДАННЫЕ
-
-        Log.d("APP_TO_1C", "Start sending")
+        //Debug.waitForDebugger()
+        Log.d("SimpleScanning_TO_1C", "Start sending")
         val retrofit = RetrofitClient()
         retrofit.initInstance()
         retrofit.instance.sendOrder(data)
@@ -194,10 +211,58 @@ object ExchangeMaster {
                 ) {
 
                     //Debug.waitForDebugger()
-                    Log.d("APP_TO_1C", "Sending is completed")
+                    Log.d("SimpleScanning_TO_1C", "Sending is completed")
                     //ПРИ УСПЕШНОЙ ВЫГРУЗКЕ ОБНОВИМ СТАТУС ОТПРАВЛЕННОСТИ ДОКУМЕНТА
                     if (response.code() == 200) {
-                        Log.d("APP_TO_1C", "Response 200")
+                        Log.d("SimpleScanning_TO_1C", "Response 200")
+                        GlobalScope.launch(Dispatchers.IO) {
+                            SimpleScanningSender.makeOrderIsSent(simpleScanning)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<SendingStatus>, t: Throwable) {
+                    Log.d("SimpleScanning_TO_1C", "Error")
+                }
+            })
+
+
+    }
+
+
+    suspend fun sendOrderTo1C(order: AssemblyOrder) {
+
+
+        //ПОДГОТОВИМ ДАННЫЕ ДЛЯ ОТПРАВКИ
+        val data = DataOutgoing(
+            "orders",
+            DataOutgoing.OrderModel(
+                order.guid,
+                order.date,
+                order.number,
+                order.comment,
+                AssemblyOrderSender.getAssemblyOrderTableGoods(order),
+                AssemblyOrderSender.getAssemblyOrderTableStamps(order)
+            )
+        )
+
+        //ПОПРОБУЕМ ОТПРАВИТЬ ДАННЫЕ
+
+        Log.d("AssemblyOrder_TO_1C", "Start sending")
+        val retrofit = RetrofitClient()
+        retrofit.initInstance()
+        retrofit.instance.sendOrder(data)
+            ?.enqueue(object : Callback<SendingStatus> {
+                override fun onResponse(
+                    call: Call<SendingStatus>,
+                    response: Response<SendingStatus>
+                ) {
+
+                    //Debug.waitForDebugger()
+                    Log.d("AssemblyOrder_TO_1C", "Sending is completed")
+                    //ПРИ УСПЕШНОЙ ВЫГРУЗКЕ ОБНОВИМ СТАТУС ОТПРАВЛЕННОСТИ ДОКУМЕНТА
+                    if (response.code() == 200) {
+                        Log.d("AssemblyOrder_TO_1C", "Response 200")
                         GlobalScope.launch(Dispatchers.IO) {
                             AssemblyOrderSender.makeOrderIsSent(order)
                         }
@@ -206,7 +271,7 @@ object ExchangeMaster {
                 }
 
                 override fun onFailure(call: Call<SendingStatus>, t: Throwable) {
-                    Log.d("APP_TO_1C", "HUEVO")
+                    Log.d("AssemblyOrder_TO_1C", "Error")
                 }
             })
 

@@ -1,5 +1,6 @@
 package ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
@@ -36,6 +37,9 @@ interface AssemblyOrderDao {
 
     @Query("SELECT * FROM assembly_orders WHERE isCompleted = 1 AND isSent = 0")
     fun getAssemblyOrderCompleteNotSentFlow(): Flow<List<AssemblyOrder>>
+
+    @Query("SELECT * FROM assembly_orders WHERE isCompleted = 1 AND isSent = 0")
+    fun getCompletedNotSendedLiveData(): LiveData<List<AssemblyOrder>>
 
     @Query("SELECT * FROM assembly_orders WHERE isCompleted = 1 AND isSent = 0")
     fun getAssemblyOrderCompleteNotSent(): List<AssemblyOrder>

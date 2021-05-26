@@ -28,6 +28,9 @@ interface AssemblyOrderTableStampsDao {
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE barcode = :barcode LIMIT 1")
     fun getTableStampsByBarcode(barcode: String): AssemblyOrderTableStamps
 
+    @Query("SELECT * FROM assembly_orders_table_stamps WHERE barcode = :barcode AND assemblyOrderId = :docId LIMIT 1")
+    fun getTableStampsByBarcodeAndDoc(barcode: String, docId: Long): AssemblyOrderTableStamps
+
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId AND productId = :productId ORDER BY id")
     fun getTableStampsByDocIdAndProductId(assemblyOrderId: Long, productId: Long): List<AssemblyOrderTableStamps>
 

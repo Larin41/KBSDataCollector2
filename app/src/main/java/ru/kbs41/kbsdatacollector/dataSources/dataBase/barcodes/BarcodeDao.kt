@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BarcodeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(barcode: Barcode)
+    fun insert(barcode: Barcode)
 
     @Delete
     suspend fun delete(barcode: Barcode)

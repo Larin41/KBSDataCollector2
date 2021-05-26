@@ -9,13 +9,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ru.kbs41.kbsdatacollector.R
-import ru.kbs41.kbsdatacollector.ui.assemblyorders.AssemblyOrderActivity
-import ru.kbs41.kbsdatacollector.ui.simpleScanningDocument.SimpleScanningDocument
+import ru.kbs41.kbsdatacollector.ui.simpleScanningDocument.SimpleScanningActivity
 
 
 class SimpleScanningFragment : Fragment() {
@@ -41,7 +39,7 @@ class SimpleScanningFragment : Fragment() {
             rootView.findViewById<FloatingActionButton>(R.id.fabAddNewSimpleScanning)
 
         fabAddNewSimpleScanning.setOnClickListener {
-            val intent = Intent(context, SimpleScanningDocument::class.java)
+            val intent = Intent(context, SimpleScanningActivity::class.java)
             ContextCompat.startActivity(requireContext(), intent, null)
         }
 

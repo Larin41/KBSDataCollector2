@@ -12,7 +12,7 @@ class SimpleScanningViewModel : ViewModel() {
     val database = App().database
     private val simpleScanningDao = database.simpleScanningDao()
 
-    val allScannings: LiveData<List<SimpleScanning>> = simpleScanningDao.getAllFlow().asLiveData()
+    val allScannings: LiveData<List<SimpleScanning>> = simpleScanningDao.getAllLiveData()
 
 
 }

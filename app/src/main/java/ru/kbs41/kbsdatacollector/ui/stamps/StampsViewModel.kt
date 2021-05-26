@@ -17,7 +17,7 @@ import ru.kbs41.kbsdatacollector.dataSources.dataBase.repository.AssemblyOrderFu
 
 class StampsViewModel() : ViewModel() {
 
-    private lateinit var context: Context
+    private lateinit var mContext: Context
 
     private var currentRowTableGoodsId: Long = 0
     var qty: MutableLiveData<Double> = MutableLiveData(0.0)
@@ -45,7 +45,7 @@ class StampsViewModel() : ViewModel() {
         _context: Context
     ) {
 
-        context = _context
+        mContext = _context
         currentRowTableGoodsId = _currentRowTableGoodsId
         qty.value = _qty
         docId = _docId
@@ -82,7 +82,7 @@ class StampsViewModel() : ViewModel() {
         }
     }
 
-    fun parseStamp(barcode: String): String{
+    fun parseStamp(barcode: String): String {
         val barcodeDatamatrix = BarcodeDatamatrix()
         barcodeDatamatrix.parseDataMatrixBarcode(barcode)
         return barcodeDatamatrix.finalData
@@ -94,12 +94,12 @@ class StampsViewModel() : ViewModel() {
 
 
         //ПРОВЕРИМ МАРКУ НА ДУБЛЬ, ЧТОБЫ НЕДОПУСТИТЬ СЧИТЫВАНИЯ ОДНОЙ МАРКИ НЕСКОЛЬКО РАЗ
-        val existedEntry = repository.getAssemblyOrderTableStampsByBarcode(barcodeParsed)
+        val existedEntry = repository.getAssemblyOrderTableStampsByBarcode(barcodeParsed, docId)
 
         if (existedEntry != null) {
             GlobalScope.launch(Dispatchers.Main) {
-                SoundEffects().playError(context)
-                Toast.makeText(context, "Данная марка уже была считана!", Toast.LENGTH_SHORT).show()
+                SoundEffects().playError(mContext)
+                Toast.makeText(mContext, "Данная марка уже была считана!", Toast.LENGTH_SHORT).show()
             }
             return
         }
@@ -110,12 +110,12 @@ class StampsViewModel() : ViewModel() {
         val pQtyCollected = cTableStamps.size.toDouble()
 
         if (qty.value == pQtyCollected) {
-            GlobalScope.launch(Dispatchers.Main) { SoundEffects().playError(context) }
+            GlobalScope.launch(Dispatchers.Main) { SoundEffects().playError(mContext) }
             return
         }
 
         if (currentRowTableGoods.qty == pQtyCollected + 1) {
-            GlobalScope.launch(Dispatchers.Main) { SoundEffects().playSuccess(context) }
+            GlobalScope.launch(Dispatchers.Main) { SoundEffects().playSuccess(mContext) }
         }
 
         val newItem = AssemblyOrderTableStamps(

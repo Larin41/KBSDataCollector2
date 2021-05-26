@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.widget.ImageButton
 import androidx.activity.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -19,7 +20,7 @@ import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.ui.assemblyorders.AssemblyOrderViewModel
 import ru.kbs41.kbsdatacollector.ui.simpleScanningDocument.ui.main.SectionsPagerAdapter
 
-class SimpleScanningDocument : AppCompatActivity() {
+class SimpleScanningActivity : AppCompatActivity() {
 
     private val model: SimpleScanningViewModel by viewModels()
 
@@ -38,6 +39,12 @@ class SimpleScanningDocument : AppCompatActivity() {
         viewPager.adapter = sectionsPagerAdapter
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
+
+        val btnSend = findViewById<ImageButton>(R.id.btnSendSimpleScanning)
+        btnSend.setOnClickListener {
+            model.sendSimpleScanning()
+            finish()
+        }
 
         registerReceiver(receiverAtol, IntentFilter(Constants.SCAN_ACTION_ATOL_SMART_LITE))
         registerReceiver(receiverCaribe, IntentFilter(Constants.SCAN_ACTION_CARIBE))

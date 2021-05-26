@@ -2,6 +2,7 @@ package ru.kbs41.kbsdatacollector.ui.mainactivity.settings
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Debug
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,8 +15,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.transition.Visibility
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.databinding.SettingsFragmentBinding
+import java.net.Socket
 
 class SettingsFragment : Fragment() {
 
@@ -48,6 +52,17 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setActions() {
+
+
+        binding.fabConnectionCheck.setOnClickListener {
+            GlobalScope.launch {
+                //Debug.waitForDebugger()
+                val client = Socket("192.168.1.52", 11000)
+                client.outputStream.write("Hello from the client!<EOF>".toByteArray())
+                client.close()
+            }
+
+        }
 
         binding.btnCheckPassword.setOnClickListener {
             if (binding.etPasswordForSettings.text.toString().equals("6831296")) {

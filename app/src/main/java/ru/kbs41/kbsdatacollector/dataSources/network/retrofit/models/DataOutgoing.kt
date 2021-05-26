@@ -1,9 +1,11 @@
 package ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models
 
+import org.w3c.dom.Comment
 import java.util.*
 
 
 data class DataOutgoing(
+    val type: String,
     val order: OrderModel
 ) {
 
@@ -12,8 +14,9 @@ data class DataOutgoing(
         val guid: String,
         val date: Date,
         val number: String,
-        val tableGoods: List<TableGoodsModel>,
-        val tableStamps: List<TableStampsModel>
+        val comment: String?,
+        val tableGoods: List<TableGoodsModel>?,
+        val tableStamps: List<TableStampsModel>?
     ) {
 
         //ТАБЛИЦА ТОВАРЫ
