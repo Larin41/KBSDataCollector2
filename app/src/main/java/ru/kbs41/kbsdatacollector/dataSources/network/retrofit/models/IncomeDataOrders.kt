@@ -3,7 +3,7 @@ package ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models
 import java.sql.Date
 
 data class IncomeDataOrders(
-    val result: String,
+    val result: String?,
     val goods: List<Good>?,
     val orders: List<Order>?
 ) {

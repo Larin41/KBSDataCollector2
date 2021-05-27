@@ -8,9 +8,9 @@ import ru.kbs41.kbsdatacollector.dataSources.dataBase.barcodes.Barcode
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.Product
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.ProductDao
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.stamps.Stamp
-import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.IncomeGoodsModel
+import ru.kbs41.kbsdatacollector.dataSources.network.models.Good
 
-class GoodsDownloader {
+object GoodsDownloader {
 
     val database = App().database
     val productDao = database.productDao()
@@ -18,14 +18,14 @@ class GoodsDownloader {
     val stampsDao = database.stampDao()
 
 
-    fun downloadCatalogs(goods: List<IncomeGoodsModel.Good>, progressBar: ProgressBar? = null) {
+    fun downloadCatalogs(goods: List<Good>, progressBar: ProgressBar? = null) {
         //Debug.waitForDebugger()
         progressBar?.max = goods.size
 
         var counter = 1
-        goods.forEach {
-            downloadCatalog(it)
-            Log.d("GoodsFrom1C", it.name)
+        goods.forEach { product ->
+            downloadCatalog(product)
+            Log.d("GoodsFrom1C", product.name)
             progressBar?.progress = counter
             counter += 1
         }
@@ -33,24 +33,31 @@ class GoodsDownloader {
         Log.d("GoodsFrom1C", "download completed")
     }
 
-    fun downloadCatalog(i: IncomeGoodsModel.Good) {
+    fun downloadCatalog(i: Good) {
 
         val product = downloadProduct(i)
-        downloadBarcodes(product, i.barcodes)
-        downloadStamps(product, i.stamps)
+
+        i.barcodes?.let {
+            downloadBarcodes(product, i.barcodes)
+        }
+
+        i.stamps?.let {
+            downloadStamps(product, i.stamps)
+        }
+
 
     }
 
     private fun downloadStamps(
         product: Product,
-        stamps: List<IncomeGoodsModel.Good.Stamp>?
+        stamps: List<ru.kbs41.kbsdatacollector.dataSources.network.models.Stamp>?
     ) {
         stamps?.forEach { bc ->
-            val stampNote = stampsDao.getOneNoteByStamp(bc.stamp)
+            val stampNote = stampsDao.getOneNoteByStamp(bc.stampValue)
 
             val stamp: Stamp = Stamp(
                 stampNote.id,
-                bc.stamp,
+                bc.stampValue,
                 product.id
             )
             stampsDao.insert(stamp)
@@ -59,7 +66,7 @@ class GoodsDownloader {
 
     private fun downloadBarcodes(
         product: Product,
-        barcodes: List<IncomeGoodsModel.Good.Barcode>?
+        barcodes: List<ru.kbs41.kbsdatacollector.dataSources.network.models.Barcode>?
     ) {
 
         barcodes?.forEach { bc ->
@@ -80,7 +87,7 @@ class GoodsDownloader {
 
     }
 
-    private fun downloadProduct(i: IncomeGoodsModel.Good): Product {
+    private fun downloadProduct(i: Good): Product {
         //ПРОБУЕМ НАЙТИ ТОВАР ПО ГУИД
         var product = productDao.getProductByGuid(i.guid)
         if (product == null) {
@@ -89,13 +96,13 @@ class GoodsDownloader {
 
         //ПОЛУЧИВШИЕЕСЯ ДАННЫЕ ЗАПИШЕМ
         product.name = i.name
-        product.unit = i.unit
+        product.unit = "шт."
         product.isAlcohol = i.isAlcohol
         product.hasStamp = i.hasStamp
         product.guid = i.guid
         product.isFolder = i.isFolder
-        product.parentGuid = i.parentGuid
-        product.parentId = getParentProduct(i.parentGuid, productDao)
+        product.parentGuid = i.folderGuid
+        product.parentId = getParentProduct(i.folderGuid, productDao)
 
         product.id = productDao.insert(product)
 

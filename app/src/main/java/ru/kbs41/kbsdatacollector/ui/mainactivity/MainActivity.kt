@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch {
                 val service = Intent(applicationContext, ExchangerService::class.java)
                 //delay(6000)
-                //startService(service)
+                startService(service)
                 //ContextCompat.startForegroundService(this@MainActivity, service)
             }
 

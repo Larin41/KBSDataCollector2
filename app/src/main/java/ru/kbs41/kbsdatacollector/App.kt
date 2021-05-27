@@ -16,16 +16,18 @@ import java.util.*
 
 class App(_context: Context? = null) : Application() {
 
-    var context = _context
+    var sContext = _context
 
     val applicationScope = CoroutineScope(SupervisorJob())
-    val database by lazy { AppDatabase.getDatabase(getCurrentContext(), applicationScope) }
+    val database by lazy {
+        AppDatabase.getDatabase(getCurrentContext(), applicationScope)
+    }
     val productRepository by lazy { ProductRepository(database.productDao()) }
     //val assemblyOrdersRepository by lazy { AssemblyOrderRepository(database.assemblyOrderDao()) }
 
     fun getCurrentContext(): Context {
-        if (context != null) {
-            return context as Context
+        if (sContext != null) {
+            return sContext as Context
         } else {
             return this
         }

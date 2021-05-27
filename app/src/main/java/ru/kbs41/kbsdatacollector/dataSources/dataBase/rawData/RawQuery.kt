@@ -9,10 +9,9 @@ import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.DataOutgoin
 
 object RawQuery {
 
-    val database = App().database
-    val rawDao = database.rawDao()
-
     fun getTableGoodsWithStamps(docId: Long): Flow<List<AssemblyOrderTableGoodsWithQtyCollectedAndProducts>> {
+        val database = App().database
+        val rawDao = database.rawDao()
 
         val queryText: String = """
                SELECT
@@ -53,6 +52,9 @@ object RawQuery {
 
     fun getTableGoodsWithStampsByRowId(rowId: Long): Flow<AssemblyOrderTableGoodsWithQtyCollectedAndProducts> {
 
+        val database = App().database
+        val rawDao = database.rawDao()
+
         val queryText: String = """
                SELECT
                     tg.id AS id,
@@ -87,6 +89,9 @@ object RawQuery {
 
     fun getTableGoodsForSending(docId: Long): List<DataOutgoing.OrderModel.TableGoodsModel> {
 
+        val database = App().database
+        val rawDao = database.rawDao()
+
         val queryText: String = """
                 SELECT
                     pr.name productName,
@@ -108,6 +113,9 @@ object RawQuery {
 
     fun getTableStampsForSending(docId: Long): List<DataOutgoing.OrderModel.TableStampsModel> {
 
+        val database = App().database
+        val rawDao = database.rawDao()
+
         val queryText: String = """
                 SELECT
                     pr.name productName,
@@ -127,6 +135,9 @@ object RawQuery {
     }
 
     fun getTableStampsByGuidAndProduct(guid: String, productId: Long): List<AssemblyOrderTableStamps?> {
+
+        val database = App().database
+        val rawDao = database.rawDao()
 
         val queryText: String = """
                 SELECT

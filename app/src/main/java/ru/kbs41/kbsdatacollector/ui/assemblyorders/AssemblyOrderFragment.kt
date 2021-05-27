@@ -5,11 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.databinding.FragmentAssemblyOrderBinding
 import ru.kbs41.kbsdatacollector.ui.mainactivity.orders.AllAssemblyOrdersAdapter
+import java.lang.Exception
 
 
 /**
@@ -25,7 +26,7 @@ class AssemblyOrderFragment : Fragment() {
     private lateinit var rwOrders: RecyclerView
     private lateinit var rwAdapterAllAssembly: AllAssemblyOrdersAdapter
 
-    private val model: AssemblyOrderViewModel by activityViewModels()
+    private lateinit var viewModel: AssemblyOrderViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,18 +40,32 @@ class AssemblyOrderFragment : Fragment() {
 
         _binding = FragmentAssemblyOrderBinding.inflate(inflater, container, false)
 
-        binding.date = FormatManager.getDateRussianFormat(model.currentAssemblyOrder.date)
-        binding.number = model.currentAssemblyOrder.number
-        binding.contractor = model.currentAssemblyOrder.counterpart
-        binding.comment = model.currentAssemblyOrder.comment
+        return binding.root
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel = activity?.run {
+            ViewModelProvider(this).get(AssemblyOrderViewModel::class.java)
+        } ?: throw Exception("Invalid activity")
+
+        setValues()
+    }
+
+    private fun setValues() {
+
+        binding.date = FormatManager.getDateRussianFormat(viewModel.currentAssemblyOrder.date)
+        binding.number = viewModel.currentAssemblyOrder.number
+        binding.contractor = viewModel.currentAssemblyOrder.counterpart
+        binding.comment = viewModel.currentAssemblyOrder.comment
 
         var comment: String = "---"
-        if (model.currentAssemblyOrder.comment.length != 0) {
-            comment = model.currentAssemblyOrder.comment
+        if (viewModel.currentAssemblyOrder.comment.length != 0) {
+            comment = viewModel.currentAssemblyOrder.comment
         }
         binding.comment = comment
-
-        return binding.root
 
     }
 

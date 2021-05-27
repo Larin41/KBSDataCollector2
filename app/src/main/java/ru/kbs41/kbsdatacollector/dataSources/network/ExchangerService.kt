@@ -1,17 +1,21 @@
 package ru.kbs41.kbsdatacollector
 
-import android.app.Service
+import android.app.*
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Debug
+import android.os.Build
 import android.os.IBinder
 import android.os.SystemClock
 import android.util.Log
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanning
 import ru.kbs41.kbsdatacollector.stateManager.NetworkChanging
 import ru.kbs41.kbsdatacollector.dataSources.network.ExchangeMaster
+import ru.kbs41.kbsdatacollector.ui.mainactivity.MainActivity
 
 
 class ExchangerService : Service() {
@@ -20,43 +24,44 @@ class ExchangerService : Service() {
     val database = App().database
     val assemblyOrderDao = database.assemblyOrderDao()
     val simpleScanningDao = database.simpleScanningDao()
+    private val CHANNAL_ID = "KBS_DATA_COLLECTOR"
+    private val NOTIFICATION_ID = 666
+    private lateinit var assemblyOrders: LiveData<List<AssemblyOrder>>
+    private lateinit var simpleScanning: LiveData<List<SimpleScanning>>
 
-
-//    private lateinit var context: Context
-//
-//    private lateinit var assemblyOrderDao: AssemblyOrderDao
-//    private lateinit var assemblyOrderDao: AssemblyOrderDao
 
     override fun onCreate() {
         super.onCreate()
-        //context = applicationContext
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        TODO("Not yet implemented")
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-        //TODO: УДАЛИТЬ ДЕБАГГЕР
-        //waitForDebugger()
-        registerReceiver(NetworkChanging(), IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"))
+        fetchLiveData()
         startExchange()
-        observeDocuments()
-        return START_STICKY
-        //return super.onStartCommand(intent, flags, startId)
-    }
+        registerReceiver(NetworkChanging(), IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"))
 
-    private fun observeDocuments() {
-
-        observeAssemblyOrders()
-        observeSimpleScanning()
+        createNotificationChannal()
 
     }
 
-    private fun observeSimpleScanning() {
+    private fun createNotificationChannal() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val serviceChannel = NotificationChannel(
+                CHANNAL_ID, "KBS_DATA_COLLECTOR", NotificationManager.IMPORTANCE_DEFAULT
+            )
 
-        val simpleScanning = simpleScanningDao.getCompletedNotSendedLiveData()
+            val manager = getSystemService(
+                NotificationManager::class.java
+            )
+
+            manager.createNotificationChannel(serviceChannel)
+
+        }
+    }
+
+
+    private fun fetchLiveData() {
+        assemblyOrders = assemblyOrderDao.getCompletedNotSendedLiveData()
+        simpleScanning = simpleScanningDao.getCompletedNotSendedLiveData()
+    }
+
+    private fun subscribeToObservers() {
 
         simpleScanning.observeForever {
             it.forEach { item ->
@@ -67,11 +72,6 @@ class ExchangerService : Service() {
                 }
             }
         }
-    }
-
-    private fun observeAssemblyOrders() {
-
-        val assemblyOrders = assemblyOrderDao.getCompletedNotSendedLiveData()
 
         assemblyOrders.observeForever {
             it.forEach { item ->
@@ -81,11 +81,37 @@ class ExchangerService : Service() {
         }
     }
 
+    override fun onBind(intent: Intent?): IBinder? {
+        TODO("Not yet implemented")
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        showNotification()
+        return START_STICKY
+    }
+
+    private fun showNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationIntent = Intent(this, MainActivity::class.java)
+
+            val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+
+            val notification = Notification
+                .Builder(this, CHANNAL_ID)
+                .setSmallIcon(R.drawable.ic_baseline_domain_verification_24)
+                .setContentIntent(pendingIntent)
+                .build()
+
+            startForeground(NOTIFICATION_ID, notification)
+        }
+
+    }
+
 
     private fun startExchange() {
         GlobalScope.launch(Dispatchers.IO) {
             while (true) {
-                SystemClock.sleep(60000)
+                SystemClock.sleep(10000)
                 ExchangeMaster.getOrdersFrom1C(application)
                 Log.d("ExchangerService", "Exchange in process")
             }

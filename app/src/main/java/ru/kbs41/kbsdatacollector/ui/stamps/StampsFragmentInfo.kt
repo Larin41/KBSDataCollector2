@@ -35,8 +35,7 @@ class StampsFragmentInfo : Fragment() {
         _binding = FragmentStampsInfoBinding.inflate(inflater, container, false)
         val root = binding.root
 
-        binding.qty = FormatManager.getFormattedNumber(viewModel.currentRowTableGoods.qty)
-        binding.product = viewModel.currentProduct.name
+
 
         return root
     }
@@ -48,8 +47,14 @@ class StampsFragmentInfo : Fragment() {
             ViewModelProvider(this).get(StampsViewModel::class.java)
         } ?: throw Exception("Invalid activity")
 
+        setData()
         subscribeObservers()
 
+    }
+
+    private fun setData() {
+        binding.qty = FormatManager.getFormattedNumber(viewModel.currentRowTableGoods.qty)
+        binding.product = viewModel.currentProduct.name
     }
 
     private fun subscribeObservers() {

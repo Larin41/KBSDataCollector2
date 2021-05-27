@@ -148,13 +148,13 @@ class AssemblyOrderFullRepository() {
         val queryText: String = """
                SELECT
                     tg.id AS id,
-                    tg.row AS row,
+                    tg.`row` AS row,
                     tg.assemblyOrderId AS orderID,
                     pr.name AS productName,
                     pr.id AS productId,
                     pr.hasStamp AS productHasStamps,
                     tg.qty AS qty,
-                    IFNULL(COUNT(ts.barcode),0) AS qtyCollected
+                    IFNULL(COUNT(ts.barcode),0) AS qtyCollected,
                     CASE pr.hasStamp
                         WHEN 1
                             THEN IFNULL(COUNT(ts.barcode),0) 	
@@ -178,7 +178,7 @@ class AssemblyOrderFullRepository() {
                     orderID,
                     productName
                 ORDER BY 
-                    row
+                    `row`
                 """
 
         return rawDao.getTableGoods(SimpleSQLiteQuery(queryText))

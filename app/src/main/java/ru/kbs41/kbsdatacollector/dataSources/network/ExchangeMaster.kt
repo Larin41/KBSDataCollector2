@@ -16,6 +16,9 @@ import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrde
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanning
 import ru.kbs41.kbsdatacollector.dataSources.network.downloaders.AssemblyOrderDownloader
 import ru.kbs41.kbsdatacollector.dataSources.network.downloaders.GoodsDownloader
+import ru.kbs41.kbsdatacollector.dataSources.network.models.Contractor
+import ru.kbs41.kbsdatacollector.dataSources.network.models.IncomeDataModel
+import ru.kbs41.kbsdatacollector.dataSources.network.models.Order
 import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.RetrofitClient
 import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.IncomeGoodsModel
 import ru.kbs41.kbsdatacollector.dataSources.network.senders.AssemblyOrderSender
@@ -47,7 +50,7 @@ object ExchangeMaster {
 
         val settings = mapOf(
             "deviceId" to "1",
-            "requiredData" to "newOrders"
+            "requiredData" to "newData"
         )
 
         try {
@@ -66,7 +69,7 @@ object ExchangeMaster {
 
         retrofit.initInstance()
 
-        if (settings["requiredData"]!! == "newOrders") {
+        if (settings["requiredData"]!! == "newData") {
             getNewOrders(retrofit, settings)
         }
 
@@ -77,7 +80,11 @@ object ExchangeMaster {
 
     }
 
-    private fun getAllGoods(retrofit: RetrofitClient, settings: Map<String, String>, progressBar: ProgressBar? = null) {
+    private fun getAllGoods(
+        retrofit: RetrofitClient,
+        settings: Map<String, String>,
+        progressBar: ProgressBar? = null
+    ) {
         retrofit.instance.getGoods(settings["deviceId"]!!, settings["requiredData"]!!)
             ?.enqueue(object : Callback<IncomeGoodsModel> {
                 override fun onResponse(
@@ -108,58 +115,59 @@ object ExchangeMaster {
 
     private fun downloadGoods(body: IncomeGoodsModel?, progressBar: ProgressBar? = null) {
         //Debug.waitForDebugger()
-        if (body?.goods != null) {
-            GoodsDownloader().downloadCatalogs(body.goods, progressBar)
-        }
 
-        GlobalScope.launch (Dispatchers.Main) { progressBar?.visibility = View.GONE }
+
+        GlobalScope.launch(Dispatchers.Main) { progressBar?.visibility = View.GONE }
 
     }
 
     private fun getNewOrders(retrofit: RetrofitClient, settings: Map<String, String>) {
         retrofit.instance.getOrders(settings["deviceId"]!!, settings["requiredData"]!!)
-            ?.enqueue(object : Callback<IncomeDataOrders> {
+            ?.enqueue(object : Callback<IncomeDataModel> {
                 override fun onResponse(
-                    call: Call<IncomeDataOrders>,
-                    response: Response<IncomeDataOrders>
+                    call: Call<IncomeDataModel>,
+                    response: Response<IncomeDataModel>
                 ) {
                     GlobalScope.launch(Dispatchers.IO) {
 
-                        val body: IncomeDataOrders? = response.body()
+                        val body: IncomeDataModel? = response.body()
                         if (body == null) {
                             Log.d("1C_TO_APP", "Null body")
                             return@launch
                         }
 
-                        Log.d("1C_TO_APP", body.result)
+                        Debug.waitForDebugger()
 
-                        if (body.result != "Ok") {
-                            return@launch
+                        body.goods?.let { goods ->
+                            GoodsDownloader.downloadCatalogs(body.goods)
                         }
 
-                        if (response.isSuccessful) {
-                            downloadNewOrders(body)
+                        body.contractors?.let { contractors ->
+                            downloadContractors(body.contractors)
                         }
+
+                        body.orders?.let { orders ->
+                            downloadNewOrders(body.orders)
+                        }
+
+
                     }
                 }
 
-                override fun onFailure(call: Call<IncomeDataOrders>, t: Throwable) {
+                override fun onFailure(call: Call<IncomeDataModel>, t: Throwable) {
                     Log.d("1C_TO_APP", "Couldn't download data")
                 }
             })
     }
 
 
-    private suspend fun downloadNewOrders(body: IncomeDataOrders) {
-//        val goodsDownloader = GoodsDownloader()
-//        goodsDownloader.downloadCatalogs(body.goods)
+    private suspend fun downloadContractors(contractors: List<Contractor>) {
+        // НЕ РЕАЛИЗОВАНО
+    }
 
-        val assemblyOrderDownloader = AssemblyOrderDownloader()
-        assemblyOrderDownloader.downloadDocuments(body.orders)
-
-        if (body.orders != null) {
-            AppNotificationManager.notifyUser()
-        }
+    private suspend fun downloadNewOrders(orders: List<Order>) {
+        AssemblyOrderDownloader.downloadDocuments(orders)
+        AppNotificationManager.notifyUser()
     }
 
     fun sendAllOrdersTo1C() {

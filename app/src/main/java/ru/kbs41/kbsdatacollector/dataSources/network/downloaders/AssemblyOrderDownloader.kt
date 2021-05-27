@@ -4,29 +4,34 @@ import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrderTableGoods
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.rawData.RawQuery
-import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.IncomeDataOrders
+import ru.kbs41.kbsdatacollector.dataSources.network.models.Order
+import ru.kbs41.kbsdatacollector.dataSources.network.models.TableGood
 
-class AssemblyOrderDownloader {
 
-    val database = App().database
+object AssemblyOrderDownloader {
 
-    val productDao = database.productDao()
-    val assemblyOrderDao = database.assemblyOrderDao()
-    val assemblyOrderTableGoodsDao = database.assemblyOrderTableGoodsDao()
-    val assemblyOrderTableStampsDao = database.assemblyOrderTableStampsDao()
+    private val database = App().database
 
-    suspend fun downloadDocuments(orders: List<IncomeDataOrders.Order>?) {
-        orders?.forEach {
-            downloadDocument(it)
+    private val productDao = database.productDao()
+    private val assemblyOrderDao = database.assemblyOrderDao()
+    private val assemblyOrderTableGoodsDao = database.assemblyOrderTableGoodsDao()
+    private val assemblyOrderTableStampsDao = database.assemblyOrderTableStampsDao()
+
+    suspend fun downloadDocuments(orders: List<Order>?) {
+        orders?.forEach { order ->
+            downloadDocument(order)
         }
     }
 
-    suspend fun downloadDocument(order: IncomeDataOrders.Order) {
+    private suspend fun downloadDocument(order: Order) {
 
-        var assemblyOrder: AssemblyOrder = downloadAssemblyOrder(order)
+        val assemblyOrder: AssemblyOrder = downloadAssemblyOrder(order)
         clearTableGoods(assemblyOrder)
-        downloadrTableGoods(assemblyOrder, order.tableGoods)
-        deleteInappropriateStamps(assemblyOrder)
+        order.tableGoods?.let { tableGoods ->
+            downloadTableGoods(assemblyOrder, tableGoods)
+            deleteInappropriateStamps(assemblyOrder)
+        }
+
 
     }
 
@@ -50,16 +55,16 @@ class AssemblyOrderDownloader {
         }
     }
 
-    private suspend fun downloadrTableGoods(
+    private suspend fun downloadTableGoods(
         assemblyOrder: AssemblyOrder,
-        tableGoods: List<IncomeDataOrders.Order.TableGood>
+        tableGoods: List<TableGood>
     ) {
 
         tableGoods.forEach { tg ->
 
-            val product = productDao.getProductByGuid(tg.productSourceId)
+            val product = productDao.getProductByGuid(tg.productGuid)
 
-            var newRowTableGoods = AssemblyOrderTableGoods(
+            val newRowTableGoods = AssemblyOrderTableGoods(
                 0,
                 tg.sourceGuid,
                 tg.rowNumber,
@@ -86,7 +91,7 @@ class AssemblyOrderDownloader {
         }
     }
 
-    private suspend fun downloadAssemblyOrder(i: IncomeDataOrders.Order): AssemblyOrder {
+    private suspend fun downloadAssemblyOrder(i: Order): AssemblyOrder {
 
         var assemblyOrder = assemblyOrderDao.getAssemblyOrderByGuid(i.guid)
 

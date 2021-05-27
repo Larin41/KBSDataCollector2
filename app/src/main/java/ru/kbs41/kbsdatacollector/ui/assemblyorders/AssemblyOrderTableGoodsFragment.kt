@@ -5,11 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.databinding.FragmentAssemblyOrderTableGoodsBinding
+import java.lang.Exception
 
 
 /**
@@ -23,7 +24,7 @@ class AssemblyOrderTableGoodsFragment : Fragment() {
     private lateinit var rwAdapter: AssemblyOrderTableGoodsAdapter
     private lateinit var rwTableGoods: RecyclerView
 
-    private val model: AssemblyOrderViewModel by activityViewModels()
+    private lateinit var viewModel: AssemblyOrderViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,23 +34,41 @@ class AssemblyOrderTableGoodsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         _binding = FragmentAssemblyOrderTableGoodsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        rwAdapter = AssemblyOrderTableGoodsAdapter(requireContext(), model, model.tableQtyQtyCollected)
+        viewModel = activity?.run {
+            ViewModelProvider(this).get(AssemblyOrderViewModel::class.java)
+        } ?: throw Exception("Invalid activity")
+
+        subscribeObservers()
+
+        setRecyclerView()
+
+    }
+
+    private fun setRecyclerView() {
+        rwAdapter = AssemblyOrderTableGoodsAdapter(
+            requireContext(),
+            viewModel,
+            viewModel.tableQtyQtyCollected
+        )
         rwTableGoods = binding.root.findViewById(R.id.rwGoods)
         rwTableGoods.layoutManager = LinearLayoutManager(context)
         rwTableGoods.adapter = rwAdapter
+    }
 
-        model.tableQtyQtyCollected.observe(
+    private fun subscribeObservers() {
+        viewModel.tableQtyQtyCollected.observe(
             viewLifecycleOwner,
             {
                 rwAdapter.notifyDataSetChanged()
             })
-
-
-
-        return binding.root
     }
 
     companion object {
