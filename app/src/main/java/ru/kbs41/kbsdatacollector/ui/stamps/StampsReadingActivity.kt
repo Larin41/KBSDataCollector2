@@ -45,17 +45,22 @@ class StampsReadingActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
-        registerReceiver(receiverAtol, IntentFilter(Constants.SCAN_ACTION_ATOL_SMART_LITE))
-        registerReceiver(receiverCaribe, IntentFilter(Constants.SCAN_ACTION_CARIBE))
     }
 
     override fun onStop() {
         super.onStop()
+    }
 
+    override fun onPause() {
+        super.onPause()
         unregisterReceiver(receiverAtol)
         unregisterReceiver(receiverCaribe)
+    }
 
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(receiverAtol, IntentFilter(Constants.SCAN_ACTION_ATOL_SMART_LITE))
+        registerReceiver(receiverCaribe, IntentFilter(Constants.SCAN_ACTION_CARIBE))
     }
 
     inner class ReceiverAtol : BroadcastReceiver() {

@@ -41,9 +41,10 @@ object GoodsDownloader {
             downloadBarcodes(product, i.barcodes)
         }
 
-        i.stamps?.let {
+       /*Функционал временно отключен
+       i.stamps?.let {
             downloadStamps(product, i.stamps)
-        }
+        }*/
 
 
     }

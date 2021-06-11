@@ -11,7 +11,7 @@ data class Settings(
     var server: String = "192.168.1.52",
     var port: String = "80",
     var deviceId: Int = 1,
-    var user: String = "cs_admin",
+    var user: String = "tsd1",
     var password: String = "6831296",
     var isCurrent: Boolean = true //TODO: в релизе сделать false
 ) {

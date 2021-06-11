@@ -46,17 +46,22 @@ class SimpleScanningActivity : AppCompatActivity() {
             finish()
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         registerReceiver(receiverAtol, IntentFilter(Constants.SCAN_ACTION_ATOL_SMART_LITE))
         registerReceiver(receiverCaribe, IntentFilter(Constants.SCAN_ACTION_CARIBE))
+    }
 
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(receiverAtol)
+        unregisterReceiver(receiverCaribe)
     }
 
     override fun onStop() {
         super.onStop()
-
-        unregisterReceiver(receiverAtol)
-        unregisterReceiver(receiverCaribe)
-
     }
 
     inner class ReceiverAtol : BroadcastReceiver() {

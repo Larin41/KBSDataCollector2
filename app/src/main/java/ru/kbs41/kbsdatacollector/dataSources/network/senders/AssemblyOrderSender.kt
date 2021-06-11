@@ -27,12 +27,13 @@ object AssemblyOrderSender {
 
         val tableGoods = assemblyOrderTableGoodsDao.getTableGoodsByDocId(assemblyOrder.id)
 
-        var tableGoodsOutModel: MutableList<DataOutgoing.OrderModel.TableGoodsModel> = arrayListOf()
+        val tableGoodsOutModel: MutableList<DataOutgoing.OrderModel.TableGoodsModel> = arrayListOf()
 
         tableGoods.forEach {
-            var newItemTableGoods = DataOutgoing.OrderModel.TableGoodsModel(
-                productDao.getProductById(it.productId).name,
-                it.sourceGuid,
+            val product = productDao.getProductById(it.productId)
+            val newItemTableGoods = DataOutgoing.OrderModel.TableGoodsModel(
+                product.name,
+                product.guid!!,
                 it.qty,
                 it.qtyCollected
             )
@@ -46,10 +47,10 @@ object AssemblyOrderSender {
 
         val tableStamps = assemblyOrderTableStampsDao.getTableStampsByDocId(assemblyOrder.id)
 
-        var tableStampsOutModel: MutableList<DataOutgoing.OrderModel.TableStampsModel> = arrayListOf()
+        val tableStampsOutModel: MutableList<DataOutgoing.OrderModel.TableStampsModel> = arrayListOf()
 
         tableStamps.forEach {
-            var newItemTableGoods = DataOutgoing.OrderModel.TableStampsModel(
+            val newItemTableGoods = DataOutgoing.OrderModel.TableStampsModel(
                 productDao.getProductById(it.productId).guid!!,
                 it.barcode
             )

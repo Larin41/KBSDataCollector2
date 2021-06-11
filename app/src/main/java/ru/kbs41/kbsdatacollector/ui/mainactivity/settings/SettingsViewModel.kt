@@ -15,7 +15,7 @@ class SettingsViewModel : ViewModel() {
     private val settingsDao = App().database.settingsDao()
     private lateinit var binding: SettingsFragmentBinding
 
-    var currentSetting: Settings = settingsDao.getCurrentSettings()
+    private var currentSetting: Settings = settingsDao.getCurrentSettings()
 
 
     fun fetchData(_binding: SettingsFragmentBinding) {

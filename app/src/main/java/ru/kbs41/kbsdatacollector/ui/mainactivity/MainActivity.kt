@@ -1,11 +1,17 @@
 package ru.kbs41.kbsdatacollector.ui.mainactivity
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.webkit.PermissionRequest
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -36,6 +42,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
 
+    private val INTERNET_PERMISSION_CODE = 100
+    private val RECEIVE_BOOT_COMPLETED_CODE = 101
+   /* private val QUICKBOOT_POWERON_CODE = 102*/
+    private val ACCESS_NETWORK_STATE_CODE = 103
+    private val WAKE_LOCK_CODE = 104
+    private val FOREGROUND_SERVICE_CODE = 105
+    private val CHANGE_NETWORK_STATE_CODE = 106
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -48,13 +63,13 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch {
                 val service = Intent(applicationContext, ExchangerService::class.java)
                 //delay(6000)
-                startService(service)
-                //ContextCompat.startForegroundService(this@MainActivity, service)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startService(service)
+                } else {
+                    ContextCompat.startForegroundService(this@MainActivity, service)
+                }
             }
 
-
-            //TODO: удалить getData(). Нужно для отладки
-            getData()
         } catch (e: IOException) {
             Log.d("1C_TO_APP", e.message!!)
         }
@@ -114,6 +129,11 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
+
+
+
+
 
     private fun getData() {
         ExchangeMaster.getOrdersFrom1C(application)

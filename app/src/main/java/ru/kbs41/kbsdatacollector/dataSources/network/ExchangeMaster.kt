@@ -130,13 +130,13 @@ object ExchangeMaster {
                 ) {
                     GlobalScope.launch(Dispatchers.IO) {
 
+                        //Debug.waitForDebugger()
+
                         val body: IncomeDataModel? = response.body()
                         if (body == null) {
                             Log.d("1C_TO_APP", "Null body")
                             return@launch
                         }
-
-                        Debug.waitForDebugger()
 
                         body.goods?.let { goods ->
                             GoodsDownloader.downloadCatalogs(body.goods)

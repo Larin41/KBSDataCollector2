@@ -4,6 +4,7 @@ import android.app.*
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.os.Debug
 import android.os.IBinder
 import android.os.SystemClock
 import android.util.Log
@@ -11,8 +12,11 @@ import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.AppDatabase
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrderDao
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanning
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanningDao
 import ru.kbs41.kbsdatacollector.stateManager.NetworkChanging
 import ru.kbs41.kbsdatacollector.dataSources.network.ExchangeMaster
 import ru.kbs41.kbsdatacollector.ui.mainactivity.MainActivity
@@ -21,9 +25,9 @@ import ru.kbs41.kbsdatacollector.ui.mainactivity.MainActivity
 class ExchangerService : Service() {
 
     val context = this
-    val database = App().database
-    val assemblyOrderDao = database.assemblyOrderDao()
-    val simpleScanningDao = database.simpleScanningDao()
+    private lateinit var database: AppDatabase
+    private lateinit var assemblyOrderDao: AssemblyOrderDao
+    private lateinit var simpleScanningDao: SimpleScanningDao
     private val CHANNAL_ID = "KBS_DATA_COLLECTOR"
     private val NOTIFICATION_ID = 666
     private lateinit var assemblyOrders: LiveData<List<AssemblyOrder>>
@@ -32,9 +36,15 @@ class ExchangerService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        database = App(this).database
+
+        assemblyOrderDao = database.assemblyOrderDao()
+        simpleScanningDao = database.simpleScanningDao()
+
         fetchLiveData()
-        startExchange()
+        subscribeToObservers()
         registerReceiver(NetworkChanging(), IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"))
+        startExchange()
 
         createNotificationChannal()
 
@@ -75,6 +85,7 @@ class ExchangerService : Service() {
 
         assemblyOrders.observeForever {
             it.forEach { item ->
+                //Debug.waitForDebugger()
                 Log.d("ExchangerService", "new order for sending")
                 GlobalScope.launch(Dispatchers.IO) { ExchangeMaster.sendOrderTo1C(item) }
             }
