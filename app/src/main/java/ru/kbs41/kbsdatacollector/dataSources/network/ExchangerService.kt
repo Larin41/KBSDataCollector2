@@ -122,7 +122,7 @@ class ExchangerService : Service() {
     private fun startExchange() {
         GlobalScope.launch(Dispatchers.IO) {
             while (true) {
-                SystemClock.sleep(10000)
+                SystemClock.sleep(7000)
                 ExchangeMaster.getOrdersFrom1C(application)
                 Log.d("ExchangerService", "Exchange in process")
             }
