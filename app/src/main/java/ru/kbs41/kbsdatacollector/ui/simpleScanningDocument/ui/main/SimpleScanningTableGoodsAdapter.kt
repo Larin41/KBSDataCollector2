@@ -84,7 +84,7 @@ class SimpleScanningTableGoodsAdapter(
                     }
                 }
 
-                popupMenu.inflate(R.menu.stamps_menu)
+                popupMenu.inflate(R.menu.delete_menu)
                 try {
                     val fieldMPopUp = PopupMenu::class.java.getDeclaredField("mPopup")
                     fieldMPopUp.isAccessible = true

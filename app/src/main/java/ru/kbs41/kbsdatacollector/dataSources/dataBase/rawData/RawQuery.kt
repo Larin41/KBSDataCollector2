@@ -178,7 +178,7 @@ object RawQuery {
                                     LEFT JOIN contractors ct
                                     ON ao.counterpart = ct.guid
                                 WHERE 
-                                    ao.isCompleted = false
+                                    ao.isCompleted = 0
                                 """
 
         return rawDao.getNotCompletedAssemblyOrders(SimpleSQLiteQuery(queryText))

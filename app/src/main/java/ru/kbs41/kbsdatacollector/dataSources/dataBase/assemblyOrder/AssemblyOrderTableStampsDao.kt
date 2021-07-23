@@ -19,6 +19,9 @@ interface AssemblyOrderTableStampsDao {
     @Query ("DELETE FROM assembly_orders_table_stamps WHERE id = :id" )
     suspend fun deleteById(id: Long)
 
+    @Query("DELETE FROM assembly_orders_table_stamps WHERE assemblyOrderId = :id")
+    fun deleteByAssemblyOrderId(id: Long)
+
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId ORDER BY id")
     fun getTableStampsByDocIdFlow(assemblyOrderId: Long): Flow<List<AssemblyOrderTableStamps>>
 

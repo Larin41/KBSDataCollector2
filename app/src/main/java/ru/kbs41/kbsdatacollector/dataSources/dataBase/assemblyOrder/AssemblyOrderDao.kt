@@ -16,6 +16,9 @@ interface AssemblyOrderDao {
     @Delete
     suspend fun delete(assemblyOrder: AssemblyOrder)
 
+    @Query("DELETE FROM assembly_orders WHERE id = :id")
+    fun deleteByAssemblyOrderId(id: Long)
+
     @Query("SELECT * FROM assembly_orders ORDER BY date DESC, number DESC")
     fun getSortedFlow(): Flow<List<AssemblyOrder>>
 
