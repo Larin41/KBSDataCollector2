@@ -15,6 +15,7 @@ import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.SendingStat
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanning
 import ru.kbs41.kbsdatacollector.dataSources.network.downloaders.AssemblyOrderDownloader
+import ru.kbs41.kbsdatacollector.dataSources.network.downloaders.ContractorsDownloader
 import ru.kbs41.kbsdatacollector.dataSources.network.downloaders.GoodsDownloader
 import ru.kbs41.kbsdatacollector.dataSources.network.models.Contractor
 import ru.kbs41.kbsdatacollector.dataSources.network.models.IncomeDataModel
@@ -162,7 +163,7 @@ object ExchangeMaster {
 
 
     private suspend fun downloadContractors(contractors: List<Contractor>) {
-        // НЕ РЕАЛИЗОВАНО
+        ContractorsDownloader.downloadContractors(contractors)
     }
 
     private suspend fun downloadNewOrders(orders: List<Order>) {

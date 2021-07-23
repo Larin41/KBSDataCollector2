@@ -1,9 +1,11 @@
 package ru.kbs41.kbsdatacollector.dataSources.dataBase.rawData
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.RawQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import kotlinx.coroutines.flow.Flow
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
 import ru.kbs41.kbsdatacollector.dataSources.network.retrofit.models.DataOutgoing
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrderTableGoods
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.pojo.AssemblyOrderTableGoodsWithQtyCollectedAndProducts
@@ -28,6 +30,9 @@ interface RawDao {
 
     @RawQuery()
     fun getTableStampsByGuidAndProduct(query: SupportSQLiteQuery): List<AssemblyOrderTableStamps>
+
+    @RawQuery(observedEntities = [AssemblyOrder::class])
+    fun getNotCompletedAssemblyOrders(query: SupportSQLiteQuery): Flow<List<AssemblyOrdersWithContractors>>
 
 
 }

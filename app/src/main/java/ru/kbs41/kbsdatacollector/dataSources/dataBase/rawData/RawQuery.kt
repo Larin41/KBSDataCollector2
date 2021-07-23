@@ -1,5 +1,6 @@
 package ru.kbs41.kbsdatacollector.dataSources.dataBase.rawData
 
+import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import kotlinx.coroutines.flow.Flow
 import ru.kbs41.kbsdatacollector.App
@@ -134,7 +135,10 @@ object RawQuery {
         return rawDao.getTableStampsForSending(SimpleSQLiteQuery(queryText))
     }
 
-    fun getTableStampsByGuidAndProduct(guid: String, productId: Long): List<AssemblyOrderTableStamps?> {
+    fun getTableStampsByGuidAndProduct(
+        guid: String,
+        productId: Long
+    ): List<AssemblyOrderTableStamps?> {
 
         val database = App().database
         val rawDao = database.rawDao()
@@ -156,4 +160,29 @@ object RawQuery {
 
         return rawDao.getTableStampsByGuidAndProduct(SimpleSQLiteQuery(queryText))
     }
+
+    fun getNotCompletedAssemblyOrders(): Flow<List<AssemblyOrdersWithContractors>> {
+
+        val database = App().database
+        val rawDao = database.rawDao()
+
+        val queryText: String = """
+                                SELECT 
+                                    ao.id,
+                                    ao.date,
+                                    ao.number,
+                                    ao.comment,
+                                    ct.name contractor
+                                FROM 
+                                    assembly_orders ao
+                                    LEFT JOIN contractors ct
+                                    ON ao.counterpart = ct.guid
+                                WHERE 
+                                    ao.isCompleted = false
+                                """
+
+        return rawDao.getNotCompletedAssemblyOrders(SimpleSQLiteQuery(queryText))
+
+    }
+
 }

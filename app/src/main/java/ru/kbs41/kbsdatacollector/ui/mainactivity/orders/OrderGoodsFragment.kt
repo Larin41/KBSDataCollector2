@@ -42,7 +42,7 @@ class OrderGoodsFragment : Fragment() {
         rwOrders.adapter = rwAdapterAllAssembly
 
 
-        model.allOrders.observe(viewLifecycleOwner, Observer<List<AssemblyOrder>> { list ->
+        model.allOrders.observe(viewLifecycleOwner, { list ->
             list.let {
                 rwAdapterAllAssembly.notifyDataSetChanged() }
         })

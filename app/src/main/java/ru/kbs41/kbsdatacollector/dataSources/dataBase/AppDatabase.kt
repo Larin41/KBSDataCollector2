@@ -9,6 +9,8 @@ import kotlinx.coroutines.CoroutineScope
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.*
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.barcodes.Barcode
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.barcodes.BarcodeDao
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.contractors.Contractor
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.contractors.ContractorDao
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.Product
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.ProductDao
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.rawData.RawDao
@@ -31,7 +33,8 @@ import ru.kbs41.kbsdatacollector.dataSources.dataBase.stamps.StampDao
         Barcode::class,
         Product::class,
         Stamp::class,
-        Settings::class
+        Settings::class,
+        Contractor::class
     ], version = 1, exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -46,12 +49,13 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun stampDao(): StampDao
     abstract fun rawDao(): RawDao
     abstract fun settingsDao(): SettingsDao
+    abstract fun contractorDao(): ContractorDao
 
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        fun getDatabase(context: Context,  scope: CoroutineScope?): AppDatabase {
+        fun getDatabase(context: Context, scope: CoroutineScope?): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,

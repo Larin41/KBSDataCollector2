@@ -12,11 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.rawData.AssemblyOrdersWithContractors
 import ru.kbs41.kbsdatacollector.ui.assemblyorders.AssemblyOrderActivity
 
 
 class AllAssemblyOrdersAdapter(
-    private val list: LiveData<List<AssemblyOrder>>
+    private val list: LiveData<List<AssemblyOrdersWithContractors>>
 ) : RecyclerView.Adapter<AllAssemblyOrdersAdapter.OrdersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersViewHolder {
@@ -31,7 +32,7 @@ class AllAssemblyOrdersAdapter(
         val number = currentItem.number
         val date = FormatManager.getDateRussianFormat(currentItem.date)
 
-        holder.contractor.text = currentItem.counterpart
+        holder.contractor.text = currentItem.contractor
         holder.dateNumber.text = "№$number от $date"
         holder.comment.text = currentItem.comment
 
@@ -48,7 +49,7 @@ class AllAssemblyOrdersAdapter(
 
     inner class OrdersViewHolder(itemView: View, context: Context) :
         RecyclerView.ViewHolder(itemView) {
-        var contractor: TextView = itemView.findViewById(R.id.date_number)
+        var contractor: TextView = itemView.findViewById(R.id.contractor_name)
         var dateNumber: TextView = itemView.findViewById(R.id.date_number)
         var comment: TextView = itemView.findViewById(R.id.comment)
 

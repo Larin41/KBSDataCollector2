@@ -3,13 +3,16 @@ package ru.kbs41.kbsdatacollector.ui
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.rawData.AssemblyOrdersWithContractors
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.rawData.RawQuery
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.repository.AssemblyOrderRepository
 
 //class MainViewModel(private val repository: AssemblyOrderRepository) : ViewModel() {
 class MainViewModel() : ViewModel() {
 
     val repository = AssemblyOrderRepository()
-    val allOrders: LiveData<List<AssemblyOrder>> = repository.allSortedAssemblyOrders.asLiveData()
+    //val allOrders: LiveData<List<AssemblyOrder>> = repository.allSortedAssemblyOrders.asLiveData()
+    val allOrders: LiveData<List<AssemblyOrdersWithContractors>> = RawQuery.getNotCompletedAssemblyOrders().asLiveData()
 
     fun insert(assemblyOrder: AssemblyOrder) = viewModelScope.launch {
         repository.insert(assemblyOrder)
