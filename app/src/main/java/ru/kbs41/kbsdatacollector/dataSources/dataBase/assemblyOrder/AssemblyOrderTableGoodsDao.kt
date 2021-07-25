@@ -46,5 +46,7 @@ interface AssemblyOrderTableGoodsDao {
     @Query("SELECT * FROM assembly_orders_table_goods WHERE id = :id")
     fun getOneRowTableGoodsById(id: Long): AssemblyOrderTableGoods
 
+    @Query("SELECT MAX(`row`) FROM assembly_orders_table_goods WHERE assemblyOrderId = :orderId")
+    fun getLatestRow(orderId: Long): Int
 
 }

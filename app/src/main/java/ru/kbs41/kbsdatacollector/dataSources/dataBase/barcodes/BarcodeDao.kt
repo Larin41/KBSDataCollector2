@@ -19,6 +19,6 @@ interface BarcodeDao {
     fun getNoteByBarcode(barcode: String): List<Barcode>
 
     @Query("SELECT * FROM barcodes WHERE barcode = :barcode LIMIT 1")
-    fun getOneNoteByBarcode(barcode: String): Barcode
+    fun getOneNoteByBarcode(barcode: String): Barcode?
 
 }

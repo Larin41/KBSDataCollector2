@@ -32,8 +32,8 @@ object AssemblyOrderSender {
         tableGoods.forEach {
             val product = productDao.getProductById(it.productId)
             val newItemTableGoods = DataOutgoing.OrderModel.TableGoodsModel(
-                product.name,
-                product.guid!!,
+                product!!.name,
+                product!!.guid!!,
                 it.qty,
                 it.qtyCollected
             )

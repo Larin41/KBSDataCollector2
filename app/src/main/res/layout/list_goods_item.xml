@@ -51,9 +51,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:textColor="@color/red"
             app:layout_constraintStart_toEndOf="@id/tvQtyCollectedInfo"
             app:layout_constraintTop_toBottomOf="@id/tvProduct"
-            android:textColor="@color/red"
             tools:text="8" />
 
         <TextView
@@ -62,10 +62,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:text="@string/out_of"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/tvQtyCollected"
             app:layout_constraintTop_toBottomOf="@id/tvProduct"
-            android:text="@string/out_of"
             tools:text="из" />
 
         <TextView
@@ -79,12 +79,22 @@
             app:layout_constraintTop_toBottomOf="@id/tvProduct"
             tools:text="10" />
 
-        <CheckBox
-            android:id="@+id/cbCompleted"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/ibMenu"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_baseline_more_vert_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/cbCompleted"
+            android:layout_width="35dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ibMenu"
             app:layout_constraintTop_toTopOf="parent" />
 
 

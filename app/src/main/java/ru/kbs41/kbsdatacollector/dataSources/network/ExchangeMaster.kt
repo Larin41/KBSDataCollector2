@@ -242,48 +242,55 @@ object ExchangeMaster {
     suspend fun sendOrderTo1C(order: AssemblyOrder) {
 
 
-        //ПОДГОТОВИМ ДАННЫЕ ДЛЯ ОТПРАВКИ
-        val data = DataOutgoing(
-            "orders",
-            DataOutgoing.OrderModel(
-                order.guid,
-                order.date,
-                order.number,
-                order.comment,
-                AssemblyOrderSender.getAssemblyOrderTableGoods(order),
-                AssemblyOrderSender.getAssemblyOrderTableStamps(order)
+        try {
+            //ПОДГОТОВИМ ДАННЫЕ ДЛЯ ОТПРАВКИ
+            val data = DataOutgoing(
+                "orders",
+                DataOutgoing.OrderModel(
+                    order.guid,
+                    order.date,
+                    order.number,
+                    order.comment,
+                    AssemblyOrderSender.getAssemblyOrderTableGoods(order),
+                    AssemblyOrderSender.getAssemblyOrderTableStamps(order)
+                )
             )
-        )
 
-        //ПОПРОБУЕМ ОТПРАВИТЬ ДАННЫЕ
+            //ПОПРОБУЕМ ОТПРАВИТЬ ДАННЫЕ
 
-        Log.d("AssemblyOrder_TO_1C", "Start sending")
-        val retrofit = RetrofitClient()
-        retrofit.initInstance()
-        retrofit.instance.sendOrder(data)
-            ?.enqueue(object : Callback<SendingStatus> {
-                override fun onResponse(
-                    call: Call<SendingStatus>,
-                    response: Response<SendingStatus>
-                ) {
+            Log.d("AssemblyOrder_TO_1C", "Start sending")
+            val retrofit = RetrofitClient()
+            retrofit.initInstance()
+            retrofit.instance.sendOrder(data)
+                ?.enqueue(object : Callback<SendingStatus> {
+                    override fun onResponse(
+                        call: Call<SendingStatus>,
+                        response: Response<SendingStatus>
+                    ) {
 
-                    //Debug.waitForDebugger()
-                    Log.d("AssemblyOrder_TO_1C", "Sending is completed")
-                    //ПРИ УСПЕШНОЙ ВЫГРУЗКЕ ОБНОВИМ СТАТУС ОТПРАВЛЕННОСТИ ДОКУМЕНТА
-                    if (response.code() == 200) {
-                        Log.d("AssemblyOrder_TO_1C", "Response 200")
-                        GlobalScope.launch(Dispatchers.IO) {
-                            AssemblyOrderSender.makeOrderIsSent(order)
+                        //Debug.waitForDebugger()
+                        Log.d("AssemblyOrder_TO_1C", "Sending is completed")
+                        //ПРИ УСПЕШНОЙ ВЫГРУЗКЕ ОБНОВИМ СТАТУС ОТПРАВЛЕННОСТИ ДОКУМЕНТА
+                        if (response.code() == 200) {
+                            Log.d("AssemblyOrder_TO_1C", "Response 200")
+                            GlobalScope.launch(Dispatchers.IO) {
+                                AssemblyOrderSender.makeOrderIsSent(order)
+                            }
                         }
+
                     }
 
-                }
+                    override fun onFailure(call: Call<SendingStatus>, t: Throwable) {
+                        Log.d("AssemblyOrder_TO_1C", "Error")
+                    }
+                })
 
-                override fun onFailure(call: Call<SendingStatus>, t: Throwable) {
-                    Log.d("AssemblyOrder_TO_1C", "Error")
-                }
-            })
 
+        } catch (e: Exception) {
+
+        } finally {
+
+        }
 
     }
 }

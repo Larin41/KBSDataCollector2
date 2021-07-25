@@ -10,7 +10,7 @@ data class AssemblyOrder(
     var guid: String = "",
     var date: Date = Date(0),
     var number: String = "",
-    var counterpart: String = "",
+    var counterpart: String? = "",
     var comment: String = "",
     var isCompleted: Boolean = false,
     var isSent: Boolean = false

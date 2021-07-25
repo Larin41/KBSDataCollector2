@@ -5,9 +5,9 @@ import java.util.*
 
 data class AssemblyOrdersWithContractors(
     val id: Long,
-    val date: Date,
-    val number: String,
-    val comment: String,
-    val contractor: String
+    val date: Date?,
+    val number: String?,
+    val comment: String?,
+    val contractor: String?
 ) {
 }
