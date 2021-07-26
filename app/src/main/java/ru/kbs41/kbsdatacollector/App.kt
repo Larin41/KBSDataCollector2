@@ -7,6 +7,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.AppDatabase
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.contractors.Contractor
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.Product
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.repository.ProductRepository
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.simpleScanning.SimpleScanning
@@ -36,44 +37,29 @@ class App(_context: Context? = null) : Application() {
     override fun onCreate() {
         super.onCreate()
         AppNotificationManager.instance(applicationContext)
-        //createTestData()
+        createPredefinedData()
     }
 
-    private fun createTestData() {
+    private fun createPredefinedData() {
 
         GlobalScope.launch {
-            val productDao = database.productDao()
-            val simpleScanningDao = database.simpleScanningDao()
-            val simpleScanningTableGoodsDao = database.simpleScanningTableGoodsDao()
 
-            val simpleScanning = SimpleScanning(
-                0,
-                "jdnlksjandlkjnaslk",
-                Date(),
-                "Test comment yeah!",
-                false,
-                false
-            )
-            val docId = simpleScanningDao.insert(simpleScanning)
+            val contractorDao = database.contractorDao()
+            var contractor = contractorDao.findContractorByGuid(Constants.RETAIL_GUID)
 
-            val list = listOf<Int>(1, 2, 3, 4, 5)
+            if (contractor == null) {
+                contractor = Contractor()
+                contractor.guid = Constants.RETAIL_GUID
+                contractor.name = "Розничный покупатель"
 
-            list.forEach {
-                val simpleScanningTableGoods = SimpleScanningTableGoods(
-                    0,
-                    productDao.getProductById(it.toLong()).guid!!,
-                    it.toDouble(),
-                    docId,
-                    it.toLong()
-                )
-
-                simpleScanningTableGoodsDao.insert(simpleScanningTableGoods)
-
+                contractorDao.insert(contractor)
             }
 
 
         }
 
+
     }
 
 }
+

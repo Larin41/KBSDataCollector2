@@ -9,11 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.R
-
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.databinding.FragmentStampsRwBinding
-import java.lang.Exception
 
 
 class StampsFragmentRw : Fragment() {
@@ -23,8 +21,6 @@ class StampsFragmentRw : Fragment() {
 
     private lateinit var rwAdapter: AssemblyOrderTableStampsNoProductAdapter
     private lateinit var rwTableGoods: RecyclerView
-
-    private var qty: Double = 0.toDouble()
 
     lateinit var viewModel: StampsViewModel
 
@@ -36,18 +32,13 @@ class StampsFragmentRw : Fragment() {
         _binding = FragmentStampsRwBinding.inflate(inflater, container, false)
         val root = binding.root
 
-        qty = requireActivity().intent.getDoubleExtra("qty", 0.0)
-        binding.qty = FormatManager.getFormattedNumber(qty)
-
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = activity?.run {
-            ViewModelProvider(this).get(StampsViewModel::class.java)
-        } ?: throw Exception("Invalid activity")
+        viewModel = ViewModelProvider(requireActivity()).get(StampsViewModel::class.java)
 
         subscribeObservers()
         fetchDataToRw()
@@ -55,7 +46,7 @@ class StampsFragmentRw : Fragment() {
     }
 
     private fun fetchDataToRw() {
-        rwAdapter = AssemblyOrderTableStampsNoProductAdapter(viewModel.tableStampsWithProducts)
+        rwAdapter = AssemblyOrderTableStampsNoProductAdapter(viewModel.tableStamps)
         rwTableGoods = binding.root.findViewById(R.id.rwStamps)
         rwTableGoods.layoutManager = LinearLayoutManager(context)
         rwTableGoods.adapter = rwAdapter
@@ -63,37 +54,54 @@ class StampsFragmentRw : Fragment() {
 
     private fun subscribeObservers() {
 
-        viewModel.qtyCollected.observe(
-            viewLifecycleOwner,
-            { qtyCollected ->
-                if (qtyCollected == viewModel.qty.value) {
-                    binding.tvQtyCollected.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.teal_700
-                        )
-                    )
-                } else {
-                    binding.tvQtyCollected.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.red
-                        )
-                    )
-                }
-            }
-        )
+        viewModel.rowTableGoods.observe(viewLifecycleOwner, { value ->
+            binding.qty = FormatManager.getFormattedNumber(value.qty)
+            calculateQty(value.qty)
+        })
 
-        viewModel.tableStampsWithProducts.observe(
-            viewLifecycleOwner,
-            {
-                rwAdapter.notifyDataSetChanged()
-                val size = it.size
-                binding.qtyCollected = size.toString()
-                if (size > 0) {
-                    rwTableGoods.smoothScrollToPosition(size - 1)
-                }
-            })
+        viewModel.tableStamps.observe(viewLifecycleOwner, { value ->
+            binding.qtyCollected = FormatManager.getFormattedNumber(value.size.toDouble())
+            rwAdapter.notifyDataSetChanged()
+
+            if (viewModel.addedManually) {
+                binding.qty = binding.qtyCollected
+            }
+
+            manageQtyColor()
+        })
+
+
     }
+
+    private fun calculateQty(qty: Double) {
+
+        if (viewModel.addedManually) {
+            binding.qty = binding.qtyCollected
+        } else {
+            binding.qty = FormatManager.getFormattedNumber(qty)
+        }
+
+        manageQtyColor()
+
+    }
+
+    private fun manageQtyColor() {
+        if (binding.qty.equals(binding.qtyCollected)) {
+            binding.tvQtyCollected.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.teal_700
+                )
+            )
+        } else {
+            binding.tvQtyCollected.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.red
+                )
+            )
+        }
+    }
+
 
 }

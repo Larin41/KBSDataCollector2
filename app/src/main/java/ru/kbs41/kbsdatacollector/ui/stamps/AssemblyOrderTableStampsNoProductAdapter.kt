@@ -15,12 +15,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.R
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrderTableStamps
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.pojo.AssemblyOrderTableStampsWithProducts
 import java.lang.Exception
 
 
 class AssemblyOrderTableStampsNoProductAdapter(
-    private val list: LiveData<List<AssemblyOrderTableStampsWithProducts>>
+    private val list: LiveData<List<AssemblyOrderTableStamps>>
 ) : RecyclerView.Adapter<AssemblyOrderTableStampsNoProductAdapter.OrdersViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersViewHolder {
@@ -31,7 +32,7 @@ class AssemblyOrderTableStampsNoProductAdapter(
     }
 
     override fun onBindViewHolder(holder: OrdersViewHolder, position: Int) {
-        val currentItem = list.value!![position].assemblyOrderTableStamps
+        val currentItem = list.value!![position]
         holder.id = currentItem.id
         holder.number.text = (position + 1).toString()
         holder.stamp.text = currentItem.barcode

@@ -150,7 +150,7 @@ class AssemblyOrderViewModel() : ViewModel() {
                 val product = productDao.getProductById(barcodeNote.productId)
 
                 val newRowTableGoods = AssemblyOrderTableGoods()
-                newRowTableGoods.addedManualy = true
+                newRowTableGoods.addedManually = true
                 newRowTableGoods.assemblyOrderId = currentAssemblyOrder.id
                 newRowTableGoods.productId = product.id
                 newRowTableGoods.needStamp = product.hasStamp!!

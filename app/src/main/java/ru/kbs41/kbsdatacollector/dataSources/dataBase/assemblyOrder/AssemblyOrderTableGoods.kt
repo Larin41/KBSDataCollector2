@@ -13,6 +13,6 @@ data class AssemblyOrderTableGoods(
     var needStamp: Boolean = false,
     var assemblyOrderId: Long = 0,
     var productId: Long = 0,
-    var addedManualy: Boolean = false
+    var addedManually: Boolean = false
 ) {
 }

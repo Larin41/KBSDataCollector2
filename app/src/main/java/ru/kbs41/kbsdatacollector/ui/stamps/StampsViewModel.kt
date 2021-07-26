@@ -1,86 +1,58 @@
 package ru.kbs41.kbsdatacollector.ui.stamps
 
-import android.content.Context
-import android.widget.Toast
-import androidx.lifecycle.*
+import android.os.Debug
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.BarcodeDatamatrix
-import ru.kbs41.kbsdatacollector.soundManager.SoundEffects
-import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrderTableGoods
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrderTableStamps
-import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.pojo.AssemblyOrderTableStampsWithProducts
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.products.Product
-import ru.kbs41.kbsdatacollector.dataSources.dataBase.repository.AssemblyOrderFullRepository
 
 class StampsViewModel() : ViewModel() {
 
-    private lateinit var mContext: Context
+    //private val applicationContext = App().applicationContext
 
-    private var currentRowTableGoodsId: Long = 0
-    var qty: MutableLiveData<Double> = MutableLiveData(0.0)
-    var qtyCollected: MutableLiveData<Double> = MutableLiveData(0.0)
-    private var docId: Long = 0
-    private var productId: Long = 0
+    private val database = App().database
+    private val productDao = database.productDao()
+    private val assemblyOrderTableGoodsDao = database.assemblyOrderTableGoodsDao()
+    private val assemblyOrderTableStampsDao = database.assemblyOrderTableStampsDao()
 
-    private val repository = AssemblyOrderFullRepository()
+    private var currentProductId: Long = 0
+    private var currentOrderId: Long = 0
+    private var currentRowId: Long = 0
 
-    //NOT LIVE DATA
-    lateinit var currentProduct: Product
-    lateinit var currentAssemblyOrder: AssemblyOrder
-    lateinit var currentRowTableGoods: AssemblyOrderTableGoods
-
-    //LIVE DATA
-    lateinit var tableStampsWithProducts: LiveData<List<AssemblyOrderTableStampsWithProducts>>
-    lateinit var tableGoods: LiveData<List<AssemblyOrderTableGoods>>
+    lateinit var product: Product
+    lateinit var rowTableGoods: LiveData<AssemblyOrderTableGoods>
     lateinit var tableStamps: LiveData<List<AssemblyOrderTableStamps>>
 
-    fun initProperties(
-        _currentRowTableGoodsId: Long,
-        _docId: Long,
-        _productId: Long,
-        _qty: Double,
-        _context: Context
+    var addedManually: Boolean = false
+
+
+    fun fetchData(
+        _currentProductId: Long,
+        _currentRowId: Long,
+        _currentOrderId: Long,
+        _addedManually: Boolean
     ) {
 
-        mContext = _context
-        currentRowTableGoodsId = _currentRowTableGoodsId
-        qty.value = _qty
-        docId = _docId
-        productId = _productId
+        addedManually = _addedManually
+        currentProductId = _currentProductId
+        currentOrderId = _currentOrderId
+        currentRowId = _currentRowId
 
-        //NOT A LIVE DATA
-        currentProduct = repository.getProduct(productId)
-        currentAssemblyOrder = repository.getAssemblyOrder(docId)
-        currentRowTableGoods = repository.getOneRowTableGoodsWithProductById(currentRowTableGoodsId)
-
-
-        //LIVE DATA
-        tableGoods = repository.getAssemblyOrderTableGoodsFlow(docId).asLiveData()
+        product = productDao.getProductById(currentProductId)
+        rowTableGoods = assemblyOrderTableGoodsDao.getRowById(currentRowId).asLiveData()
         tableStamps =
-            repository.getAssemblyOrderTableStampsByDocIdAndProductIdFlow(docId, productId)
-                .asLiveData()
-        tableStampsWithProducts =
-            repository.getAssemblyOrderTableStampsByAssemblyOrderIdAndProductIdWithProducts(
-                docId,
-                productId
-            ).asLiveData()
+            assemblyOrderTableStampsDao.getTableStampsByTableGoodsRow(currentRowId).asLiveData()
 
-        tableStamps.observeForever {
-            if (it != null) {
 
-                val size = it.size.toDouble()
-
-                //UPDATE TABLE GOODS
-                currentRowTableGoods.qtyCollected = size
-                repository.updateTableGoods(currentRowTableGoods)
-
-                qtyCollected.value = size
-            }
-        }
     }
+
 
     fun parseStamp(barcode: String): String {
         val barcodeDatamatrix = BarcodeDatamatrix()
@@ -88,46 +60,114 @@ class StampsViewModel() : ViewModel() {
         return barcodeDatamatrix.finalData
     }
 
-    suspend fun insertNewStamp(barcode: String) {
+    suspend fun insertNewStamp(barcode: String): ErrorsDescription {
 
-        val barcodeParsed = parseStamp(barcode)
-
-
-        //ПРОВЕРИМ МАРКУ НА ДУБЛЬ, ЧТОБЫ НЕДОПУСТИТЬ СЧИТЫВАНИЯ ОДНОЙ МАРКИ НЕСКОЛЬКО РАЗ
-        val existedEntry = repository.getAssemblyOrderTableStampsByBarcode(barcodeParsed, docId)
-
-        if (existedEntry != null) {
-            GlobalScope.launch(Dispatchers.Main) {
-                SoundEffects().playError(mContext)
-                Toast.makeText(mContext, "Данная марка уже была считана!", Toast.LENGTH_SHORT).show()
-            }
-            return
+        val errorrDescription = checkBarcodeForProblems(barcode)
+        if (errorrDescription.hasProblems) {
+            return errorrDescription
         }
 
-        val cTableStamps: List<AssemblyOrderTableStamps> =
-            repository.getAssemblyOrderTableStampsByDocIdAndProductId(docId, productId)
 
-        val pQtyCollected = cTableStamps.size.toDouble()
+        val parsedBarcode = parseStamp(barcode)
 
-        if (qty.value == pQtyCollected) {
-            GlobalScope.launch(Dispatchers.Main) { SoundEffects().playError(mContext) }
-            return
-        }
-
-        if (currentRowTableGoods.qty == pQtyCollected + 1) {
-            GlobalScope.launch(Dispatchers.Main) { SoundEffects().playSuccess(mContext) }
-        }
-
-        val newItem = AssemblyOrderTableStamps(
+        val newNote = AssemblyOrderTableStamps(
             0,
-            barcodeParsed,
-            currentAssemblyOrder.id,
-            currentProduct.id
+            currentRowId,
+            parsedBarcode,
+            currentOrderId,
+            currentProductId
         )
 
+        assemblyOrderTableStampsDao.insert(newNote)
 
-        //INSERT NEW BARCODE
-        repository.insertAssemblyOrderTableStamps(newItem)
+        return ErrorsDescription()
 
+    }
+
+    fun updateRowTableGoods(qtyCollected: Double) {
+        if (addedManually) {
+            rowTableGoods.value?.let {
+                it.qty = qtyCollected
+                GlobalScope.launch(Dispatchers.IO) { assemblyOrderTableGoodsDao.update(it) }
+            }
+        }
+    }
+
+    private suspend fun checkBarcodeForProblems(barcode: String): ErrorsDescription {
+
+        //Debug.waitForDebugger()
+
+        val stampsAreCollected: Boolean = stampsAreAlreadyCollected()
+        val problemsWithBarcodeFormat: Boolean = checkForLenght(barcode)
+
+        val parsedBarcode = parseStamp(barcode)
+        val problemsWithExistedStamp: Boolean = checkForExisted(parsedBarcode, currentOrderId)
+
+        val scanningComplete: Boolean = checkForScanningComplete()
+
+
+        val errorDescriptions = ErrorsDescription(
+            stampsAreCollected || problemsWithBarcodeFormat || problemsWithExistedStamp,
+            stampsAreCollected,
+            problemsWithBarcodeFormat,
+            problemsWithExistedStamp,
+            scanningComplete
+        )
+
+        return errorDescriptions
+
+    }
+
+    private fun checkForScanningComplete(): Boolean {
+
+        //Debug.waitForDebugger()
+
+        if (rowTableGoods.value?.addedManually == true) {
+            return false
+        }
+
+        if (tableStamps.value != null && rowTableGoods.value != null) {
+            val qtyCollected = tableStamps.value!!.size.toDouble()
+            val qty = rowTableGoods.value!!.qty
+
+            return qty == (qtyCollected + 1)
+
+        } else {
+            return false
+        }
+
+    }
+
+    private fun stampsAreAlreadyCollected(): Boolean {
+
+        if (rowTableGoods.value?.addedManually == true) {
+            return false
+        }
+
+        if (tableStamps.value != null && rowTableGoods.value != null) {
+            val qtyCollected = tableStamps.value?.size?.toDouble()
+            val qty = rowTableGoods.value?.qty
+
+            return qty == qtyCollected
+
+        } else {
+            return false
+        }
+
+
+    }
+
+
+    private fun checkForExisted(barcodeParsed: String, currentOrderId: Long): Boolean {
+
+        //Debug.waitForDebugger()
+
+        val existedEntry =
+            assemblyOrderTableStampsDao.getTableStampsByBarcodeAndDoc(barcodeParsed, currentOrderId)
+        return existedEntry != null
+    }
+
+    private fun checkForLenght(barcode: String): Boolean {
+        return barcode.length < 32
     }
 }

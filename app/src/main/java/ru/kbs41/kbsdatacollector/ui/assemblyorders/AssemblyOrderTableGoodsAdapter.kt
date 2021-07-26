@@ -96,6 +96,8 @@ class AssemblyOrderTableGoodsAdapter(
                 }
 
                 val intent = Intent(context, StampsReadingActivity::class.java)
+                intent.putExtra("tableGoodsId", currentPosition.id)
+                intent.putExtra("addedManually", currentPosition.addedManually)
                 intent.putExtra("productId", currentPosition.productId)
                 intent.putExtra("docId", currentPosition.orderID)
                 intent.putExtra("qty", currentPosition.qty)
@@ -130,7 +132,7 @@ class AssemblyOrderTableGoodsAdapter(
 
                             GlobalScope.launch(Dispatchers.IO) {
                                 assemblyOrderTableStampsDao.deleteByAssemblyOrderIdAndProductId(orderId, productId)
-                                assemblyOrderTableGoodsDao.deleteByAssemblyOrderId(tableGoodsId)
+                                assemblyOrderTableGoodsDao.deleteByAssemblyOrderId(orderId)
                             }
 
                             true

@@ -23,6 +23,7 @@ object RawQuery {
                     pr.id AS productId,
                     pr.hasStamp AS productHasStamps,
                     tg.qty AS qty,
+                    tg.addedManually AS addedManually,
                     CASE pr.hasStamp
                         WHEN 1
                             THEN IFNULL(COUNT(ts.barcode),0) 	

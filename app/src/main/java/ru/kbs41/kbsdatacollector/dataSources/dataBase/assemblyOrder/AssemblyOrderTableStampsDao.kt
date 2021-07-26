@@ -35,13 +35,16 @@ interface AssemblyOrderTableStampsDao {
     fun getTableStampsByBarcode(barcode: String): AssemblyOrderTableStamps
 
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE barcode = :barcode AND assemblyOrderId = :docId LIMIT 1")
-    fun getTableStampsByBarcodeAndDoc(barcode: String, docId: Long): AssemblyOrderTableStamps
+    fun getTableStampsByBarcodeAndDoc(barcode: String, docId: Long): AssemblyOrderTableStamps?
 
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId AND productId = :productId ORDER BY id")
     fun getTableStampsByDocIdAndProductId(assemblyOrderId: Long, productId: Long): List<AssemblyOrderTableStamps>
 
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId AND ProductId = :productId ORDER BY id")
     fun getTableStampsByDocIdAndProductIdFlow(assemblyOrderId: Long, productId: Long): Flow<List<AssemblyOrderTableStamps>>
+
+    @Query("SELECT * FROM assembly_orders_table_stamps WHERE tableGoodsRowId = :tableGoodsRowId ORDER BY id")
+    fun getTableStampsByTableGoodsRow(tableGoodsRowId: Long): Flow<List<AssemblyOrderTableStamps>>
 
     @Transaction
     @Query("SELECT * FROM assembly_orders_table_stamps WHERE assemblyOrderId = :assemblyOrderId ORDER BY id")

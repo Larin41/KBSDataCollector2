@@ -149,6 +149,7 @@ class AssemblyOrderFullRepository() {
                SELECT
                     tg.id AS id,
                     tg.`row` AS row,
+                    tg.addedManually AS addedManually,
                     tg.assemblyOrderId AS orderID,
                     pr.name AS productName,
                     pr.id AS productId,

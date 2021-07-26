@@ -8,7 +8,8 @@ class AssemblyOrderTableGoodsWithQtyCollectedAndProducts(
         val productHasStamps: Boolean?,
         val productId: Long?,
         val qty: Double?,
-        val qtyCollected: Double?
+        val qtyCollected: Double?,
+        val addedManually: Boolean
 
 ) {
 }

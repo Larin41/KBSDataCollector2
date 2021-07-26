@@ -35,8 +35,6 @@ class StampsFragmentInfo : Fragment() {
         _binding = FragmentStampsInfoBinding.inflate(inflater, container, false)
         val root = binding.root
 
-
-
         return root
     }
 
@@ -53,35 +51,27 @@ class StampsFragmentInfo : Fragment() {
     }
 
     private fun setData() {
-        binding.qty = FormatManager.getFormattedNumber(viewModel.currentRowTableGoods.qty)
-        binding.product = viewModel.currentProduct.name
+        binding.product = viewModel.product.name
     }
 
     private fun subscribeObservers() {
-        viewModel.tableStampsWithProducts.observe(viewLifecycleOwner) {
-            binding.qtyCollected = it.size.toString()
-        }
 
-        viewModel.qtyCollected.observe(
-            viewLifecycleOwner,
-            {
-                if (it == viewModel.qty.value) {
-                    binding.tvQtyCollected.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.teal_700
-                        )
-                    )
-                } else {
-                    binding.tvQtyCollected.setTextColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.red
-                        )
-                    )
-                }
+        viewModel.rowTableGoods.observe(viewLifecycleOwner, {
+            if (viewModel.addedManually) {
+                binding.qty = binding.qtyCollected
+            } else {
+                binding.qty = it.qty.toString()
             }
-        )
+        })
+
+        viewModel.tableStamps.observe(viewLifecycleOwner, {
+            val size = it.size
+            binding.qtyCollected = size.toString()
+            if (viewModel.addedManually) {
+                binding.qty = binding.qtyCollected
+            }
+            viewModel.updateRowTableGoods(size.toDouble())
+        })
 
     }
 

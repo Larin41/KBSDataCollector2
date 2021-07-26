@@ -18,6 +18,9 @@ interface AssemblyOrderTableGoodsDao {
     @Update
     suspend fun update(assemblyOrderTableGoods: AssemblyOrderTableGoods)
 
+    @Query("SELECT * FROM assembly_orders_table_goods WHERE id = :id")
+    fun getRowById(id: Long): Flow<AssemblyOrderTableGoods>
+
     @Query("SELECT * FROM assembly_orders_table_goods WHERE assemblyOrderId = :assemblyOrderId ORDER BY `row`")
     fun getTableGoodsByDocIdFlow(assemblyOrderId: Long): Flow<List<AssemblyOrderTableGoods>>
 
