@@ -110,7 +110,7 @@ class StampsReadingActivity : AppCompatActivity() {
 
             //Debug.waitForDebugger()
 
-            if (errorsDescription.scanningComplete) {
+            if (errorsDescription.scanningComplete && !errorsDescription.hasProblems) {
                 SoundEffects().playSuccess(applicationContext)
                 return@withContext
             }

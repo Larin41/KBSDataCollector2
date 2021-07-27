@@ -3,6 +3,7 @@ package ru.kbs41.kbsdatacollector.dataSources.network.downloaders
 import ru.kbs41.kbsdatacollector.App
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrder
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrderTableGoods
+import ru.kbs41.kbsdatacollector.dataSources.dataBase.assemblyOrder.AssemblyOrderTableStampsDao
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.rawData.RawQuery
 import ru.kbs41.kbsdatacollector.dataSources.network.models.Order
 import ru.kbs41.kbsdatacollector.dataSources.network.models.TableGood
@@ -29,10 +30,15 @@ object AssemblyOrderDownloader {
         clearTableGoods(assemblyOrder)
         order.tableGoods?.let { tableGoods ->
             downloadTableGoods(assemblyOrder, tableGoods)
-            deleteInappropriateStamps(assemblyOrder)
+            deleteAllStamps(assemblyOrder)
+        //deleteInappropriateStamps(assemblyOrder)
         }
 
 
+    }
+
+    private fun deleteAllStamps(assemblyOrder: AssemblyOrder) {
+        assemblyOrderTableStampsDao.deleteByAssemblyOrderId(assemblyOrder.id)
     }
 
     private fun clearTableGoods(assemblyOrder: AssemblyOrder) {

@@ -1,6 +1,5 @@
 package ru.kbs41.kbsdatacollector.ui.stamps
 
-import android.os.Debug
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -50,11 +49,9 @@ class StampsViewModel() : ViewModel() {
         tableStamps =
             assemblyOrderTableStampsDao.getTableStampsByTableGoodsRow(currentRowId).asLiveData()
 
-
     }
 
-
-    fun parseStamp(barcode: String): String {
+    private fun parseStamp(barcode: String): String {
         val barcodeDatamatrix = BarcodeDatamatrix()
         barcodeDatamatrix.parseDataMatrixBarcode(barcode)
         return barcodeDatamatrix.finalData
@@ -62,9 +59,9 @@ class StampsViewModel() : ViewModel() {
 
     suspend fun insertNewStamp(barcode: String): ErrorsDescription {
 
-        val errorrDescription = checkBarcodeForProblems(barcode)
-        if (errorrDescription.hasProblems) {
-            return errorrDescription
+        val errorDescription = checkBarcodeForProblems(barcode)
+        if (errorDescription.hasProblems) {
+            return errorDescription
         }
 
 
@@ -80,16 +77,20 @@ class StampsViewModel() : ViewModel() {
 
         assemblyOrderTableStampsDao.insert(newNote)
 
-        return ErrorsDescription()
+        return errorDescription
 
     }
 
     fun updateRowTableGoods(qtyCollected: Double) {
-        if (addedManually) {
-            rowTableGoods.value?.let {
+
+        rowTableGoods.value?.let {
+            it.qtyCollected = qtyCollected
+            if (addedManually) {
                 it.qty = qtyCollected
-                GlobalScope.launch(Dispatchers.IO) { assemblyOrderTableGoodsDao.update(it) }
             }
+
+            GlobalScope.launch(Dispatchers.IO) { assemblyOrderTableGoodsDao.update(it) }
+
         }
     }
 
@@ -98,7 +99,7 @@ class StampsViewModel() : ViewModel() {
         //Debug.waitForDebugger()
 
         val stampsAreCollected: Boolean = stampsAreAlreadyCollected()
-        val problemsWithBarcodeFormat: Boolean = checkForLenght(barcode)
+        val problemsWithBarcodeFormat: Boolean = checkForLength(barcode)
 
         val parsedBarcode = parseStamp(barcode)
         val problemsWithExistedStamp: Boolean = checkForExisted(parsedBarcode, currentOrderId)
@@ -157,7 +158,6 @@ class StampsViewModel() : ViewModel() {
 
     }
 
-
     private fun checkForExisted(barcodeParsed: String, currentOrderId: Long): Boolean {
 
         //Debug.waitForDebugger()
@@ -167,7 +167,7 @@ class StampsViewModel() : ViewModel() {
         return existedEntry != null
     }
 
-    private fun checkForLenght(barcode: String): Boolean {
+    private fun checkForLength(barcode: String): Boolean {
         return barcode.length < 32
     }
 }
