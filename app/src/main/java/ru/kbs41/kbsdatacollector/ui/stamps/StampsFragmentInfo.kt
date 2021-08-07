@@ -1,6 +1,7 @@
 package ru.kbs41.kbsdatacollector.ui.stamps
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,20 +58,33 @@ class StampsFragmentInfo : Fragment() {
     private fun subscribeObservers() {
 
         viewModel.rowTableGoods.observe(viewLifecycleOwner, {
-            if (viewModel.addedManually) {
-                binding.qty = binding.qtyCollected
-            } else {
-                binding.qty = it.qty.toString()
+            try {
+                if (viewModel.addedManually) {
+                    binding.qty = binding.qtyCollected
+                } else {
+                    binding.qty = it.qty.toString()
+                }
+            } catch (e: Exception) {
+                Log.d("FORM ERROR", e.message.toString())
+            } finally {
+
             }
         })
 
         viewModel.tableStamps.observe(viewLifecycleOwner, {
-            val size = it.size
-            binding.qtyCollected = size.toString()
-            if (viewModel.addedManually) {
-                binding.qty = binding.qtyCollected
+
+            try {
+                val size = it.size
+                binding.qtyCollected = size.toString()
+                if (viewModel.addedManually) {
+                    binding.qty = binding.qtyCollected
+                }
+                viewModel.updateRowTableGoods(size.toDouble())
+            } catch (e: Exception) {
+                Log.d("FORM ERROR", e.message.toString())
+            } finally {
+
             }
-            viewModel.updateRowTableGoods(size.toDouble())
         })
 
     }

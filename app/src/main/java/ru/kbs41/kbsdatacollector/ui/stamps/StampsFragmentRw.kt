@@ -1,6 +1,7 @@
 package ru.kbs41.kbsdatacollector.ui.stamps
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.kbs41.kbsdatacollector.R
 import ru.kbs41.kbsdatacollector.dataSources.dataBase.FormatManager
 import ru.kbs41.kbsdatacollector.databinding.FragmentStampsRwBinding
+import java.lang.Exception
 
 
 class StampsFragmentRw : Fragment() {
@@ -55,19 +57,34 @@ class StampsFragmentRw : Fragment() {
     private fun subscribeObservers() {
 
         viewModel.rowTableGoods.observe(viewLifecycleOwner, { value ->
-            binding.qty = FormatManager.getFormattedNumber(value.qty)
-            calculateQty(value.qty)
+            try {
+                binding.qty = FormatManager.getFormattedNumber(value.qty)
+                calculateQty(value.qty)
+            } catch (e: Exception) {
+                Log.d("FORM ERROR", e.message.toString())
+            } finally {
+
+            }
+
         })
 
         viewModel.tableStamps.observe(viewLifecycleOwner, { value ->
-            binding.qtyCollected = FormatManager.getFormattedNumber(value.size.toDouble())
-            rwAdapter.notifyDataSetChanged()
+            try {
+                binding.qtyCollected = FormatManager.getFormattedNumber(value.size.toDouble())
+                rwAdapter.notifyDataSetChanged()
 
-            if (viewModel.addedManually) {
-                binding.qty = binding.qtyCollected
+                if (viewModel.addedManually) {
+                    binding.qty = binding.qtyCollected
+                }
+
+                manageQtyColor()
+            } catch (e: Exception) {
+                Log.d("FORM ERROR", e.message.toString())
+            } finally {
+
             }
 
-            manageQtyColor()
+
         })
 
 

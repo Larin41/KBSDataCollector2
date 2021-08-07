@@ -76,9 +76,9 @@ object AssemblyOrderDownloader {
                 tg.rowNumber,
                 tg.qty,
                 0.0,
-                product!!.hasStamp!!,
+                product?.hasStamp ?: false,
                 assemblyOrder.id,
-                product.id
+                product!!.id
             )
 
             //ПОСЧИТАЕМ УЖЕ ПОДОБРАННЫЕ МАРКИ

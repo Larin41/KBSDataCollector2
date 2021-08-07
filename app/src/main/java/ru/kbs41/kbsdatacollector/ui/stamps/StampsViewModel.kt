@@ -168,6 +168,6 @@ class StampsViewModel() : ViewModel() {
     }
 
     private fun checkForLength(barcode: String): Boolean {
-        return barcode.length < 32
+        return barcode.length < 31
     }
 }

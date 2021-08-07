@@ -28,13 +28,13 @@ import java.io.IOException
 
 object ExchangeMaster {
 
-    fun getAllGoodsFrom1C(progressBar: ProgressBar? = null) {
+    fun getAllGoodsFrom1C(progressBar: ProgressBar? = null, requiredData: String = "allData") {
 
         //Debug.waitForDebugger()
 
         val settings = mapOf(
             "deviceId" to "1",
-            "requiredData" to "allGoods"
+            "requiredData" to requiredData
         )
 
         try {
@@ -70,11 +70,13 @@ object ExchangeMaster {
 
         retrofit.initInstance()
 
-        if (settings["requiredData"]!! == "newData") {
+        val requiredData = settings["requiredData"]!!
+
+        if (requiredData == "newData" || requiredData == "allData") {
             getNewOrders(retrofit, settings)
         }
 
-        if (settings["requiredData"]!! == "allGoods") {
+        if (requiredData == "allGoods") {
             getAllGoods(retrofit, settings, progressBar)
         }
 
